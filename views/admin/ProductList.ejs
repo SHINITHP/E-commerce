@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+    <link rel="stylesheet" href="/assets/css/admin/dashboard.css">
+
+    <link rel="stylesheet" href="/assets/css/admin/productList.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+
+
+    <title>Admin Dashboard</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <%- include('../../views/admin/adminNavbar.ejs') %>
+        <!-- Navbar -->
+        <br>
+
+
+        <div class="container-fluid conF-2">
+            <div class="row1">
+
+                <div class="con-1 ">
+                    <div class="box-1">
+                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png" class="adminIcon" alt=""> <span
+                                class="adminName">Admin</span></a>
+                    </div>
+                    <a href="adminDashboard">
+                        <button class="btns btnDashboard"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Dashboard</span></button>
+                    </a>
+                    <a href="ProductList">
+                        <button class="btns btnProducts btnColor"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Products</span></button>
+                    </a>
+                    <a href="Category">
+                        <button class="btns btnCategory "><img class="img" src="/assets/images/grid.png" alt=""><span
+                           class="btnvalue"><span>Category</span></button>
+                   </a>
+                    <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Order History</span></button>
+                    <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Coupon</span></button>
+                    <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Sales Report</span></button>
+                    <a href="CustomerDetails">
+                        <button class="btns btnUser"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">User Report</span> </button>
+                    </a>
+                    <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Banner</span></button>
+                    <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Wallet</span></button>
+                </div>
+
+                <div class="con-2">
+                    <div class="row row2">
+                        <div class="col-3 cols">
+                            <h3>Product Details</h3>
+                        </div>
+                        <div class="col-5 cols">
+                            <div class="col-12 col1">
+                                <form action="/adminLogin/ProductList/search" method="post">
+                                    <input type="text" class="searchInput" name="search" required="true"
+                                        id="exampleFormControlInput1" placeholder="Search ">
+                                    <span>   <button class="btnSearch" type="submit"><a ><i class="fa-solid fa-magnifying-glass searchBtn"
+                                                style="color: #8b8e99;"></i></a> </button></span>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-4 cols">
+                            <a href="/Export"><button class="btnExport"><span><i class="fa-solid fa-download"
+                                            style="color: #ffffff;"></i></span>Export Info</button></a>
+                            <span> <a href="/adminLogin/ProductList/addProducts"><button class="btnAddProducts"><span><i
+                                                class="fa-regular fa-plus" style="color: #ffffff;"></i></span>Add
+                                        products</button></span></a>
+                        </div>
+                    </div>
+
+                    <div class="row MessageRow " >
+                        <p>
+                           <%= message %>
+                        </p>
+                    </div>
+
+                    <div class="row row3">
+                      
+                        <table class="table table1">
+                            <thead class="thead tableHead">
+                                <tr>
+                                    <th scope="col" style="width:30px">SI</th>
+                                    <th scope="col">Products</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Stock</th>
+                                    <th scope="col">PRate</th>
+                                    <th scope="col">SRate</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Inventory</th>
+                                    <th scope="col">Added</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% productDetails.forEach((data,index)=> { %>
+                                    <tr class="tableRow">
+                                        <th scope="row" style="width:30px"><%=index + 1%></th>
+                                        <td>
+                                            <img src="<%= data.files[0].url %>"
+                                                style="border: 1px solid rgb(80, 80, 80);" class="imageBox" alt="">
+                                          
+                                              <h6 > <%=data.ProductName%></h6> 
+                                           
+                                        </td>
+                                      
+                                        <td>
+                                            <%=data.CategoryName%>
+                                        </td>
+                                        <td>
+                                            <%=data.StockQuantity%>
+                                        </td>
+                                        <td>
+                                            <%=data.PurchaseRate%>
+                                        </td>
+                                        <td>
+                                            <%=data.SalesRate%>
+                                        </td>
+                                        <td style="width: 150px;">
+                                            <%=data.ProductDescription%>
+                                        </td>
+                                        <td id="Inventory">
+                                            <%=data.Inventory%>
+                                        </td>
+                                        <td>
+                                            <%= data.Added.toLocaleDateString() %>
+                                        </td>
+                                        <td class="icon-cell" style="display:flex; min-height:130px;justify-content:center;align-items:center;" >
+                                            
+                                            <a href="/adminLogin/ProductList/editProducts?id=<%= data._id %>"><i
+                                                    class="fa-solid fa-pen edit" style="color: #5e5e5e;"></i></a>
+                                            <span class="listed" >
+                                                <form class="actionForm" method="post" action="ProductList?ID=<%= data._id %>">
+                                                <% if(data.Inventory==="Listed") {%>
+                                                    <button class="iconbtns">
+                                                        <a id="activeIcon">
+                                                            <i class="fa-solid fa-eye" style="color: #5e5e5e;"></i>
+                                                        </a>
+                                                    </button>
+
+                                                    <% } else if(data.Inventory==="Unlisted") {%>
+                                                        <button class="iconbtns">
+                                                            <a id="blockedIcon">
+                                                                <i class="fa-solid fa-eye-slash"
+                                                                    style="color: #5e5e5e;"></i>
+                                                            </a>
+                                                        </button>
+
+                                                     <% } %>     
+                                            </form>
+                                            </span>
+                                            <span class="delete"><a href=""><i
+                                                class="fa-solid fa-trash "
+                                                style="color: #5e5e5e;"></i></a></span>
+                                            </span>
+                                            
+                                         
+                                        </td>
+
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+        <script>
+
+            
+            const statusId = document.getElementById('Inventory');
+
+            if (statusId.textContent.trim() === 'Listed') {
+                statusId.style.color = 'green';
+            }
+            else if (statusId.textContent.trim() === 'Unlisted') {
+                statusId.style.color = 'red';
+            }
+
+           
+        </script>
+</body>
+
+</html>

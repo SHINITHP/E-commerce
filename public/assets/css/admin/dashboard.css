@@ -1,0 +1,323 @@
+html,
+body {
+    font-family: "Montserrat", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.conF-1 {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #5e5e5e;
+
+}
+
+.logoutImg {
+    height: 35px;
+    margin-bottom: 10px;
+}
+
+.logout {
+    margin-right: 40px;
+    text-decoration: none;
+}
+
+.logout:hover {
+    text-decoration: none;
+    color: black;
+}
+
+.logo {
+    margin-left: 40px;
+}
+
+.logout span {
+    font-family: calibri;
+    font-weight: lighter;
+    font-size: 25px;
+    margin-left: 10px;
+}
+
+.row1 {
+    display: flex;
+}
+
+.conF-2 {
+    min-height: 620px;
+    /* background-color: tan; */
+}
+
+.con-1 {
+    min-height: 620px;
+    width: 300px;
+    background-color: #f3f3f3;
+    border: 10px solid #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+.con-2 {
+    width: 79vw;
+    min-height: 620px;
+    background-color: #f3f3f3;
+    border: 10px solid #ffffff;
+}
+
+
+.btns {
+    height: 45px;
+    width: 280px;
+    background-color: #ebebeb;
+    /* Set transparent background color */
+    text-align: left;
+    text-decoration: none;
+    /* Remove default link underline */
+    cursor: pointer;
+    /* Add pointer cursor on hover */
+    outline: none;
+    padding: 0;
+    border: none;
+    margin-top: 7px;
+}
+
+.btns:active,
+.btns:focus {
+    border: none;
+    outline: none;
+}
+
+.img {
+    height: 19pt;
+    margin-left: 10px;
+    margin-right: 30px;
+}
+
+.btnvalue {
+    font-family: calibri;
+    font-size: 15pt;
+    color: #5e5e5e;
+    font-weight: 600;
+}
+
+.box-1 {
+    width: 280px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: aqua; */
+}
+
+.box-1 a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.adminIcon {
+    height: 60px;
+}
+
+.adminName {
+    padding-top: 15px;
+    margin-left: 20px;
+    font-size: 20pt;
+    font-weight: bold;
+    font-family: calibri;
+}
+
+.AdminLogo:hover {
+    text-decoration: none;
+    color: black;
+}
+
+.navbar {
+    height: 100px;
+}
+
+.box {
+    border-right: 1px solid;
+}
+
+.btns:hover,
+.btns:focus {
+    background-color: #afafaf;
+}
+
+.row2 {
+    border-left: 10px solid #ffffff;
+    border-right: 10px solid #ffffff;
+    height: 100px;
+}
+
+.cols {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Poppins;
+}
+
+.cols h3 {
+    text-shadow: 2px 2px #c7c7c7;
+    font-weight: 500;
+}
+
+.searchInput {
+    width: 95%;
+    height: 40px;
+    border: none;
+    font-family: Poppins;
+    color: #5e5e5e;
+    font-size: 10pt;
+}
+
+.searchInput:focus {
+    border: none;
+    outline: none;
+}
+
+.col1 {
+    height: 42px;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid rgb(196, 196, 196);
+
+}
+
+.col1 form {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.searchBtn {
+    font-size: 13pt;
+}
+
+.btnExport {
+    background-color: black;
+    width: 150px;
+    font-size: 10pt;
+    border: none;
+    color: white;
+    height: 38px;
+    border-radius: 7px;
+}
+
+.btnExport span {
+    margin-right: 10px;
+}
+
+.btnAddProducts {
+    background-color: black;
+    border: none;
+    margin-left: 20px;
+    width: 150px;
+    font-size: 10pt;
+    color: white;
+    height: 38px;
+    border-radius: 7px;
+}
+
+.btnAddProducts span {
+    margin-right: 10px;
+}
+
+.btnAddProducts:focus {
+    border: none;
+    outline: none;
+}
+
+.btnAddProducts:active {
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.row3 {
+    border-left: 10px solid #ffffff;
+    border-right: 10px solid #ffffff;
+    height: fit-content;
+    display: flex;
+    /* flex-direction: column;
+    align-items: center; */
+    justify-content: center;
+    overflow-x: scroll;
+}
+
+.tableHead {
+    background-color: white;
+    font-family: Poppins;
+    text-align: center;
+    /* outline: 1px solid rgb(214, 214, 214); */
+    border-bottom: 7px solid #f3f3f3;
+}
+.table1{
+    width: 98%;
+}
+.tableRow{
+    background-color: #e2e2e2;
+    height: 80px;
+    border-bottom: 7px solid #f3f3f3;
+    text-align: center;
+}
+.table1 td{
+    vertical-align: middle;
+}
+.tableRow th{
+    vertical-align: middle;
+}
+
+.btnColor{
+    background-color: #afafaf;
+}
+.icon-cell {
+    min-height: 80px;
+    color: #5e5e5e;
+    cursor: pointer;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+  }
+  .unlisted {
+    display: none;
+  }
+.listed{
+    padding-left: 6px;
+}
+.unlisted{
+    padding-left: 6px;
+}
+.delete{
+    padding-left: 6px;
+}
+.imageBox{
+    height: 80px;
+    width: 80px;
+    background-color: #5e5e5e;
+}
+.tableRow td{
+    /* width: 150px; */
+    /* background-color: tan;
+    border: 1px solid black; */
+    padding: 4px;
+    font-size: 10pt;
+}
+a{
+    color:#5e5e5e;
+}
+a:hover{
+    color: #5e5e5e;
+    text-decoration: none;
+}

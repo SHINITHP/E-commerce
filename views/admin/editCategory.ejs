@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+    <link rel="stylesheet" href="/assets/css/admin/dashboard.css">
+
+    <link rel="stylesheet" href="/assets/css/admin/productList.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- <link rel="stylesheet" href="/assets/css/admin/addProducts.css"> -->
+
+
+
+
+    <title>Category</title>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <%- include('../../views/admin/adminNavbar.ejs') %>
+        <!-- Navbar -->
+        <br>
+
+        <div class="container-fluid conF-2">
+            <div class="row1">
+
+                <div class="con-1 ">
+                    <div class="box-1">
+                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png" class="adminIcon" alt=""> <span
+                                class="adminName">Admin</span></a>
+                    </div>
+                    <a href="adminDashboard">
+                        <button class="btns btnDashboard"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Dashboard</span></button>
+                    </a>
+                    <a href="ProductList">
+                        <button class="btns btnProducts"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Products</span></button>
+                    </a>
+                    <a href="Category">
+                        <button class="btns btnCategory btnColor"><img class="img" src="/assets/images/grid.png" alt=""><span
+                           class="btnvalue"><span>Category</span></button>
+                   </a>
+                    <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Order History</span></button>
+                    <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Coupon</span></button>
+                    <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Sales Report</span></button>
+                    <a href="CustomerDetails">
+                        <button class="btns btnUser"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">User Report</span> </button>
+                    </a>
+                    <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Banner</span></button>
+                    <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Wallet</span></button>
+                </div>
+
+
+                <div class="con-2">
+                    <div class="row row2">
+                        <div class="col-4 column1">
+                            <h3>Add Category</h3>
+                        </div>
+
+                        <div class="col-8 col2">
+                            <a href="/adminLogin/Category">
+                                <button class="btnCancel"><span><i class="fa-solid fa-xmark"
+                                            style="color: #ffffff;"></i></span>Cancel</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row MessageRow ">
+                        <p>
+                            <%= success %>
+                        </p>
+                    </div>
+                    <form action="<%=categoryData._id%>?_method=PUT" method="post" enctype="multipart/form-data">
+                        <div class="row row-addCat">
+                            <div class="col-3 Thumbnail-box">
+                                <h4 class="Heading">Thumbnail</h4>
+
+
+                                <label for="input-file4" id="drop-area4" class="ml-3">
+                                    <input type="file" name="images" accept="image/*" id="input-file4" hidden>
+                                    <div id="img-view4" style="background-image: url('<%= categoryData.image[0].url %>');">
+                                       
+                                    </div>
+                                </label>
+
+                            </div>
+                            <div class="col-8 General-box">
+                                <div class="col-12 catField-box">
+
+                                    <h4 class="Heading">General-Information</h4>
+                                    <br>
+                                    <div class="col-10">
+                                        <label class="lbl" for="">Category Name</label>
+
+                                        <select name="CategoryName"  class="dropbtn">
+                                            <option value="Mens" <%= categoryData.CategoryName === 'Mens' ? 'selected' : '' %> >Mens</option>
+                                            <option value="Womens" <%= categoryData.CategoryName === 'Womens' ? 'selected' : '' %> >Womens</option>
+                                            <option value="Kids" <%= categoryData.CategoryName === 'Kids' ? 'selected' : '' %> >Kids</option>
+                                            <!-- <option value="Accessories">Accessories</option> -->
+                                            <!-- Add more color options as needed -->
+                                        </select>
+                                    </div>
+                                    <div class="col-10">
+                                        <label class="lbl" for="">Sub-Category</label>
+                                        <input type="text" class="form-control inputpass" name="subCategory"
+                                            id="ProductName" placeholder="Enter Sub-Category" value="<%=categoryData.subCategory%>">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <br>
+                        <div class="row SaveBtnRow">
+                            <button type="submit" class="btnSaveProduct">Save Products</button>
+                        </div>
+                    </form>
+
+
+
+
+
+
+                </div>
+
+
+            </div>
+
+
+            <script>
+                function handleImageInput(inputId, previewId) {
+                    const input = document.getElementById(inputId);
+                    const preview = document.getElementById(previewId);
+                
+                    input.addEventListener('change', function () {
+                        const file = input.files[0];
+                
+                        if (file) {
+                            const reader = new FileReader();
+                
+                            reader.onload = function (e) {
+                                // Set the background image of the preview div
+                                preview.style.backgroundImage = `url(${e.target.result})`;
+                                preview.textContent="";
+                                preview.style.border = 0
+                            };
+                
+                            reader.readAsDataURL(file);
+                        } else {
+                            // Clear the background image if no file is selected
+                            preview.style.backgroundImage = 'none';
+                        }
+                    });
+                }
+                
+                // Call the function for each image input dynamically
+                    handleImageInput(`input-file4`, `img-view4`);
+
+                
+                
+            </script>
+
+</body>
+
+</html>

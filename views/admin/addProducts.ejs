@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+    <link rel="stylesheet" href="/assets/css/admin/addProducts.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+    <title>Add Products</title>
+</head>
+
+
+<body>
+    <!-- Navbar -->
+    <%- include('../../views/admin/adminNavbar.ejs') %>
+        <!-- Navbar -->
+        <br>
+
+
+        <div class="container-fluid conF-2">
+            <div class="row1">
+
+                <div class="con-1 ">
+                    <div class="box-1">
+                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png" class="adminIcon" alt=""> <span
+                                class="adminName">Admin</span></a>
+                    </div>
+                    <a href="/adminLogin/adminDashboard">
+                        <button class="btns btnDashboard"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Dashboard</span></button>
+                    </a>
+                    <a href="/adminLogin/ProductList">
+                        <button class="btns btnProducts"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Products</span></button>
+                    </a>
+                    <button class="btns btnCategory"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue"><span>Category</span></button>
+                    <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Order History</span></button>
+                    <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Coupon</span></button>
+                    <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Sales Report</span></button>
+                    <a href="/adminLogin/CustomerDetails">
+                        <button class="btns btnUser"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">User Report</span> </button>
+                    </a>
+                    <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Banner</span></button>
+                    <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Wallet</span></button>
+                </div>
+                <div class="con-2">
+                    <div class="row row2">
+                        <div class="col-4 col1">
+                            <h3>Add Products</h3>
+                        </div>
+
+                        <div class="col-8 col2">
+                            <a href="/adminLogin/ProductList">
+                            <button class="btnCancel"><span><i class="fa-solid fa-xmark"
+                                        style="color: #ffffff;"></i></span>Cancel</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="Container con2">
+                        <div class="row MessageRow">
+                            <p>
+                                <%= success %>
+                            </p>
+                        </div>
+                        <div class="row row3">
+                            <form action="addProducts" class="frmRow3" method="post" enctype="multipart/form-data">
+                                <div class="row generalRow">
+                                    <div class="col-11 col11">
+                                        <br>
+                                        <h5>General Information</h5>
+                                        <div class="row box1">
+                                            <div class="col-12 box1-col1">
+                                                <div class="col-6">
+                                                    <label class="lbl" for="">Product Name</label>
+                                                    <input type="text" class="form-control inputpass" name="ProductName"
+                                                        id="ProductName" placeholder="Enter Product Name">
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="lbl" for="">Brand Name</label>
+                                                    <input type="text" class="form-control inputpass" name="BrandName"
+                                                        id="ProductName" placeholder="Enter Brand Name">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 box1-col1">
+                                                <div class="col-4 categoryRow">
+                                                    <label class="lbl" for="">Category Name</label>
+
+                                                    <select name="CategoryName"
+                                                        class="dropbtn">
+                                                        <option value="Mens">Mens</option>
+                                                        <option value="Womens">Womens</option>
+                                                        <option value="Kids">Kids</option>
+                                                        <option value="Accessories">Accessories</option>
+                                                        <!-- Add more color options as needed -->
+                                                    </select>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label class="lbl" for="">Stock Quantity</label>
+                                                    <input type="text" class="form-control inputpass"
+                                                        name="StockQuantity" id="CategoryName"
+                                                        placeholder="Enter Stock Quantity">
+                                                </div>
+
+                                                <div class="col-4 categoryRow">
+                                                    <label class="lbl" for="">Sub-Category Name</label>
+
+                                                    <select name="subCategory" class="dropbtn">
+                                                        <% subCategory.forEach((data) => { %> 
+                                                        <option value="<%= data %>"><%= data %></option>
+                                                        <% }) %>
+                                                    </select>
+                                                </div>
+                                              
+                                            </div>
+
+                                            <div class="col-12 box1-col1">
+                                                <div class="col-4">
+                                                    <label class="lbl" for="">Purchase Rate</label>
+                                                    <input type="text" class="form-control inputpass"
+                                                        name="PurchaseRate" id="PurchaseRate"
+                                                        placeholder="Enter Purchase Rate">
+                                                </div>
+                                                <div class="col-4">
+                                                    <label class="lbl" for="">Sales Rate</label>
+                                                    <input type="text" class="form-control inputpass" name="SalesRate"
+                                                        id="SalesRate" placeholder="Enter Sales Rate">
+                                                </div>
+                                                <div class="col-4">
+                                                    <label class="lbl" for="">Total Price</label>
+                                                    <input type="text" class="form-control inputpass" name="TotalPrice"
+                                                        id="TotalPrice" placeholder="Total Price">
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-12 box1-col1 Description">
+                                                <div class="col-12 textAreaRow">
+                                                    <label class="lbl" for="">Product Description</label>
+
+                                                    <textarea class="inputDescription" name="ProductDescription" id=""
+                                                        placeholder="Enter your Product Description" cols="30" rows="10"
+                                                        name="ProductDescription"></textarea>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-12 box1-col1">
+                                                <div class="col-4">
+                                                    <label class="lbl" for="">VAT Amount (%)</label>
+                                                    <input type="text" class="form-control inputpass" name="VATAmount"
+                                                        id="SalesRate" placeholder="Enter VAT Amount">
+                                                </div>
+                                                <div class="col-4">
+                                                    <label class="lbl" for="">Discount Precentage (%)</label>
+                                                    <input type="text" class="form-control inputpass"
+                                                        name="DiscountPrecentage" id="TotalPrice"
+                                                        placeholder="Enter Discount Precentage">
+                                                </div>
+                                                <div class="col-4 categoryRow">
+                                                    <label class="lbl" for="">Color Name</label>
+
+                                                    <select name="ColorNames"
+                                                        class="dropbtn">
+                                                        <option value="Red">Red</option>
+                                                        <option value="Blue">Blue</option>
+                                                        <option value="Black">Black</option>
+                                                        <option value="White">White</option>
+                                                        <option value="yellow">yellow</option>
+                                                        <option value="green">green</option>
+                                                        <option value="grey">grey</option>                                                       
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-12 box1-col1">
+                                                <div class="col-12 sizeRow">
+                                                    <label class="lbl" for="">Select Product Size</label>
+                                                    <div class="col-12 checkRow">
+                                                        <label class="container">
+                                                            <input type="checkbox" class="checkBox" name="sizes" value="S"
+                                                                checked="checked">
+                                                            <span class="checkmark"></span>
+                                                            <input type="text" class="form-control inputSmall"
+                                                            name="SizeQuantity" id="TotalPrice"
+                                                            placeholder="S Quantity">
+                                                        </label>
+                                                        <label class="container">
+                                                            <input type="checkbox"  class="checkBox" checked="checked" value="M"
+                                                                name="sizes">
+                                                            <span class="checkmark"></span>
+                                                            <input type="text" class="form-control inputSmall"
+                                                            name="SizeQuantity" id="TotalPrice"
+                                                            placeholder="M Quantity">
+                                                        </label>
+                                                        <label class="container">
+                                                            <input type="checkbox" class="checkBox" checked="checked" value="L"
+                                                                name="sizes">
+                                                            <span class="checkmark"></span>
+                                                            <input type="text" class="form-control inputSmall"
+                                                            name="SizeQuantity" id="TotalPrice"
+                                                            placeholder="L Quantity">
+                                                        </label>
+                                                        <label class="container">
+                                                            <input type="checkbox" class="checkBox" checked="checked" value="XL"
+                                                                name="sizes">
+                                                            <span class="checkmark"></span>
+                                                            <input type="text" class="form-control inputSmall"
+                                                            name="SizeQuantity" id="TotalPrice"
+                                                            placeholder="XL Quantity">
+                                                        </label>
+                                                        <label class="container">
+                                                            <input type="checkbox" class="checkBox" checked="checked"
+                                                                value="XXL" name="sizes">
+                                                            <span class="checkmark"></span>
+                                                            <input type="text" class="form-control inputSmall"
+                                                            name="SizeQuantity" id="TotalPrice"
+                                                            placeholder="XXL Quantity">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                         
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row ImgRow">
+                                    <div class="col-11 col11-2">
+                                        <br>
+                                        <h5>Product Images</h5>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-12 imgInput">
+
+
+                                                <label for="input-file1" id="drop-area1">
+                                                    <input type="file" name="images" accept="image/*" id="input-file1"
+                                                        hidden>
+                                                    <div id="img-view1">
+                                                        <img src="/assets/images/addImage.png">
+                                                        <p>Drag and drop or click here to upload image</p>
+                                                    </div>
+                                                </label>
+
+                                                <label for="input-file2" id="drop-area2" class="ml-3">
+                                                    <input type="file" name="images" accept="image/*" id="input-file2"
+                                                        hidden>
+                                                    <div id="img-view2">
+                                                        <img src="/assets/images/addImage.png">
+                                                        <p>Drag and drop or click here to upload image</p>
+                                                    </div>
+                                                </label>
+
+                                                <label for="input-file3" id="drop-area3" class="ml-3">
+                                                    <input type="file" name="images" accept="image/*" id="input-file3"
+                                                        hidden>
+                                                    <div id="img-view3">
+                                                        <img src="/assets/images/addImage.png">
+                                                        <p>Drag and drop or click here to upload image</p>
+                                                    </div>
+                                                </label>
+
+                                                <label for="input-file4" id="drop-area4" class="ml-3">
+                                                    <input type="file" name="images" accept="image/*" id="input-file4"
+                                                        hidden>
+                                                    <div id="img-view4">
+                                                        <img src="/assets/images/addImage.png">
+                                                        <p>Drag and drop or click here to upload image</p>
+                                                    </div>
+                                                </label>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row SaveBtnRow">
+                                    <button type="submit" class="btnSaveProduct">Save Products</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="/assets/js/addProduct.js"></script>
+
+</body>
+
+</html>
