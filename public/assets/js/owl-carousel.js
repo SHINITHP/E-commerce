@@ -469,6 +469,12 @@
 		this.$element.append(this.$stage.parent());
 	};
 
+
+
+
+
+
+
 	/**
 	 * Create item DOM elements
 	 */

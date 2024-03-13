@@ -1,23 +1,28 @@
 const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 const adminAuth = (req, res, next) => {
     const token = req.cookies.jwtAdmin;
-    // console.log('00000000000000',token)
-    if(!token){
-        res.render('admin/adminLogin',{message: ""})
-    }else{
 
-  
+    if (token) {
+        try {
 
-    //verify the token is correct and redirect to home
-    jwt.verify(token,'jwt_adminSecretKey', (err,decoded) => {
-        if(err){
-            res.render('admin/adminLogin',{message:" "})
+            jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+                if (err) {
+                    res.render('admin/adminLogin', { message: " " })
+                }
+                // console.log('decoded data means :',decoded);
+                req.decoded = decoded
+                res.redirect('/adminLogin/adminDashboard')
+            })
+
+        } catch (error) {
+            res.render('admin/adminLogin', { message: "Error while Login" })
         }
-            req.decoded = decoded
-            res.redirect('/adminLogin/adminDashboard')
-    }) 
- }
+    } else {
+        res.render('admin/adminLogin', { message: " " })
+    }
+
 }
 
 module.exports = adminAuth;

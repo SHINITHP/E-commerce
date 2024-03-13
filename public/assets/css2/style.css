@@ -1658,6 +1658,7 @@ ol {
 
 .product__details__slider__content {
 	width: calc(78% - 20px);
+	height: 580px;
 	float: left;
 	margin-left: 20px;
 }
@@ -2060,6 +2061,9 @@ ol {
 	font-weight: 600;
 	text-transform: uppercase;
 	margin-bottom: 35px;
+}
+.imageZoom:hover{
+	--zoom: 3;
 }
 
 /*---------------------

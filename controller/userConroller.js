@@ -7,6 +7,8 @@ const otpGenerator = require('otp-generator');
 const jwt = require('jsonwebtoken');
 const { request } = require("express");
 const subCategorySchema = require('../models/admin/category.js')
+const passport = require("passport")
+require('dotenv').config()
 
 
 //Globally declared variables
@@ -24,11 +26,10 @@ let otp;
 //Create jwt Token 
 const MaxExpTime = 3 * 24 * 60 * 60 // expire in 3days
 const createToken = (id) => {
-  return jwt.sign({ id }, 'jwt_SecretKey', {
+  return jwt.sign({ id },process.env.JWT_SECRET, {
     expiresIn: MaxExpTime
   })
 }
-
 
 
 
@@ -70,6 +71,10 @@ const loginPage = (req, res) => {
   res.render('user/login', { error: "" })
 }
 
+const google = (req,res) => {
+  
+}
+
 //profile
 const profile = (req, res) => {
   res.render('user/Profile', { error: '' })
@@ -99,9 +104,8 @@ const shoppingCart = (req, res) => {
 
 //logout get Request
 const logout = async (req, res) => {
-  const ProductData = await productModel.find({})
   res.clearCookie('jwtUser');  // Clear the cookie
-  res.render('user/index', { ProductData })
+  res.redirect('/')
 }
 
 //Section for GET Request End here.......
@@ -207,10 +211,9 @@ const createUser = async (req, res) => {
     }
     // hash the password
     GlobalUser.password = hashedPassword
-    const ProductData = await productModel.find({})
     //store the user data to mongodb
     await UserModel.create(GlobalUser);
-    res.render('user/index', { ProductData })
+    res.redirect('/')
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ success: false, error: error.message });
@@ -232,8 +235,7 @@ const userLogin = (async (req, res) => {
           // const userData = await UserModel.create(GlobalUser);
           const Token = createToken(userExist._id)
           res.cookie('jwtUser', Token, { httpOnly: true, maxAge: MaxExpTime * 1000 });
-          const ProductData = await productModel.find({})
-          res.render('user/index', { ProductData })
+          res.redirect('/')
         }
         else {
           res.render('user/login', { error: "User Blocked!" })
@@ -380,6 +382,7 @@ module.exports = {
   userLogin,
   logout,
   profile,
+  google,
   shoppingCart,
   sendEmailOtp,
   postsendEmailOtp,

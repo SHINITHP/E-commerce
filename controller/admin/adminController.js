@@ -6,12 +6,12 @@ const fs = require('fs')
 const productModel = require('../../models/admin/productModel.js')
 const subCategorySchema = require('../../models/admin/category.js')
 const jwt = require('jsonwebtoken');
-
+require('dotenv').config()
 
 //Create jwt Token 
 const MaxExpTime = 3 * 24 * 60 * 60 // expire in 3days
 const createToken = (id) => {
-    return jwt.sign({ id }, 'jwt_adminSecretKey', {
+    return jwt.sign({ id },process.env.JWT_SECRET, {
         expiresIn: MaxExpTime
     })
 }
@@ -101,7 +101,7 @@ const Category = async (req, res) => {
 //Logout get Request
 const logout = (req, res) => {
     res.clearCookie('jwtAdmin');
-    res.render('admin/adminLogin', { message: 'Logout Success!' })
+    res.redirect('/adminLogin')
 }
 
 

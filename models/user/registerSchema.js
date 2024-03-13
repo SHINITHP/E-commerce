@@ -17,9 +17,12 @@ const registerSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    googleId:{
+        type:String
+    },
     phoneNo:{
         type:Number,
-        required:true
+        // required:true
     },
     emailAddress:{
         type:String,
@@ -27,7 +30,7 @@ const registerSchema = new mongoose.Schema({
     },
     password:{
         type:String,
-        required:true
+        // required:true
     },
     isAdmin:{
         type:Boolean,

@@ -1,22 +1,30 @@
 const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
-const userAuth = (req, res, next) => {
+const userAuth = async (req, res, next) => {
+    // console.log('jwt token : ', req.cookies.jwtUser, '233wjn3iuui3232  f ', process.env.JWT_SECRET);
     const token = req.cookies.jwtUser;
-    if(!token){
-        res.render('user/login',{error: ""})
-    }else{
-        res.redirect('/Profile')
+
+    if (token) {
+        try {
+
+            jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+                if (err) {
+                    res.render('user/login', { error: " " })
+                }
+                    console.log('decoded data means :',decoded);
+                    req.decoded = decoded
+                    next()
+            })
+
+        } catch (error) {
+            res.render('user/login', { error: "Error while Login" })
+        }
+    } else {
+        res.redirect('/login')
+        // res.render('user/login', { error: "Error while Login" })
     }
 
-    // //verify the token is correct and redirect to home
-    // jwt.verify(token,'jwt_SecretKey', (err,decoded) => {
-    //     if(err){
-    //         res.render('user/login',{error:" "})
-    //     }
-    //     req.decoded = decoded
-    //     // res.redirect('/');
-    //     next()
-    // })
 }
 
 

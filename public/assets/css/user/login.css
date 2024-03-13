@@ -15,7 +15,7 @@
 }
 
 .loginform {
-    height: 430px;
+    min-height: 420px;
     background-color: #F7F5F5;
     border: 1px solid rgb(172, 172, 172);
 }
@@ -54,18 +54,49 @@
     font-size: 30px;
     font-weight: 300;
 }
+.googleBox{
+    display: flex; 
+    justify-content:center;
+    align-items:center;
+    cursor: pointer;
+}
+.googlefont{
+    font-family: Poppins;
+    text-decoration: none;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    font-size: 14pt;
+    margin-left: 10px;
+}
+.googleBox:hover,:active{
+    color: black;
+}
 
 .inputDiv {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 240px;
+    height: 320px;
+    /* background-color: teal; */
+}
+.google{
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    border: 1px solid rgb(150, 150, 150);
+    border-radius: 7px;
 }
 
 .SubmitFrm {
-    height: 220px;
+    height: 320px;
     display: flex;
     flex-direction: column;
+    /* background-color: tan; */
 }
 
 .inputemail {
@@ -89,6 +120,7 @@
     justify-content: space-between;
     width: 95%;
     margin-left: 10px;
+    /* background-color: tan; */
 }
 
 .forgotpassword {
