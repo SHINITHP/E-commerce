@@ -11,7 +11,7 @@ require('dotenv').config()
 //Create jwt Token 
 const MaxExpTime = 3 * 24 * 60 * 60 // expire in 3days
 const createToken = (id) => {
-    return jwt.sign({ id },process.env.JWT_SECRET, {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: MaxExpTime
     })
 }
@@ -55,28 +55,28 @@ const productList = async (req, res) => {
 const CustomerDetails = async (req, res) => {
     const users = await UserModel.find({})
     console.log(users);
-    res.render('admin/CustomerDetails', { users })        
+    res.render('admin/CustomerDetails', { users })
 }
 
 
 //CustomerDetails get Request
 const CustomerFilter = async (req, res) => {
 
-         if (req.query.filter == "all") {
-            const users = await UserModel.find({})
-            console.log(req.query.filter);
-            res.render('admin/CustomerDetails', { users })
-        }
-        else if (req.query.filter == "active") {
-            const users = await UserModel.find({status:true})
-            console.log(req.query.filter);
-            res.render('admin/CustomerDetails', { users })
-        }
-        else if (req.query.filter == "blocked") {
-            const users = await UserModel.find({status:false})
-            console.log(req.query.filter);
-            res.render('admin/CustomerDetails', { users })
-        }
+    if (req.query.filter == "all") {
+        const users = await UserModel.find({})
+        console.log(req.query.filter);
+        res.render('admin/CustomerDetails', { users })
+    }
+    else if (req.query.filter == "active") {
+        const users = await UserModel.find({ status: true })
+        console.log(req.query.filter);
+        res.render('admin/CustomerDetails', { users })
+    }
+    else if (req.query.filter == "blocked") {
+        const users = await UserModel.find({ status: false })
+        console.log(req.query.filter);
+        res.render('admin/CustomerDetails', { users })
+    }
 
 }
 
@@ -97,6 +97,7 @@ const Category = async (req, res) => {
         res.render('admin/editCategory', { categoryData, success: '' })
     }
 }
+
 
 //Logout get Request
 const logout = (req, res) => {
@@ -275,8 +276,8 @@ const postEditProduct = async (req, res) => {
         console.log(finalImage)
         console.log('final images   :::: ', urls)
 
-        const oldData = await productModel.findById(req.params.id)
-
+        const oldData = await productModel.findById(req.query.id)
+        console.log(oldData)
         const imgData = []
         imgData.push(oldData.files)
 
@@ -307,7 +308,7 @@ const postEditProduct = async (req, res) => {
                 console.log(error);
             });
             const subCategory = await subCategorySchema.distinct('subCategory');
-            const productInfo = await ProductModel.findById(req.params.id)
+            const productInfo = await ProductModel.findById(req.query.id)
             res.render('admin/editProducts', { subCategory, productInfo, success: 'Product Successfully Edited' })
         } catch (saveError) {
             console.error('Error saving product to database:', saveError)
@@ -323,7 +324,7 @@ const postEditProduct = async (req, res) => {
 //listed and ulisted for CustomerDetails page
 const updateUser = async (req, res) => {
     const user = await UserModel.findById(req.query.id)
-    console.log('jhegwggtr  ',req.query.id)
+    console.log('jhegwggtr  ', req.query.id)
     if (user.status === true) {
         await UserModel.findByIdAndUpdate(req.query.id, { status: false })
         res.clearCookie('jwtUser');//removing the cookies
@@ -458,6 +459,16 @@ const postAddCategory = async (req, res) => {
     }
 }
 
+//delete products
+const deleteInventory = async (req, res) => {
+    if (req.query.delete === "Product") {
+        if (req.query.id) {
+            await productModel.findByIdAndDelete({ _id: req.query.id })
+            res.redirect('adminLogin/ProductList')
+        }
+    }
+}
+
 //Section for Post Method End here.....
 //.................................................................................................................................................
 
@@ -469,6 +480,7 @@ module.exports = {
     productListEdit,
     categoryPost,
     addProductsPost,
+    deleteInventory,
     adminDashboard,
     CustomerDetails,
     updateUser,

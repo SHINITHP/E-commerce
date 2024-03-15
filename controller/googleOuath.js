@@ -32,7 +32,9 @@ passport.use(
     //    done(null, profile); 
     // console.log('1232131412 ',profile)
 
-    usermodel.findOne({emailAddress:profile.emails[0].value}).then((userExist) => {
+    usermodel.findOne({emailAddress:profile.emails[0].value})
+    .select("-password")
+    .then((userExist) => {
         if(userExist){
             console.log(userExist);
             done(null,userExist)

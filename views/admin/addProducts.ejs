@@ -16,6 +16,13 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
+        <!-- crop images -->
+     <!-- Cropper CSS -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css"> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" integrity="sha512-hvNR0F/e2J7zPPfLC9auFe3/SE0yG4aJCOd/qxew74NN7eyiSKjr7xJJMu1Jy2wf7FXITpWS1E/RY8yzuXN7VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
     <title>Add Products</title>
 </head>
 
@@ -26,7 +33,9 @@
         <!-- Navbar -->
         <br>
 
+    <div class="container-fluid outerDiv" id="blur" style="padding: 0px;">
 
+    
         <div class="container-fluid conF-2">
             <div class="row1">
 
@@ -255,8 +264,9 @@
 
 
                                                 <label for="input-file1" id="drop-area1">
-                                                    <input type="file" name="images" accept="image/*" id="input-file1"
+                                                    <input type="file"   accept="image/*" onclick="cropImage('input-file1','img-view1','returnImg1')" id="input-file1"
                                                         hidden>
+                                                        <input type="text" name="images" id="returnImg1" hidden>
                                                     <div id="img-view1">
                                                         <img src="/assets/images/addImage.png">
                                                         <p>Drag and drop or click here to upload image</p>
@@ -264,8 +274,9 @@
                                                 </label>
 
                                                 <label for="input-file2" id="drop-area2" class="ml-3">
-                                                    <input type="file" name="images" accept="image/*" id="input-file2"
+                                                    <input type="file"   accept="image/*" onclick="cropImage('input-file2','img-view2','returnImg2')" id="input-file2"
                                                         hidden>
+                                                        <input type="text" name="images"  id="returnImg2" hidden>
                                                     <div id="img-view2">
                                                         <img src="/assets/images/addImage.png">
                                                         <p>Drag and drop or click here to upload image</p>
@@ -273,8 +284,9 @@
                                                 </label>
 
                                                 <label for="input-file3" id="drop-area3" class="ml-3">
-                                                    <input type="file" name="images" accept="image/*" id="input-file3"
+                                                    <input type="file"    accept="image/*" onclick="cropImage('input-file3','img-view3','returnImg3')" id="input-file3"
                                                         hidden>
+                                                        <input type="text"  name="images" id="returnImg3" hidden>
                                                     <div id="img-view3">
                                                         <img src="/assets/images/addImage.png">
                                                         <p>Drag and drop or click here to upload image</p>
@@ -282,8 +294,9 @@
                                                 </label>
 
                                                 <label for="input-file4" id="drop-area4" class="ml-3">
-                                                    <input type="file" name="images" accept="image/*" id="input-file4"
+                                                    <input type="file"  accept="image/*" onclick="cropImage('input-file4','img-view4','returnImg4')" id="input-file4"
                                                         hidden>
+                                                        <input type="text" name="images"  id="returnImg4" hidden>
                                                     <div id="img-view4">
                                                         <img src="/assets/images/addImage.png">
                                                         <p>Drag and drop or click here to upload image</p>
@@ -309,7 +322,41 @@
         </div>
 
 
-        <script src="/assets/js/addProduct.js"></script>
+    </div>
+
+        
+    <div  id="popup">
+        <p style="width: 60%; text-align: end; padding-top: 20px;">Crop Your Image Here</p>
+
+        <div class="row imageRow">
+            <div class="col-6 imgDiv" >
+                <img src="" alt="" id="image" >
+            </div>
+            <div class="col-5 cropDiv" >
+                <div id="Croppedimage" class="preview"></div>
+                <div class="row btnRow">
+                    <a href="addProducts">
+                        <button class="Cancel"><span><i class="fa-solid fa-xmark"
+                                    style="color: #ffffff;"></i></span>Cancel</button>
+                    </a>
+
+                    <button type="button" id="cropBtn" class="crop"><span><i class="fa-solid fa-crop" style="color: #ffffff;"></i></span>Crop</button>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+
+          <!-- Latest compiled and minified JavaScript -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js" integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+         
+
+
+        <script src="/assets/js/addProduct.js"></script> 
+          <script src="/assets/js/cropImage.js"></script>
 
 </body>
 

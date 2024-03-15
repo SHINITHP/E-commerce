@@ -258,7 +258,7 @@ const postsendEmailOtp = async (req, res) => {
   try {
     GlobalUser.emailAddress = req.body.emailAddress
     const emailAddress = GlobalUser.emailAddress
-    console.log('00100012092838!! : ',emailAddress);
+    // console.log('00100012092838!! : ',emailAddress);
     const checkUserPresent = await UserModel.findOne({ emailAddress });
     console.log(checkUserPresent);
     if (checkUserPresent) {

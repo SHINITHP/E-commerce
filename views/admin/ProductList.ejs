@@ -40,13 +40,13 @@
                                 class="btnvalue">Dashboard</span></button>
                     </a>
                     <a href="ProductList">
-                        <button class="btns btnProducts btnColor"><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue">Products</span></button>
+                        <button class="btns btnProducts btnColor"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Products</span></button>
                     </a>
                     <a href="Category">
                         <button class="btns btnCategory "><img class="img" src="/assets/images/grid.png" alt=""><span
-                           class="btnvalue"><span>Category</span></button>
-                   </a>
+                                class="btnvalue"><span>Category</span></button>
+                    </a>
                     <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png" alt=""><span
                             class="btnvalue">Order History</span></button>
                     <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
@@ -73,8 +73,9 @@
                                 <form action="/adminLogin/ProductList/search" method="post">
                                     <input type="text" class="searchInput" name="search" required="true"
                                         id="exampleFormControlInput1" placeholder="Search ">
-                                    <span>   <button class="btnSearch" type="submit"><a ><i class="fa-solid fa-magnifying-glass searchBtn"
-                                                style="color: #8b8e99;"></i></a> </button></span>
+                                    <span> <button class="btnSearch" type="submit"><a><i
+                                                    class="fa-solid fa-magnifying-glass searchBtn"
+                                                    style="color: #8b8e99;"></i></a> </button></span>
                                 </form>
                             </div>
                         </div>
@@ -87,14 +88,14 @@
                         </div>
                     </div>
 
-                    <div class="row MessageRow " >
+                    <div class="row MessageRow ">
                         <p>
-                           <%= message %>
+                            <%= message %>
                         </p>
                     </div>
 
                     <div class="row row3">
-                      
+
                         <table class="table table1">
                             <thead class="thead tableHead">
                                 <tr>
@@ -113,15 +114,19 @@
                             <tbody>
                                 <% productDetails.forEach((data,index)=> { %>
                                     <tr class="tableRow">
-                                        <th scope="row" style="width:30px"><%=index + 1%></th>
+                                        <th scope="row" style="width:30px">
+                                            <%=index + 1%>
+                                        </th>
                                         <td>
                                             <img src="<%= data.files[0].url %>"
                                                 style="border: 1px solid rgb(80, 80, 80);" class="imageBox" alt="">
-                                          
-                                              <h6 > <%=data.ProductName%></h6> 
-                                           
+
+                                            <h6>
+                                                <%=data.ProductName%>
+                                            </h6>
+
                                         </td>
-                                      
+
                                         <td>
                                             <%=data.CategoryName%>
                                         </td>
@@ -143,36 +148,40 @@
                                         <td>
                                             <%= data.Added.toLocaleDateString() %>
                                         </td>
-                                        <td class="icon-cell" style="display:flex; min-height:130px;justify-content:center;align-items:center;" >
-                                            
+                                        <td class="icon-cell"
+                                            style="display:flex; min-height:130px;justify-content:center;align-items:center;">
+
                                             <a href="/adminLogin/ProductList/editProducts?id=<%= data._id %>"><i
                                                     class="fa-solid fa-pen edit" style="color: #5e5e5e;"></i></a>
-                                            <span class="listed" >
-                                                <form class="actionForm" method="post" action="ProductList?ID=<%= data._id %>">
-                                                <% if(data.Inventory==="Listed") {%>
-                                                    <button class="iconbtns">
-                                                        <a id="activeIcon">
-                                                            <i class="fa-solid fa-eye" style="color: #5e5e5e;"></i>
-                                                        </a>
-                                                    </button>
-
-                                                    <% } else if(data.Inventory==="Unlisted") {%>
+                                            <span class="listed">
+                                                <form class="actionForm" method="post"
+                                                    action="ProductList?ID=<%= data._id %>">
+                                                    <% if(data.Inventory==="Listed" ) {%>
                                                         <button class="iconbtns">
-                                                            <a id="blockedIcon">
-                                                                <i class="fa-solid fa-eye-slash"
-                                                                    style="color: #5e5e5e;"></i>
+                                                            <a id="activeIcon">
+                                                                <i class="fa-solid fa-eye" style="color: #5e5e5e;"></i>
                                                             </a>
                                                         </button>
 
-                                                     <% } %>     
+                                                        <% } else if(data.Inventory==="Unlisted" ) {%>
+                                                            <button class="iconbtns">
+                                                                <a id="blockedIcon">
+                                                                    <i class="fa-solid fa-eye-slash"
+                                                                        style="color: #5e5e5e;"></i>
+                                                                </a>
+                                                            </button>
+
+                                                            <% } %>
+                                                </form>
+                                            </span>
+                                            <form action="Productlist/deleteInventory?delete=Product&id=<%= data._id %>&_method=DELETE" method="post">
+                                                <span class="delete"><button class="iconbtns" type="submit"><i class="fa-solid fa-trash "
+                                                            style="color: #5e5e5e;"></i></button></span>
+                                                </span>
                                             </form>
-                                            </span>
-                                            <span class="delete"><a href=""><i
-                                                class="fa-solid fa-trash "
-                                                style="color: #5e5e5e;"></i></a></span>
-                                            </span>
-                                            
-                                         
+
+
+
                                         </td>
 
                                     </tr>
@@ -194,7 +203,7 @@
 
         <script>
 
-            
+
             const statusId = document.getElementById('Inventory');
 
             if (statusId.textContent.trim() === 'Listed') {
@@ -204,7 +213,7 @@
                 statusId.style.color = 'red';
             }
 
-           
+
         </script>
 </body>
 

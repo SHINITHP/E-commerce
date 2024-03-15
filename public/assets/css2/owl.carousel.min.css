@@ -53,7 +53,7 @@
     -webkit-backface-visibility: hidden;
     -webkit-touch-callout: none
 }
-
+/* 
 #imageContainer{
     min-height: 580px;
     min-width: 300px;
@@ -70,7 +70,7 @@
 }
 #imageContainer:hover{
     cursor: zoom-in;
-}
+} */
 
 .owl-carousel .owl-item img {
     display: block;

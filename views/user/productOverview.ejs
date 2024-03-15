@@ -99,86 +99,15 @@
                         <div class="product__details__slider__content " id="">
                             <div class="product__details__pic__slider owl-carousel " id="imageContainer" >
                                 <img data-hash="product-1" class="product__big__img " id="imageZoom" src="<%= item.files[0].url %>" alt="">
-                                <img data-hash="product-2" class="product__big__img imageZoom" id="" src="<%= item.files[1].url %>" alt="">
-                                <img data-hash="product-3" class="product__big__img imageZoom" id="" src="<%= item.files[2].url %>" alt="">
-                                <img data-hash="product-4" class="product__big__img imageZoom" id="" src="<%= item.files[3].url %>" alt="">
+                                <img data-hash="product-2" class="product__big__img " id="" src="<%= item.files[1].url %>" alt="">
+                                <img data-hash="product-3" class="product__big__img " id="" src="<%= item.files[2].url %>" alt="">
+                                <img data-hash="product-4" class="product__big__img " id="" src="<%= item.files[3].url %>" alt="">
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <script>
-                    const imgConElem = document.getElementById('imageContainer')
-                    const imgElem = document.getElementById('imageZoom')
-                    const zoom = 300;
-
-                    //event mouse enter
-                    imgConElem.addEventListener('mouseenter', function(){
-                        imgElem.style.width = zoom + '%';
-
-                    })
-
-                    //mouse leave
-                    imgConElem.addEventListener('mouseleave', function(){
-                        imgElem.style.width = '100%';
-                        imgElem.style.top = '0';
-                        imgElem.style.left = '0';
-                        
-                    })
-
-                    //enter mouse move
-                    imgConElem.addEventListener('mousemove',function(mouseEvent){
-                        let obj = imgConElem;
-                        let obj_left = 0;
-                        let obj_top = 0;
-                        let x;
-                        let y;
-
-                        while(obj.offsetParent){
-                            obj_left += obj.offsetLeft;
-                            obj_top += obj.offsetTop;
-                            obj = obj.offsetParent;
-                        }
-
-
-                        if(mouseEvent){
-                            x = mouseEvent.pageX;
-                            y = mouseEvent.pageY
-                        }else{
-                            x = window.event.x + document.body.scrollLeft - 2
-                            y = window.event.y + document.body.scrollTop - 2
-                        }
-
-                        x -= obj_left;
-                        y -= obj_top
-
-                        const imgwidth = imgElem.clientWidth;
-                        const imgheight = imgElem.clientHeight;
-
-                        imgElem.style.top = -(((imgheight - this.clientHeight) * y) / this.clientHeight) +'px';
-                        imgElem.style.left = -(((imgwidth - this.clientWidth) * x) / this.clientWidth) +'px';
-
-                    })
-
-
-                    //changing the height of the image container
-
-                    function changeHeight(){
-                        imgConElem.style.height = imgConElem.clientWidth + 'px';
-                    }
-
-                    changeHeight()
-
-                    window.addEventListener('resize', changeHeight);
-
-
-
-
-
-                </script>
-
-
-             
+               
 
 
                 <div class="col-lg-6">
@@ -437,10 +366,8 @@
 
 
 
-    <script>
-       
-    </script>
-
+   
+ 
 
 
 
