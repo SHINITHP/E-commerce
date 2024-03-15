@@ -13,14 +13,15 @@ const adminAuth = (req, res, next) => {
                 }
                 // console.log('decoded data means :',decoded);
                 req.decoded = decoded
-                res.redirect('/adminLogin/adminDashboard')
+                // res.redirect('/adminLogin/adminDashboard')
+                next()
             })
 
         } catch (error) {
             res.render('admin/adminLogin', { message: "Error while Login" })
         }
     } else {
-        res.render('admin/adminLogin', { message: " " })
+      res.redirect('/adminLogin')
     }
 
 }

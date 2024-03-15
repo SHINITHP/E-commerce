@@ -19,7 +19,8 @@ const {
     google,
     sentOTP,
     resendOtp,
-    productOverview
+    productOverview,
+    filterProducts
 } = require("../../controller/userConroller.js");
 const { userAuth } = require('../../middlewares/authMiddleware.js')
 const passport = require('passport')
@@ -42,18 +43,17 @@ router.route('/google/redirect').get(passport.authenticate('google'), (req, res)
     res.cookie('jwtUser', token);
     res.redirect('/')
 })
-router.route('/shoppingcart').get(shoppingCart)//shoppingcart 
+router.route('/shoppingcart').get(userAuth,shoppingCart)//shoppingcart 
 router.route('/sendEmailOtp').get(sendEmailOtp).post(postsendEmailOtp)//enter email page to send otp for forgotpassword
 router.route('/forgotEnterOtp').get(forgotEnterOtp).post(postForgotEnterOtp)// Enter otp for forgotpassword
 router.route('/resetPassword').get(resetPassword).patch(createPassword)// resetpassword page
 router.route('/resendOtp').post(resendOtp)//resend otp 
 router.route('/productOverview').get(productOverview)//productOverview 
 router.route('/allProducts').get(landingPage)//allProducts
+router.route('/filterProducts').get(filterProducts)
 router.route('/filterCategory').get(landingPage)//listCategory
 router.route('/Profile').get(userAuth,profile)//profile
 router.route('/logout').get(logout)//logout
-
-
 
 
 

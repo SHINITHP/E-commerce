@@ -26,7 +26,7 @@ let otp;
 //Create jwt Token 
 const MaxExpTime = 3 * 24 * 60 * 60 // expire in 3days
 const createToken = (id) => {
-  return jwt.sign({ id },process.env.JWT_SECRET, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: MaxExpTime
   })
 }
@@ -71,8 +71,8 @@ const loginPage = (req, res) => {
   res.render('user/login', { error: "" })
 }
 
-const google = (req,res) => {
-  
+const google = (req, res) => {
+
 }
 
 //profile
@@ -82,12 +82,12 @@ const profile = (req, res) => {
 
 // show the page to enter the email to send otp when the user forgot password.
 const sendEmailOtp = (req, res) => {
-  res.render('user/sendEmailOtp')
+  res.render('user/sendEmailOtp', { message: '' })
 }
 
 // show forgotEnterOtp page to enter otp
 const forgotEnterOtp = (req, res) => {
-  res.render('user/forgotEnterOtp')
+  res.render('user/forgotEnterOtp',{message:''})
 }
 
 
@@ -107,6 +107,17 @@ const logout = async (req, res) => {
   res.clearCookie('jwtUser');  // Clear the cookie
   res.redirect('/')
 }
+
+const filterProducts = async (req, res) => {
+  if (req.query.subCategory) {
+    const subCategories = await subCategorySchema.find({})
+    const ProductData = await productModel.find({subCategory:req.query.subCategory,CategoryName:req.query.category})
+    res.render('user/allProducts', { ProductData, category:req.query.category, subCategories })
+  }
+}
+
+
+
 
 //Section for GET Request End here.......
 
@@ -197,7 +208,7 @@ const createUser = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'The OTP is not valid',
-      });
+      })
     }
     // Secure password
     let hashedPassword;
@@ -212,6 +223,10 @@ const createUser = async (req, res) => {
     // hash the password
     GlobalUser.password = hashedPassword
     //store the user data to mongodb
+
+    const Token = createToken(GlobalUser.emailAddress)
+    res.cookie('jwtUser', Token, { httpOnly: true, maxAge: MaxExpTime * 1000 });
+
     await UserModel.create(GlobalUser);
     res.redirect('/')
   } catch (error) {
@@ -279,7 +294,7 @@ const postsendEmailOtp = async (req, res) => {
       await OTPModel.create(otpPayload);
       res.redirect('/forgotEnterOtp')
     } else {
-      res.json({ success: false, message: "User not found" });
+      res.render('user/sendEmailOtp', { message: 'User not found !' })
     }
 
   } catch (error) {
@@ -294,9 +309,7 @@ const postForgotEnterOtp = async (req, res) => {
     const emailAddress = GlobalUser.emailAddress
     const { otp1, otp2, otp3, otp4, otp5, otp6 } = req.body
     const combinedOTP = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
-    // console.log(combinedOTP);
-    // console.log('postForgotEnterOtp  : ', emailAddress);
-    //check the entered  otp is valid or not
+    
     const response = await OTPModel.find({ emailAddress }).sort({ createdAt: -1 }).limit(1);
     console.log('response   = ', response);
     console.log(otp);
@@ -346,7 +359,7 @@ const createPassword = async (req, res) => {
     // hash the password
     user.password = hashedPassword
     await user.save();
-    res.render('user/login',{error:'Reset Password Successful'})
+    res.render('user/login', { error: 'Reset Password Successful' })
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ success: false, error: error.message });
@@ -390,6 +403,7 @@ module.exports = {
   postForgotEnterOtp,
   resetPassword,
   createPassword,
+  filterProducts,
   enterOtp,
   sentOTP,
   createUser,

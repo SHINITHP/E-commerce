@@ -98,7 +98,7 @@
                                                     <% if(subCategory.CategoryName ==="Womens" && subCategory.Inventory==="Listed") { %> 
                                                     <ul>
                                                      
-                                                        <li><a href="#"><%= subCategory.subCategory %></a></li>
+                                                        <li><a href="filterProducts?subCategory=<%=subCategory.subCategory%>&category=Womens"><%= subCategory.subCategory %></a></li>
                                                        
                                                     </ul>
                                                     <% } %>
@@ -116,7 +116,7 @@
                                                     <% if(subCategory.CategoryName ==="Mens" && subCategory.Inventory==="Listed") { %> 
                                                 <ul>
                                                
-                                                    <li><a href="#"><%= subCategory.subCategory %></a></li>
+                                                    <li><a href="filterProducts?subCategory=<%=subCategory.subCategory%>&category=Mens"><%= subCategory.subCategory %></a></li>
                                                  
                                                 </ul>
                                                 <% } %> 
@@ -135,7 +135,7 @@
                                                
                                                     <ul>
                                                         
-                                                        <li><a href="#"><%= subCategory.subCategory %></a></li>
+                                                        <li><a href="filterProducts?subCategory=<%=subCategory.subCategory%>&category=Kids"><%= subCategory.subCategory %></a></li>
                                                        
                                                     </ul> 
                                                     <% } %>
@@ -212,10 +212,10 @@
                         </div>
                         <div class="sidebar__color">
                             <div class="section-title">
-                                <h4>Shop by Color</h4>
+                                <!-- <h4>Shop by Color</h4> -->
                             </div>
                             <div class="size__list color__list">
-                                <label for="black">
+                                <!-- <label for="black">
                                     Blacks
                                     <input type="checkbox" id="black">
                                     <span class="checkmark"></span>
@@ -254,7 +254,7 @@
                                     Yellows
                                     <input type="checkbox" id="yellows">
                                     <span class="checkmark"></span>
-                                </label>
+                                </label> -->
                             </div>
                         </div>
                     </div>

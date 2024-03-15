@@ -138,14 +138,14 @@
                                             <form class="actionForm"  method="post" action="CustomerDetails?id=<%= data._id %>&_method=PATCH">
                                                 <% if(data.status === true) { %>
                                                     <button class="iconbtns" type="submit">
-                                                        <a id="activeIcon"><i class="fa-solid fa-eye" style="color: #5e5e5e;"></i></a>
+                                                        <a id="activeIcon" onclick="AlertBox('activeIcon')"><i class="fa-solid fa-eye" style="color: #5e5e5e;"></i></a>
                                                     </button>
                                                 <% } else if(data.status === false) { %>
                                                     <button class="iconbtns" type="submit">
-                                                        <a id="blockedIcon"><i class="fa-solid fa-eye-slash" style="color: #5e5e5e;"></i></a>
+                                                        <a id="blockedIcon" onclick="AlertBox('blockedIcon')"><i class="fa-solid fa-eye-slash" style="color: #5e5e5e;"></i></a>
                                                     </button>
                                                 <% } %>
-                                                <span class="delete"><a href=""><i class="fa-solid fa-trash " style="color: #5e5e5e;"></i></a></span>
+                                                <span class="delete"><a href="" id="dltBtn" onclick="AlertBox('dltBtn')"><i class="fa-solid fa-trash " style="color: #5e5e5e;"></i></a></span>
                                             </form>
                                         </td>
                                     </tr>
@@ -156,6 +156,31 @@
                     
 
                 </div>
+
+                <script>
+                    function AlertBox(value){
+                        const myForm = document.getElementById(value);
+        
+                        if(value == 'activeIcon'){
+                            const confirmation = confirm('Are you sure to Block the user?');
+                            if (!confirmation) {
+                                event.preventDefault(); // Prevent form submission
+                            }
+                        }else if(value == 'blockedIcon'){
+                            const confirmation = confirm('Are you sure to Unblock the user?');
+                            if (!confirmation) {
+                                event.preventDefault(); // Prevent form submission
+                            }
+                           
+                        }else if(value == 'dltBtn'){
+                            const confirmation = confirm('Are you sure to Delete the product?');
+                            if (!confirmation) {
+                                event.preventDefault(); // Prevent form submission
+                            }
+                        }
+        
+                    }
+                </script>
 
 
 

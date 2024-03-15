@@ -90,33 +90,35 @@
                         </div>
                     </div>
                     <div class="row row-Filter">
+
+                        <div class="col-2 box">
+                            <a href="/adminLogin/FilterCategory?Category=All" class="a-tag-box">
+                                <img src="/assets/images/explore-image-01.jpg" class="image" alt=""> 
+                                <span class="text">Category</span>
+                            </a>
+                        </div>
                         
                             <div class="col-2 box">
-                                <a href="" class="a-tag-box">
-                                    <img src="/assets/images/womenCat.jpg" class="image" alt=""> 
+                                <a href="/adminLogin/FilterCategory?Category=Mens" class="a-tag-box">
+                                    <img src="/assets/images/MenCat.jpg" class="image" alt=""> 
                                     <span class="text">Men's</span>
                                 </a>
                             </div>
                         
                        
                         <div class="col-2 box">
-                            <a href="" class="a-tag-box">
-                                <img src="/assets/images/MenCat.jpg" class="image" alt=""> 
+                            <a href="/adminLogin/FilterCategory?Category=Womens" class="a-tag-box">
+                                <img src="/assets/images/womenCat.jpg" class="image" alt=""> 
                                 <span class="text">Women's</span>
                             </a>
                         </div>
                         <div class="col-2 box">
-                            <a href="" class="a-tag-box">
+                            <a href="/adminLogin/FilterCategory?Category=Kids" class="a-tag-box">
                                 <img src="/assets/images/kid-03.jpg" class="image" alt=""> 
                                 <span class="text">Kid's</span>
                             </a>
                         </div>
-                        <div class="col-2 box">
-                            <a href="" class="a-tag-box">
-                                <img src="/assets/images/explore-image-01.jpg" class="image" alt=""> 
-                                <span class="text">Accessories</span>
-                            </a>
-                        </div>
+                        
                     </div>
 
                     <div class="row row3">
@@ -158,17 +160,17 @@
                                             <a href="Category/<%=data._id%>"><i
                                                     class="fa-solid fa-pen edit" style="color: #5e5e5e;"></i></a>
                                             <span class="listed" >
-                                                <form class="actionForm" method="post" action="Category?Inventory=<%= data._id %>">
+                                                <form class="actionForm" method="post" action="Category?ID=<%=data._id%>&_method=PATCH">
                                                 <% if(data.Inventory==="Listed") {%>
                                                     <button class="iconbtns">
-                                                        <a id="activeIcon">
+                                                        <a id="activeIcon" onclick="AlertBox('activeIcon')">
                                                             <i class="fa-solid fa-eye" style="color: #5e5e5e;"></i>
                                                         </a>
                                                     </button>
 
                                                     <% } else if(data.Inventory==="Unlisted") {%>
                                                         <button class="iconbtns">
-                                                            <a id="blockedIcon">
+                                                            <a id="blockedIcon" onclick="AlertBox('blockedIcon')">
                                                                 <i class="fa-solid fa-eye-slash"
                                                                     style="color: #5e5e5e;"></i>
                                                             </a>
@@ -177,9 +179,10 @@
                                                      <% } %>     
                                             </form>
                                             </span>
-                                            <span class="delete"><a href=""><i
-                                                class="fa-solid fa-trash "
-                                                style="color: #5e5e5e;"></i></a></span>
+                                            <span class="delete"><a href="">
+                                                <form action="deleteInventory?delete=Category&id=<%= data._id %>&_method=DELETE">
+                                                <i id="dltBtn" onclick="AlertBox('dltBtn')" class="fa-solid fa-trash " style="color: #5e5e5e;"></i></a>
+                                                </form>
                                             </span>
                                             
                                          
@@ -202,10 +205,31 @@
 
                 </div>
 
-
-
-
-
+                <script>
+                    
+                function AlertBox(value){
+                    const myForm = document.getElementById(value);
+    
+                    if(value == 'activeIcon'){
+                        const confirmation = confirm('Are you sure to Block the user?');
+                        if (!confirmation) {
+                            event.preventDefault(); // Prevent form submission
+                        }
+                    }else if(value == 'blockedIcon'){
+                        const confirmation = confirm('Are you sure to Unblock the user?');
+                        if (!confirmation) {
+                            event.preventDefault(); // Prevent form submission
+                        }
+                       
+                    }else if(value == 'dltBtn'){
+                        const confirmation = confirm('Are you sure to Delete the product?');
+                        if (!confirmation) {
+                            event.preventDefault(); // Prevent form submission
+                        }
+                    }
+    
+                }
+                </script>
 
 
                 <!-- jQuery -->

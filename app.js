@@ -17,8 +17,6 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}));
 app.use(cookieParser());
 
-
-
 app.use(session({
     secret:process.env.COOKIES_KEY,
     resave: false,
@@ -32,14 +30,8 @@ app.use(passport.session());
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'))  
 
-
-
 app.use('/',userRouter);
 app.use('/adminLogin',adminRoutes)
-
-// app.get('/',(req,res) => {
-//   res.render('user/crop')
-// })
 
 
 const port = process.env.port||8000

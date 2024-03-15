@@ -53,8 +53,8 @@ const productList = async (req, res) => {
 
 //CustomerDetails get Request
 const CustomerDetails = async (req, res) => {
-    const users = await UserModel.find({})
-    console.log(users);
+    const users = await UserModel.find({}).select("-password")
+    // console.log(users);
     res.render('admin/CustomerDetails', { users })
 }
 
@@ -63,17 +63,17 @@ const CustomerDetails = async (req, res) => {
 const CustomerFilter = async (req, res) => {
 
     if (req.query.filter == "all") {
-        const users = await UserModel.find({})
+        const users = await UserModel.find({}).select("-password")
         console.log(req.query.filter);
         res.render('admin/CustomerDetails', { users })
     }
     else if (req.query.filter == "active") {
-        const users = await UserModel.find({ status: true })
+        const users = await UserModel.find({ status: true }).select("-password")
         console.log(req.query.filter);
         res.render('admin/CustomerDetails', { users })
     }
     else if (req.query.filter == "blocked") {
-        const users = await UserModel.find({ status: false })
+        const users = await UserModel.find({ status: false }).select("-password")
         console.log(req.query.filter);
         res.render('admin/CustomerDetails', { users })
     }
@@ -96,8 +96,21 @@ const Category = async (req, res) => {
         // console.log(categoryData);
         res.render('admin/editCategory', { categoryData, success: '' })
     }
+     
 }
 
+const filterCategory = async(req,res) => {
+    if(req.query.Category == 'All'){
+        console.log(req.query.Category)
+        const categoryData = await subCategorySchema.find({});
+        res.render('admin/Category', { categoryData })
+    }
+    else{
+        console.log(req.query.Category)
+        const categoryData = await subCategorySchema.find({CategoryName: req.query.Category});
+        res.render('admin/Category', { categoryData })
+    }
+}
 
 //Logout get Request
 const logout = (req, res) => {
@@ -118,25 +131,26 @@ const adminLoginPost = async (req, res) => {
 
     try {
         const { emailAddress, Password } = req.body
+
+        const email = process.env.ADMIN_USERNAME;
+        const adminPassword = process.env.ADMIN_PASSWORD;
+
+
         // console.log(emailAddress);
-        const adminExist = await UserModel.findOne({ emailAddress })
-        if (adminExist.emailAddress == emailAddress) {
-            const isAdmin = adminExist.isAdmin;
+        // const adminExist = await UserModel.findOne({ emailAddress })
+        if (emailAddress == email) {
+            // const isAdmin = adminExist.isAdmin;
             // console.log('.....!!', isAdmin);
-            if (isAdmin) {
-                const isPasswordMatch = await bcrypt.compare(Password, adminExist.password)
-                if (isPasswordMatch) {
-                    const Token = createToken(adminExist._id)
+                // const isPasswordMatch = await bcrypt.compare(Password, adminExist.password)
+                if (Password == adminPassword) {
+                    const Token = createToken(emailAddress)
                     res.cookie('jwtAdmin', Token, { httpOnly: true, maxAge: MaxExpTime * 1000 });
                     res.redirect('adminLogin/adminDashboard')
                 } else {
                     res.render('admin/adminLogin', { message: 'Invalid Password!' })
                 }
-            } else {
-                res.render('admin/adminLogin', { message: 'Access Denied' })
-            }
         } else {
-            res.render('admin/adminLogin', { message: 'Entered  Email Address is Invalid!' })
+            res.render('admin/adminLogin', { message: 'Access Denied' })
         }
     } catch (error) {
         console.log('Error while login : ', error);
@@ -224,9 +238,9 @@ const addProductsPost = async (req, res) => {
                 PurchaseRate, SalesRate, TotalPrice, ColorNames, ProductDescription,
                 VATAmount, DiscountPrecentage, ProductSize, files: urls
             }
-
+            //  console.log(Products);
             try {
-                // console.log(Products);
+              
                 await ProductModel.create(Products);
                 const subCategory = await subCategorySchema.distinct('subCategory');
                 res.render('admin/addProducts', { subCategory, success: 'Product Added Successfully' })
@@ -301,8 +315,8 @@ const postEditProduct = async (req, res) => {
         }
         //Save the updated data the database 
         try {
-            console.log(Products);
-            await ProductModel.findOneAndUpdate({ _id: req.params.id }, { $set: Products }).then((result) => {
+            console.log('edited items :',Products);
+            await ProductModel.findOneAndUpdate({ _id: req.query.id }, { $set: Products }).then((result) => {
                 console.log('result :', result);
             }).catch(error => {
                 console.log(error);
@@ -339,7 +353,8 @@ const updateUser = async (req, res) => {
 
 //listed and unlisted for the Category Page
 const categoryPost = async (req, res) => {
-    const Inventory = req.query.Inventory
+    const Inventory = req.query.ID
+    console.log('id : ',req.query.ID)
     if (Inventory) {
         const Category = await subCategorySchema.findById(Inventory)
         console.log(Category);
@@ -461,14 +476,21 @@ const postAddCategory = async (req, res) => {
 
 //delete products
 const deleteInventory = async (req, res) => {
-    if (req.query.delete === "Product") {
+    if (req.query.delete === "Products") {
         if (req.query.id) {
+            console.log('imag wsnhjfn ')
             await productModel.findByIdAndDelete({ _id: req.query.id })
-            res.redirect('adminLogin/ProductList')
+            res.redirect('/adminLogin/productList')
+        }
+    }
+    else if(req.query.delete === "Category"){
+        if (req.query.id) {
+            console.log('imag wsnhjfn ')
+            await subCategorySchema.findByIdAndDelete({ _id: req.query.id })
+            res.redirect('/adminLogin/Category')
         }
     }
 }
-
 //Section for Post Method End here.....
 //.................................................................................................................................................
 
@@ -483,6 +505,7 @@ module.exports = {
     deleteInventory,
     adminDashboard,
     CustomerDetails,
+    filterCategory,
     updateUser,
     productSearch,
     Category,

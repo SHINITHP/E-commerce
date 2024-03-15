@@ -154,18 +154,18 @@
                                             <a href="/adminLogin/ProductList/editProducts?id=<%= data._id %>"><i
                                                     class="fa-solid fa-pen edit" style="color: #5e5e5e;"></i></a>
                                             <span class="listed">
-                                                <form class="actionForm" method="post"
+                                                <form class="actionForm" method="post" id="ListedForm"
                                                     action="ProductList?ID=<%= data._id %>">
                                                     <% if(data.Inventory==="Listed" ) {%>
                                                         <button class="iconbtns">
-                                                            <a id="activeIcon">
+                                                            <a id="activeIcon" onclick="AlertBox('activeIcon')">
                                                                 <i class="fa-solid fa-eye" style="color: #5e5e5e;"></i>
                                                             </a>
                                                         </button>
 
                                                         <% } else if(data.Inventory==="Unlisted" ) {%>
                                                             <button class="iconbtns">
-                                                                <a id="blockedIcon">
+                                                                <a id="blockedIcon" onclick="AlertBox('blockedIcon')">
                                                                     <i class="fa-solid fa-eye-slash"
                                                                         style="color: #5e5e5e;"></i>
                                                                 </a>
@@ -174,8 +174,8 @@
                                                             <% } %>
                                                 </form>
                                             </span>
-                                            <form action="Productlist/deleteInventory?delete=Product&id=<%= data._id %>&_method=DELETE" method="post">
-                                                <span class="delete"><button class="iconbtns" type="submit"><i class="fa-solid fa-trash "
+                                            <form action="deleteInventory?delete=Products&id=<%= data._id %>&_method=DELETE" method="post">
+                                                <span class="delete"><button class="iconbtns" type="submit" id="dltBtn" onclick="AlertBox('dltBtn')"><i class="fa-solid fa-trash "
                                                             style="color: #5e5e5e;"></i></button></span>
                                                 </span>
                                             </form>
@@ -202,6 +202,33 @@
         </div>
 
         <script>
+
+            function AlertBox(value){
+                const myForm = document.getElementById(value);
+
+                if(value == 'activeIcon'){
+                    const confirmation = confirm('Are you sure to Unlist the Product?');
+                    if (!confirmation) {
+                        event.preventDefault(); // Prevent form submission
+                    }
+                }else if(value == 'blockedIcon'){
+                    const confirmation = confirm('Are you sure to List the product?');
+                    if (!confirmation) {
+                        event.preventDefault(); // Prevent form submission
+                    }
+                   
+                }else if(value == 'dltBtn'){
+                    const confirmation = confirm('Are you sure to Delete the product?');
+                    if (!confirmation) {
+                        event.preventDefault(); // Prevent form submission
+                    }
+                }
+
+            }
+
+       
+           
+
 
 
             const statusId = document.getElementById('Inventory');

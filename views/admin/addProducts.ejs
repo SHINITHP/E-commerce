@@ -52,8 +52,10 @@
                         <button class="btns btnProducts"><img class="img" src="/assets/images/grid.png" alt=""><span
                                 class="btnvalue">Products</span></button>
                     </a>
-                    <button class="btns btnCategory"><img class="img" src="/assets/images/grid.png" alt=""><span
-                            class="btnvalue"><span>Category</span></button>
+                    <a href="/adminLogin/Category">
+                        <button class="btns btnCategory btnColor"><img class="img" src="/assets/images/grid.png" alt=""><span
+                           class="btnvalue"><span>Category</span></button>
+                   </a>
                     <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png" alt=""><span
                             class="btnvalue">Order History</span></button>
                     <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
@@ -100,12 +102,12 @@
                                                 <div class="col-6">
                                                     <label class="lbl" for="">Product Name</label>
                                                     <input type="text" class="form-control inputpass" name="ProductName"
-                                                        id="ProductName" placeholder="Enter Product Name">
+                                                        id="ProductName" placeholder="Enter Product Name" required>
                                                 </div>
                                                 <div class="col-6">
                                                     <label class="lbl" for="">Brand Name</label>
                                                     <input type="text" class="form-control inputpass" name="BrandName"
-                                                        id="ProductName" placeholder="Enter Brand Name">
+                                                        id="ProductName" placeholder="Enter Brand Name" required>
                                                 </div>
                                             </div>
                                             <div class="col-12 box1-col1">
@@ -117,7 +119,7 @@
                                                         <option value="Mens">Mens</option>
                                                         <option value="Womens">Womens</option>
                                                         <option value="Kids">Kids</option>
-                                                        <option value="Accessories">Accessories</option>
+                                                        <!-- <option value="Accessories">Accessories</option> -->
                                                         <!-- Add more color options as needed -->
                                                     </select>
                                                 </div>
@@ -125,7 +127,7 @@
                                                     <label class="lbl" for="">Stock Quantity</label>
                                                     <input type="text" class="form-control inputpass"
                                                         name="StockQuantity" id="CategoryName"
-                                                        placeholder="Enter Stock Quantity">
+                                                        placeholder="Enter Stock Quantity" required>
                                                 </div>
 
                                                 <div class="col-4 categoryRow">
@@ -145,17 +147,17 @@
                                                     <label class="lbl" for="">Purchase Rate</label>
                                                     <input type="text" class="form-control inputpass"
                                                         name="PurchaseRate" id="PurchaseRate"
-                                                        placeholder="Enter Purchase Rate">
+                                                        placeholder="Enter Purchase Rate" required>
                                                 </div>
                                                 <div class="col-4">
                                                     <label class="lbl" for="">Sales Rate</label>
                                                     <input type="text" class="form-control inputpass" name="SalesRate"
-                                                        id="SalesRate" placeholder="Enter Sales Rate">
+                                                        id="SalesRate" placeholder="Enter Sales Rate" required>
                                                 </div>
                                                 <div class="col-4">
                                                     <label class="lbl" for="">Total Price</label>
                                                     <input type="text" class="form-control inputpass" name="TotalPrice"
-                                                        id="TotalPrice" placeholder="Total Price">
+                                                        id="TotalPrice" placeholder="Total Price" required>
                                                 </div>
 
                                             </div>
@@ -166,7 +168,7 @@
 
                                                     <textarea class="inputDescription" name="ProductDescription" id=""
                                                         placeholder="Enter your Product Description" cols="30" rows="10"
-                                                        name="ProductDescription"></textarea>
+                                                        name="ProductDescription" required></textarea>
                                                 </div>
 
                                             </div>
@@ -175,13 +177,13 @@
                                                 <div class="col-4">
                                                     <label class="lbl" for="">VAT Amount (%)</label>
                                                     <input type="text" class="form-control inputpass" name="VATAmount"
-                                                        id="SalesRate" placeholder="Enter VAT Amount">
+                                                        id="SalesRate" placeholder="Enter VAT Amount" required>
                                                 </div>
                                                 <div class="col-4">
                                                     <label class="lbl" for="">Discount Precentage (%)</label>
                                                     <input type="text" class="form-control inputpass"
                                                         name="DiscountPrecentage" id="TotalPrice"
-                                                        placeholder="Enter Discount Precentage">
+                                                        placeholder="Enter Discount Precentage" required>
                                                 </div>
                                                 <div class="col-4 categoryRow">
                                                     <label class="lbl" for="">Color Name</label>
@@ -264,9 +266,9 @@
 
 
                                                 <label for="input-file1" id="drop-area1">
-                                                    <input type="file"   accept="image/*" onclick="cropImage('input-file1','img-view1','returnImg1')" id="input-file1"
+                                                    <input type="file" name="images"  accept="image/*" onclick="cropImage('input-file1','img-view1','returnImg1')" id="input-file1"
                                                         hidden>
-                                                        <input type="text" name="images" id="returnImg1" hidden>
+                                                        <!-- <input type="text" name="images" id="returnImg1" hidden> -->
                                                     <div id="img-view1">
                                                         <img src="/assets/images/addImage.png">
                                                         <p>Drag and drop or click here to upload image</p>
@@ -274,9 +276,9 @@
                                                 </label>
 
                                                 <label for="input-file2" id="drop-area2" class="ml-3">
-                                                    <input type="file"   accept="image/*" onclick="cropImage('input-file2','img-view2','returnImg2')" id="input-file2"
+                                                    <input type="file" name="images"  accept="image/*" onclick="cropImage('input-file2','img-view2','returnImg2')" id="input-file2"
                                                         hidden>
-                                                        <input type="text" name="images"  id="returnImg2" hidden>
+                                                        <!-- <input type="text" name="images"  id="returnImg2" hidden> -->
                                                     <div id="img-view2">
                                                         <img src="/assets/images/addImage.png">
                                                         <p>Drag and drop or click here to upload image</p>
@@ -284,9 +286,9 @@
                                                 </label>
 
                                                 <label for="input-file3" id="drop-area3" class="ml-3">
-                                                    <input type="file"    accept="image/*" onclick="cropImage('input-file3','img-view3','returnImg3')" id="input-file3"
+                                                    <input type="file" name="images"   accept="image/*" onclick="cropImage('input-file3','img-view3','returnImg3')" id="input-file3"
                                                         hidden>
-                                                        <input type="text"  name="images" id="returnImg3" hidden>
+                                                        <!-- <input type="text"  name="images" id="returnImg3" hidden> -->
                                                     <div id="img-view3">
                                                         <img src="/assets/images/addImage.png">
                                                         <p>Drag and drop or click here to upload image</p>
@@ -294,9 +296,9 @@
                                                 </label>
 
                                                 <label for="input-file4" id="drop-area4" class="ml-3">
-                                                    <input type="file"  accept="image/*" onclick="cropImage('input-file4','img-view4','returnImg4')" id="input-file4"
+                                                    <input type="file" name="images"  accept="image/*" onclick="cropImage('input-file4','img-view4','returnImg4')" id="input-file4"
                                                         hidden>
-                                                        <input type="text" name="images"  id="returnImg4" hidden>
+                                                        <!-- <input type="text" name="images"  id="returnImg4" hidden> -->
                                                     <div id="img-view4">
                                                         <img src="/assets/images/addImage.png">
                                                         <p>Drag and drop or click here to upload image</p>
@@ -325,7 +327,7 @@
     </div>
 
         
-    <div  id="popup">
+    <!-- <div  id="popup">
         <p style="width: 60%; text-align: end; padding-top: 20px;">Crop Your Image Here</p>
 
         <div class="row imageRow">
@@ -345,7 +347,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
           <!-- Latest compiled and minified JavaScript -->
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script> -->
@@ -356,7 +358,7 @@
 
 
         <script src="/assets/js/addProduct.js"></script> 
-          <script src="/assets/js/cropImage.js"></script>
+          <!-- <script src="/assets/js/cropImage.js"></script> -->
 
 </body>
 

@@ -50,10 +50,10 @@
                 <div class="col-12 inputDiv">
                     <form class="SubmitRegFrm" action="/register" method="post">
                         <div class="form-group input-container">
-                            <input type="text" required="true" class="form-control inputemail" name="userName" id="exampleFormControlInput1" placeholder=" Enter your Name">
-                              <input type="tel" required="true" class="form-control inputpass" name="phoneNo" id="exampleFormControlInput1" placeholder=" Enter your PhoneNo ">
-                              <input type="email" required="true" class="form-control inputpass" name="emailAddress" id="exampleFormControlInput1" placeholder=" Enter your Email-Address">
-                              <input type="password" required="true" class="form-control inputpass" name="password" id="exampleFormControlInput1" placeholder=" Enter the password">
+                            <input type="text" required="true" class="form-control inputemail" name="userName" id="exampleFormControlInput1" placeholder=" Enter your Name" >
+                              <input type="tel" required="true" minlength="10" maxlength="10" class="form-control inputpass" name="phoneNo" id="exampleFormControlInput1" placeholder=" Enter your PhoneNo " >
+                              <input type="email" required="true" class="form-control inputpass" name="emailAddress" id="exampleFormControlInput1" placeholder=" Enter your Email-Address" >
+                              <input type="password" required="true" class="form-control inputpass" name="password" id="exampleFormControlInput1" placeholder=" Enter the password"  maxlength="15" minlength="7" >
                         </div>
                         <button type="submit" class="btn btn-secondary btnRegister">Register</button> 
                     </form>
