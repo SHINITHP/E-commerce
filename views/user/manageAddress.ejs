@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body><!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    
+        <!-- Google Font -->
+        <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+            rel="stylesheet">
+    
+        <!-- Css Styles -->
+        <!-- Additional CSS Files -->
+        <link rel="stylesheet" type="text/css" href="/assets/css/user/bootstrap.min.css">
+    
+        <link rel="stylesheet" type="text/css" href="/assets/css/user/font-awesome.css">
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+            integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+        <link rel="stylesheet" href="/assets/css/user/templatemo-hexashop.css">
+    
+        <link rel="stylesheet" href="/assets/css/user/owl-carousel.css">
+    
+        <link rel="stylesheet" href="/assets/css/user/lightbox.css">
+    
+        <link rel="stylesheet" href="/assets/css/user/manageAddress.css">
+    
+        <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css"
+            integrity="sha512-hvNR0F/e2J7zPPfLC9auFe3/SE0yG4aJCOd/qxew74NN7eyiSKjr7xJJMu1Jy2wf7FXITpWS1E/RY8yzuXN7VA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+        <title>Document</title>
+    </head>
+    
+    <body>
+    
+    
+    
+    
+        <!-- ***** Header Area Start ***** -->
+        <header class="header-area header-sticky">
+            <a class='menu-trigger' id="menuTrigger" style="position: relative;">
+                <span>Menu</span>
+            </a>
+            <div class="container Nav-con-1">
+                <div class="row row1">
+                    <div class="col-10">
+                        <nav class="main-nav" style=" margin-left: 20px;">
+    
+                            <!-- ***** Logo Start ***** -->
+                            <a href="/" class="logo" style="padding: 0;">
+                                <img src="/assets/images/logo.png">
+                            </a>
+                            <!-- ***** Logo End ***** -->
+                            <!-- ***** Menu Start ***** -->
+                            <ul class="nav">
+                                <li class="scroll-to-section"><a href="/#top" class="active">Home</a></li>
+                                <li class="scroll-to-section"><a href="/#men">Men's</a></li>
+                                <li class="scroll-to-section"><a href="/#women">Women's</a></li>
+                                <li class="scroll-to-section"><a href="/#kids">Kid's</a></li>
+                                <li class="scroll-to-section"><a href="/#Contact">Contact</a></li>
+                            </ul>
+    
+    
+                        </nav>
+    
+    
+                    </div>
+                    <div class="col-2 col2">
+                        <a href=""><i class="fa-solid fa-magnifying-glass searchIcon" style="color: #404040;"></i></a>
+                        <a href="/shoppingcart">
+                            <i class="fa-solid fa-cart-shopping cartIcon" style="color: #404040;"></i>
+                        </a>
+                        <a href="/Profile" class="profileLogo">
+                            <img src="/assets/images/profile-Icon.png" class="profileIcon">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- ***** Header Area End ***** -->
+    
+    
+    
+        <div class="container-fluid outerDiv" id="blur" style="padding: 0px;">
+            <div class="container-fluid conF-1">
+                <h3 class="myAccount">My Account</h3>
+                <div class="row" style="min-height: 100vh;">
+                    <div class="col-md-3 col-sm-12 col3">
+                        <div class="row" style="display: flex;align-items: center; padding-left: 20px; padding-top: 20px;">
+                            <label for="imgInput">
+                                <div class="circle">
+                                    <img class="profile-pic" id="profilePic"
+                                        src="https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg">
+                                </div>
+                                <input class="file-upload" id="imgInput" hidden type="file" accept="image/*"
+                                    onclick="cropImage('imgInput','profilePic')" />
+    
+                            </label>
+                            <p>Welcome , Shinith </p>
+                        </div>
+    
+    
+                        <ul>
+                            <a id="changeIcon">
+                                <li><i class="fa-regular fa-user menuIcon" style="color: black;"></i><span class="spanText">Account
+                                        Settings</span>
+                                    <span>
+                                        <i id="icon" class="fa rightAngle">&#xf105;</i>
+                                    </span>
+                                </li>
+                            </a>
+    
+    
+                            <a href="" id="DropDownLi1" style="display: none;">
+                                <li style="padding-left: 68px;">Profile Information <span><i
+                                            style="font-size:24px;color:#494949;padding-left:63px;"
+                                            class="fa rightAngle">&#xf105;</i></span></li>
+                            </a>
+    
+                            <a href="" id="DropDownLi2" style="display: none;">
+                                <li style="padding-left: 68px;">Manage Address <span><i
+                                            style="font-size:24px;color:#494949;padding-left:79px;"
+                                            class="fa rightAngle">&#xf105;</i></span></li>
+                            </a>
+    
+    
+    
+                            <a href="">
+                                <li><i class="fa-solid fa-cart-shopping cartIcon menuIcon" style="color: black;"></i><span
+                                        class="spanText">My
+                                        Orders</span>
+                                    <span >
+                                        <i style="font-size:24px;color:#494949;" class="fa rightAngle">&#xf105;</i>
+                                    </span>
+                                </li>
+                            </a>
+                            <a href="">
+                                <li><i class="fa fa-heart menuIcon" style="color: black;"></i><span class="spanText">Wishlist</span>
+                                    <span>
+                                        <i style="font-size:24px;color:#494949;" class="fa rightAngle">&#xf105;</i>
+                                    </span>
+                                </li>
+                            </a>
+                            <a href="">
+                                <li><i class="fa-solid fa-receipt menuIcon" style="color: black;"></i><span
+                                        class="spanText">Coupons</span>
+                                    <span>
+                                        <i style="font-size:24px;color:#494949;" class="fa rightAngle">&#xf105;</i>
+                                    </span>
+                                </li>
+                            </a>
+                            <a href="/logout">
+                                <li><img src="/assets/images/logout.png" class="logoutImg"><span class="spanText"
+                                        style="padding-left: 30px; font-size: 13pt;">Logout</span>
+                                    <span>
+                                        <i style="font-size:24px;padding-left: 10px; color:#494949;" class="fa rightAngle">&#xf105;</i>
+                                    </span>
+                                </li>
+                            </a>
+                        </ul>
+
+                        </div>
+
+                        <div class="col-md-9 col-sm-12 col9">
+                                <h3 style="width: 100%;">Manage Address</h3>
+                                <br>
+                                <div class="container con1" id="addAddressDiv">
+                                    <i class="fa-solid fa-plus plusBtn" id="addIcon" style="color: #030303;"></i>
+                                    <p style="padding-left: 30px;font-size: 14pt;font-family: Poppins;">ADD A NEW ADDRESS</p>
+                                </div>    
+                                    <div class="container" id="addAddress"> 
+                                        <div class="row">
+                                            <div class="col-7" style="padding-top: 5px;">
+                                                <p class="addAddressTxt">Add Address</p>
+                                            </div>
+                                            <div class="col-5" style="padding-top:8px; display: flex;justify-content: end;">
+                                                <button class="btn" style="display: none;" id="addAddressCancel">Cancel</button>
+                                            </div>
+                                        </div>
+                                   
+                                    <form action="" class="addForm" id="addAddressForm">
+                                        <!-- <div class="row">
+                                            <div class="col-7">
+                                               
+                                            </div>
+                                            <div class="col-5" style="display: flex;justify-content: end; padding-top: 7px;">
+                                                  
+                                            </div>
+                                        </div> -->
+                                      
+                                      
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                                <label class="lbl" for="firstName">First Name
+                                                    <input type="text" class="form-control firstNameInput" name="BrandName"
+                                                        id="firstName" placeholder="Enter First Name" required>
+                                                </label>
+                
+                                                <label class="lbl" for="MobileNo"> Mobile Number
+                                                    <input type="tel" class="form-control firstNameInput" name="mobileNo" id="MobileNo"
+                                                        placeholder="Enter Mobile Number" required>
+                                                </label>
+        
+                                                <label class="lbl" for="EmailAddress"> City/District/Town
+                                                    <input type="text" class="form-control firstNameInput" name="emailAddress"
+                                                        id="EmailAddress" placeholder="City/District/Town" required>
+                                                </label>
+                                               
+                                                <label class="lbl" for="State"> Country
+                                                    <select name="state" class="dropbtn firstNameInput"  id="State" >
+                                                        <option value="Mens">India</option>
+                                                        <option value="Womens">Karnadaka</option>
+                                                        <option value="Kids">TamilNadu</option>
+                                                    </select>
+                                                </label>
+        
+                                            </div>
+        
+                                            <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                                <label class="lbl" for="firstName"> Last Name
+                                                    <input type="text" class="form-control firstNameInput" name="BrandName"
+                                                        id="lastName" placeholder="Enter Last Name" required>
+                                                </label>
+                                                <label class="lbl" for="gender" > Gender
+                                                    <div class="firstNameInput" style="padding-top: 10px; font-size: 12pt;">
+                                                        <input type="radio" id="gender" name="gender" value="male"> Male
+                                                        <input type="radio" name="gender" value="female"> Female
+                                                    </div>
+                                                   
+                                                </label>
+                                                <label class="lbl" for="State"> State
+                                                    <select name="state" class="dropbtn firstNameInput"  id="State" >
+                                                        <option value="Mens">Kerala</option>
+                                                        <option value="Womens">Karnadaka</option>
+                                                        <option value="Kids">TamilNadu</option>
+                                                    </select>
+                                                </label>
+                                                <label class="lbl" for="PinCode"> Pin-Code
+                                                    <input type="number" class="form-control firstNameInput" name="pinCode"
+                                                        id="PinCode" placeholder="Enter Pin-Code" required>
+                                                </label>
+                                            </div>
+        
+                                            <div class="col-12">
+                                                <label class="lbl" for="txtAddress" style="width: 100%;">Address
+                                                    <textarea name="" id="txtAddress" cols="30" rows="10" class="addressTxtArea" placeholder="Enter your Address"></textarea>
+                                                </label>
+                                            </div>
+                                            <div class="col-7" style="display: flex;padding-left: 30px;">
+                                                <input type="radio" id="gender" name="gender" value="Home"> Home
+                                                <input type="radio" name="gender" value="Workspace" style="margin-left: 20px;">  Workspace
+                                            </div>
+        
+                                        </div>
+        
+                                        <a  style="width: 100%;display: flex; justify-content: center; margin-bottom: 20px;">
+                                            <button class="saveChanges" id="svaebtn">Save Changes</button>
+                                        </a>
+        
+                                    </form>
+                                </div>
+                               
+
+                                <br>
+                                <div class="container con2"  id="defaultDiv">
+                                    <div class="row con2Row1">
+                                        <div class="col-6 rowcol6-1">
+                                            <p>Home</p>
+                                        </div>
+                                        <div class="col-6 rowcol6-2">
+                                            <button class="btn" id="remove">Remove</button>
+                                            <button class="btn" id="update">Update</button>
+                                            <button class="btn" style="display: none;" id="cancelBtn">Cancel</button>
+                                        </div>    
+                                    </div>
+
+                                    <div class="row con2Row2">
+                                        <h5>Shibith.P</h5>
+                                        <h6>1234567890</h6>
+                                    </div>
+
+                                    <div class="row con2Row3">
+                                        <p>Beena nivas, Uruvachal, Near imc hospital, Mattannur, Kerala - 670702</p>
+                                    </div>
+
+                                  
+
+
+                                    <form action="" class="editForm" id="updateForm">
+                                        <p class="updateTxt">Update Address</p>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                                <label class="lbl" for="firstName">First Name
+                                                    <input type="text" class="form-control firstNameInput" name="BrandName"
+                                                        id="firstName" placeholder="Enter First Name" required>
+                                                </label>
+                
+                                                <label class="lbl" for="MobileNo"> Mobile Number
+                                                    <input type="text" class="form-control firstNameInput" name="mobileNo" id="MobileNo"
+                                                        placeholder="Enter Mobile Number" required>
+                                                </label>
+        
+                                                <label class="lbl" for="EmailAddress"> City/District/Town
+                                                    <input type="email" class="form-control firstNameInput" name="emailAddress"
+                                                        id="EmailAddress" placeholder="City/District/Town" required>
+                                                </label>
+                                               
+                                                <label class="lbl" for="State"> Country
+                                                    <select name="state" class="dropbtn firstNameInput"  id="State" >
+                                                        <option value="Mens">India</option>
+                                                        <option value="Womens">Karnadaka</option>
+                                                        <option value="Kids">TamilNadu</option>
+                                                    </select>
+                                                </label>
+        
+                                            </div>
+        
+                                            <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                                <label class="lbl" for="firstName"> Last Name
+                                                    <input type="text" class="form-control firstNameInput" name="BrandName"
+                                                        id="lastName" placeholder="Enter Last Name" required>
+                                                </label>
+                                                <label class="lbl" for="gender" > Gender
+                                                    <div class="firstNameInput" style="padding-top: 10px; font-size: 12pt;">
+                                                        <input type="radio" id="gender" name="gender" value="male"> Male
+                                                        <input type="radio" name="gender" value="female"> Female
+                                                    </div>
+                                                   
+                                                </label>
+                                                <label class="lbl" for="State"> State
+                                                    <select name="state" class="dropbtn firstNameInput"  id="State" >
+                                                        <option value="Mens">Kerala</option>
+                                                        <option value="Womens">Karnadaka</option>
+                                                        <option value="Kids">TamilNadu</option>
+                                                    </select>
+                                                </label>
+                                                <label class="lbl" for="PinCode"> Pin-Code
+                                                    <input type="text" class="form-control firstNameInput" name="pinCode"
+                                                        id="PinCode" placeholder="Enter Pin-Code" required>
+                                                </label>
+                                            </div>
+        
+                                            <div class="col-12">
+                                                <label class="lbl" for="txtAddress" style="width: 100%;">Address
+                                                    <textarea name="" id="txtAddress" cols="30" rows="10" class="addressTxtArea" placeholder="Enter your Address"></textarea>
+                                                </label>
+                                            </div>
+                                            <div class="col-7" style="display: flex;padding-left: 30px;">
+                                                <input type="radio" id="gender" name="gender" value="Home"> Home
+                                                <input type="radio" name="gender" value="Workspace" style="margin-left: 20px;">  Workspace
+                                            </div>
+        
+                                        </div>
+        
+                                        <a  style="width: 100%;display: flex; justify-content: center; margin-bottom: 20px;">
+                                            <button class="saveChanges" id="svaebtn">Save Changes</button>
+                                        </a>
+        
+                                    </form>
+                                    <br>
+                                </div>
+    
+                   
+
+
+                            
+
+
+                        </div>
+
+
+
+
+
+
+
+                    </div>
+
+
+
+                    
+                </div>
+
+            </div>
+        
+    
+     
+        
+        <!-- eFooter starts here... -->
+        <%- include('../../views/user/footer.ejs') %>
+            <!-- Footer end  here... -->
+    
+    
+    
+            <script>
+                document.getElementById('update').addEventListener('click' , function(){
+                    document.getElementById('update').style.display='none'
+                    document.getElementById('remove').style.display='none'
+                    document.getElementById('updateForm').style.display='block'
+                    document.getElementById('cancelBtn').style.display='block'
+                })
+                document.getElementById('cancelBtn').addEventListener('click' , function(){
+                    document.getElementById('cancelBtn').style.display='none'
+                    document.getElementById('remove').style.display='block'
+                    document.getElementById('updateForm').style.display='none'
+                    document.getElementById('update').style.display='block'
+                })
+
+                document.getElementById('addAddressDiv').addEventListener('click' , function(){
+                    document.getElementById('addAddressDiv').style.display='none'
+                    document.getElementById('addAddress').style.display='block'
+                    document.getElementById('addAddressCancel').style.display='block'
+                })
+
+                document.getElementById('addAddressCancel').addEventListener('click' , function(){
+                    document.getElementById('addAddress').style.display='none'
+                    document.getElementById('addAddressDiv').style.display='block'
+                    document.getElementById('addAddressDiv').style.display='flex'
+
+                })
+
+            </script>
+    
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"
+                integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+                <script src="/assets/js/profile.js"></script>
+    
+    
+    
+            <!-- jQuery -->
+            <script src="/assets/js/jquery-2.1.0.min.js"></script>
+    
+            <!-- Bootstrap -->
+            <script src="/assets/js/popper.js"></script>
+            <script src="/assets/js/bootstrap.min.js"></script>
+    
+            <!-- Plugins -->
+            <script src="/assets/js/owl-carousel.js"></script>
+            <script src="/assets/js/accordions.js"></script>
+            <script src="/assets/js/datepicker.js"></script>
+            <script src="/assets/js/scrollreveal.min.js"></script>
+            <script src="/assets/js/waypoints.min.js"></script>
+            <script src="/assets/js/jquery.counterup.min.js"></script>
+            <script src="/assets/js/imgfix.min.js"></script>
+            <script src="/assets/js/slick.js"></script>
+            <script src="/assets/js/lightbox.js"></script>
+            <script src="/assets/js/isotope.js"></script>
+    
+            <!-- Global Init -->
+            <script src="/assets/js/custom.js"></script>
+    
+    
+    </body>
+    
+    </html>
+    
+</body>
+</html>

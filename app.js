@@ -30,10 +30,12 @@ app.use(passport.session());
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'))  
 
-app.use('/',userRouter);
-app.use('/adminLogin',adminRoutes)
+// app.use('/',userRouter);
+// app.use('/adminLogin',adminRoutes)
 
-
+app.get('/', (req,res) => {
+  res.render('user/manageAddress')
+})
 const port = process.env.port||8000
 app.listen(port,(err)=>{
     if(err) console.log(err);

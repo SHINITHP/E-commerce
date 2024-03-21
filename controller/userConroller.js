@@ -46,13 +46,54 @@ const landingPage = async (req, res) => {
     res.render('user/index', { ProductData })
   }
   else if (req.path == '/allProducts') {
+    const page = req.query.page;
+    const perPage = 4;
+    let docCount;
     const ProductData = await productModel.find({})
-    res.render('user/allProducts', { ProductData, category: '', subCategories })
+      .countDocuments()
+      .then(documents => {
+        docCount = documents;
+
+        return productModel.find({})
+          .skip((page - 1) * perPage)
+          .limit(perPage)
+      })
+      .then(ProductData => {
+        res.render('user/allProducts', {
+          route:'allProducts',
+          ProductData,
+          category: '',
+          subCategories,
+          currentPage: page,
+          totalDocuments: docCount,
+          pages:Math.ceil(docCount/perPage)
+        })
+      })
   }
   else if (req.path == '/filterCategory') {
     const category = req.query.cat
-    const ProductData = await productModel.find({ CategoryName: category })
-    res.render('user/allProducts', { ProductData, category, subCategories })
+    const page = req.query.page;
+    const perPage = 4;
+    let docCount;
+    const ProductData = await productModel.find({CategoryName:category})
+      .countDocuments()
+      .then(documents => {
+        docCount = documents;
+        return productModel.find({CategoryName:category})
+          .skip((page - 1) * perPage)
+          .limit(perPage)
+      })
+      .then(ProductData => {
+        res.render('user/allProducts', {
+          route:'filterCategory',
+          ProductData,
+          category,
+          subCategories,
+          currentPage: page,
+          totalDocuments: docCount,
+          pages:Math.ceil(docCount/perPage)
+        })
+      })
   }
 }
 
@@ -87,7 +128,7 @@ const sendEmailOtp = (req, res) => {
 
 // show forgotEnterOtp page to enter otp
 const forgotEnterOtp = (req, res) => {
-  res.render('user/forgotEnterOtp',{message:''})
+  res.render('user/forgotEnterOtp', { message: '' })
 }
 
 
@@ -111,8 +152,8 @@ const logout = async (req, res) => {
 const filterProducts = async (req, res) => {
   if (req.query.subCategory) {
     const subCategories = await subCategorySchema.find({})
-    const ProductData = await productModel.find({subCategory:req.query.subCategory,CategoryName:req.query.category})
-    res.render('user/allProducts', { ProductData, category:req.query.category, subCategories })
+    const ProductData = await productModel.find({ subCategory: req.query.subCategory, CategoryName: req.query.category })
+    res.render('user/allProducts', { ProductData, category: req.query.category, subCategories })
   }
 }
 
@@ -201,34 +242,42 @@ const createUser = async (req, res) => {
   try {
     const emailAddress = GlobalUser.emailAddress
     const password = GlobalUser.password
-    // console.log("usernameG :", GlobalUser);
+
+
+    const { otp1, otp2, otp3, otp4, otp5, otp6 } = req.body
+    const combinedOTP = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
     // Find the most recent OTP for the email
     const response = await OTPModel.find({ emailAddress }).sort({ createdAt: -1 }).limit(1);
-    if (response.length === 0 || otp !== response[0].otp) {
+    // console.log( response[0].otp, 'dshsdsdmn :', otp, combinedOTP)
+
+    if (combinedOTP !== response[0].otp) {
       return res.status(400).json({
         success: false,
         message: 'The OTP is not valid',
       })
-    }
-    // Secure password
-    let hashedPassword;
-    try {
-      hashedPassword = await bcrypt.hash(password, 10);
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        message: `Hashing password error for ${password}: ` + error.message,
-      });
-    }
-    // hash the password
-    GlobalUser.password = hashedPassword
-    //store the user data to mongodb
+    } else {
+      console.log('i am here !!! ')
+      // Secure password
+      let hashedPassword;
+      try {
+        hashedPassword = await bcrypt.hash(password, 10);
+      } catch (error) {
+        return res.status(500).json({
+          success: false,
+          message: `Hashing password error for ${password}: ` + error.message,
+        });
+      }
+      // hash the password
+      GlobalUser.password = hashedPassword
+      //store the user data to mongodb
 
-    const Token = createToken(GlobalUser.emailAddress)
-    res.cookie('jwtUser', Token, { httpOnly: true, maxAge: MaxExpTime * 1000 });
+      const Token = createToken(GlobalUser.emailAddress)
+      res.cookie('jwtUser', Token, { httpOnly: true, maxAge: MaxExpTime * 1000 });
 
-    await UserModel.create(GlobalUser);
-    res.redirect('/')
+      await UserModel.create(GlobalUser);
+      res.redirect('/')
+    }
+
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ success: false, error: error.message });
@@ -309,7 +358,7 @@ const postForgotEnterOtp = async (req, res) => {
     const emailAddress = GlobalUser.emailAddress
     const { otp1, otp2, otp3, otp4, otp5, otp6 } = req.body
     const combinedOTP = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
-    
+
     const response = await OTPModel.find({ emailAddress }).sort({ createdAt: -1 }).limit(1);
     console.log('response   = ', response);
     console.log(otp);
