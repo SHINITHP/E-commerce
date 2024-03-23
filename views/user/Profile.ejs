@@ -115,27 +115,27 @@
                             <li><i class="fa-regular fa-user menuIcon" style="color: black;"></i><span class="spanText">Account
                                     Settings</span>
                                 <span>
-                                    <i id="icon" class="fa rightAngle">&#xf105;</i>
+                                    <i id="icon" class="fa rightAngle">&#xf107;</i>
                                 </span>
                             </li>
                         </a>
 
 
-                        <a href="" id="DropDownLi1" style="display: none;">
-                            <li style="padding-left: 68px;">Profile Information <span><i
+                        <a href="/Profile" id="DropDownLi1" >
+                            <li style="padding-left: 68px; background-color: #afafaf; height: 50px;">Profile Information <span><i
                                         style="font-size:24px;color:#494949;padding-left:63px;"
                                         class="fa rightAngle">&#xf105;</i></span></li>
                         </a>
 
-                        <a href="" id="DropDownLi2" style="display: none;">
-                            <li style="padding-left: 68px;">Manage Address <span><i
+                        <a href="profileMenu?menu=manageAddress" id="DropDownLi2" >
+                            <li style="padding-left: 68px; height: 50px;">Manage Address <span><i
                                         style="font-size:24px;color:#494949;padding-left:79px;"
                                         class="fa rightAngle">&#xf105;</i></span></li>
                         </a>
 
 
 
-                        <a href="">
+                        <a href="profileMenu?menu=myOrders">
                             <li><i class="fa-solid fa-cart-shopping cartIcon menuIcon" style="color: black;"></i><span
                                     class="spanText">My
                                     Orders</span>
@@ -144,7 +144,7 @@
                                 </span>
                             </li>
                         </a>
-                        <a href="">
+                        <a href="profileMenu?menu=wishlist">
                             <li><i class="fa fa-heart menuIcon" style="color: black;"></i><span class="spanText">Wishlist</span>
                                 <span>
                                     <i style="font-size:24px;color:#494949;" class="fa rightAngle">&#xf105;</i>
@@ -177,52 +177,59 @@
                     <div class="container"> 
                         <form action="">
                         <div class="row">
+                            <% userInfo.forEach((data) => { %> 
                            
                             <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
-                                <label class="lbl" for="firstName">First Name
-                                    <input type="text" class="form-control firstNameInput" name="BrandName"
-                                        id="firstName" placeholder="Enter First Name" required>
+                                <label class="lbl" for="firstName">Full Name
+                                    <input type="text" class="form-control firstNameInput" name="fullName"
+                                        id="firstName" placeholder="Enter Full Name" required value="<%=data.fullName%>">
                                 </label>
 
                                 <label class="lbl" for="EmailAddress"> Email Address
                                     <input type="email" class="form-control firstNameInput" name="emailAddress"
-                                        id="EmailAddress" placeholder="Enter Email Address" required>
+                                        id="EmailAddress" placeholder="Enter Email Address" required value="<%=data.emailAddress%>">
                                 </label>
-                                <label class="lbl" for="MobileNo"> Mobile Number
-                                    <input type="text" class="form-control firstNameInput" name="mobileNo" id="MobileNo"
-                                        placeholder="Enter Mobile Number" required>
+                                <label class="lbl" for="EmailAddress"> City/District/Town
+                                    <input type="text" class="form-control firstNameInput" name="cityDistrictTown"
+                                        id="EmailAddress" placeholder="City/District/Town" required value="<%=data.cityDistrictTown%>">
                                 </label>
+                            
                                 <label class="lbl" for="State"> State
                                     <select name="state" class="dropbtn firstNameInput"  id="State" >
-                                        <option value="Mens">Kerala</option>
-                                        <option value="Womens">Karnadaka</option>
-                                        <option value="Kids">TamilNadu</option>
+                                        <option value="" <%= data.state === '' ? 'selected' :'' %>>Select State</option>
+                                        <option value="Kerala" <%= data.state === 'Kerala' ? 'selected' : '' %> >Kerala</option>
+                                        <option value="Karnadaka" <%= data.state === 'Karnadaka' ? 'selected' : '' %> >Karnadaka</option>
+                                        <option value="TamilNadu" <%= data.state === 'TamilNadu' ? 'selected' : '' %> >TamilNadu</option>
                                     </select>
                                 </label>
                             </div>
                             <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
-                                <label class="lbl" for="firstName"> Last Name
-                                    <input type="text" class="form-control firstNameInput" name="BrandName"
-                                        id="lastName" placeholder="Enter Last Name" required>
+                                <label class="lbl" for="MobileNo"> Mobile Number
+                                    <input type="text" class="form-control firstNameInput" name="mobileNo" id="MobileNo"
+                                        placeholder="Enter Mobile Number" required value="<%=data.phoneNo%>">
                                 </label>
                                 <label class="lbl" for="gender"> Gender
                                     <div class="firstNameInput" style="padding-top: 10px; font-size: 12pt;">
-                                        <input type="radio" id="gender" name="gender" value="male"> Male
-                                        <input type="radio" name="gender" value="female"> Female
+                                        <input type="radio" id="gender" name="gender" value="Male" <%= data.gender === 'Male' ? 'checked' : '' %> > Male
+                                        <input type="radio" name="gender" value="Female"  <%= data.gender === 'Female' ? 'checked' : '' %>> Female
                                     </div>
                                 </label>
-                                <label class="lbl" for="State"> State
+                                <label class="lbl" for="State"> Country
                                     <select name="state" class="dropbtn firstNameInput"  id="State" >
-                                        <option value="Mens">Kerala</option>
-                                        <option value="Womens">Karnadaka</option>
-                                        <option value="Kids">TamilNadu</option>
+                                        <option value="" <%= data.country === '' ? 'selected' :'' %>>Select Country</option>
+                                        <option value="India" <%= data.country === 'India' ? 'selected' : '' %>  >India</option>
+                                        <option value="Australia" <%= data.country === 'Australia' ? 'selected' : '' %>>Australia</option>
+                                        <option value="New Zealand" <%= data.country === 'New Zealand' ? 'selected' : '' %>>New Zealand</option>
                                     </select>
                                 </label>
                                 <label class="lbl" for="PinCode"> Pin-Code
                                     <input type="text" class="form-control firstNameInput" name="pinCode"
-                                        id="PinCode" placeholder="Enter Pin-Code" required>
+                                        id="PinCode" placeholder="Enter Pin-Code" required value="<%=data.pincode%>">
                                 </label>
                             </div>
+
+                            <% }) %>
+                          
                         </div>
                          <a  style="width: 100%;display: flex; justify-content: center;">
                             <button class="saveChanges" id="svaebtn">Save Changes</button>
@@ -262,13 +269,18 @@
             <div class="col-5 cropDiv">
                 <div id="Croppedimage" class="preview"></div>
                 <div class="row btnRow">
-                    <a href="addProducts">
+                    <a href="">
                         <button class="Cancel"><span><i class="fa-solid fa-xmark"
                                     style="color: #ffffff;"></i></span>Cancel</button>
                     </a>
 
                     <button type="button" id="cropBtn" class="crop"><span><i class="fa-solid fa-crop"
                                 style="color: #ffffff;"></i></span>Crop</button>
+                        <!-- <form action="/Profile" method="post">
+                             <button type="submit" id="" class="crop"><span><i class="fa-solid fa-crop"
+                                    style="color: #ffffff;"></i></span>Save</button>
+                        </form>    -->
+                   
 
                 </div>
             </div>
@@ -287,8 +299,6 @@
             integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="/assets/js/profile.js">  </script>
-
-        <script src="/assets/js/profile.js"></script>
 
 
 

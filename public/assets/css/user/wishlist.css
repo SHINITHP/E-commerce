@@ -276,3 +276,6 @@ img {
     font-size: 14pt;
     font-family: Poppins;
 }
+.col3 ul li:hover {
+    background-color: #afafaf;
+}

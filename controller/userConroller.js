@@ -1,5 +1,6 @@
 const reqErrorHandler = require("../middlewares/reqErrorHandler.js")
 const UserModel = require('../models/user/registerSchema.js')
+const addressModel = require('../models/user/addressSchema.js')
 const OTPModel = require('../models/user/otpModel.js')
 const productModel = require('../models/admin/productModel.js')
 const bcrypt = require('bcrypt')
@@ -9,6 +10,9 @@ const { request } = require("express");
 const subCategorySchema = require('../models/admin/category.js')
 const passport = require("passport")
 require('dotenv').config()
+const fetch = require('node-fetch'); 
+const axios = require('axios')
+
 
 
 //Globally declared variables
@@ -42,8 +46,9 @@ const landingPage = async (req, res) => {
   const subCategories = await subCategorySchema.find({})
   // console.log(subCategories);
   if (req.path == '/') {
+
     const ProductData = await productModel.find({})
-    res.render('user/index', { ProductData })
+    res.render('user/index', { ProductData, userId: '' })
   }
   else if (req.path == '/allProducts') {
     const page = req.query.page;
@@ -60,13 +65,13 @@ const landingPage = async (req, res) => {
       })
       .then(ProductData => {
         res.render('user/allProducts', {
-          route:'allProducts',
+          route: 'allProducts',
           ProductData,
           category: '',
           subCategories,
           currentPage: page,
           totalDocuments: docCount,
-          pages:Math.ceil(docCount/perPage)
+          pages: Math.ceil(docCount / perPage)
         })
       })
   }
@@ -75,23 +80,23 @@ const landingPage = async (req, res) => {
     const page = req.query.page;
     const perPage = 4;
     let docCount;
-    const ProductData = await productModel.find({CategoryName:category})
+    const ProductData = await productModel.find({ CategoryName: category })
       .countDocuments()
       .then(documents => {
         docCount = documents;
-        return productModel.find({CategoryName:category})
+        return productModel.find({ CategoryName: category })
           .skip((page - 1) * perPage)
           .limit(perPage)
       })
       .then(ProductData => {
         res.render('user/allProducts', {
-          route:'filterCategory',
+          route: 'filterCategory',
           ProductData,
           category,
           subCategories,
           currentPage: page,
           totalDocuments: docCount,
-          pages:Math.ceil(docCount/perPage)
+          pages: Math.ceil(docCount / perPage)
         })
       })
   }
@@ -116,10 +121,7 @@ const google = (req, res) => {
 
 }
 
-//profile
-const profile = (req, res) => {
-  res.render('user/Profile', { error: '' })
-}
+
 
 // show the page to enter the email to send otp when the user forgot password.
 const sendEmailOtp = (req, res) => {
@@ -156,8 +158,103 @@ const filterProducts = async (req, res) => {
     res.render('user/allProducts', { ProductData, category: req.query.category, subCategories })
   }
 }
+process.env.JWT_SECRET
+
+// Define the verifyToken function
+function verifyToken(token) {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded.id; // Return the decoded userID
+  } catch (err) {
+    return null; // Return null if verification fails
+  }
+}
 
 
+//profile
+const profile = async (req, res) => {
+  const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+  const userID = await verifyToken(token); // Verify token and get userID
+  try {
+    const userInfo = await addressModel.aggregate([
+      {
+        $lookup: {
+          from: "userregisters",
+          localField: 'userID',
+          foreignField: '_id',
+          as: 'UserAddress'
+        }
+      },
+      {
+        $project: {
+          "UserAddress.password": 0 // Exclude the password field
+        }
+      }
+    ]);
+    if (!userID) {
+      res.render('user/login', { error: " " }); // Render login page if token is invalid
+    } else {
+      // Render profile page with userID
+          res.render('user/Profile', { error: '', userInfo })
+    }
+    // Handle result here
+  } catch (error) {
+    console.error('Token verification failed:', error);
+  }
+}
+
+
+const profileMenu = async (req, res) => {
+  if (req.path == '/profileMenu') {
+    const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+    const userID = verifyToken(token); // Verify token and get userID
+    const userAddress = await addressModel.find({ userID: userID })
+    if (req.query.menu == 'manageAddress') {
+      res.render('user/manageAddress', { userAddress })
+    }
+    else if (req.query.menu == 'myOrders') {
+      res.render('user/myOrders')
+    }
+    else if (req.query.menu == 'wishlist') {
+      res.render('user/wishlist')
+    }
+  }
+}
+
+const saveImage = async(req,res) => {
+  const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+  const userID = verifyToken(token); // Verify token and get userID
+
+}
+
+const saveIndexData = async(req,res) => {
+  const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+  const userID = verifyToken(token); // Verify token and get userID
+  axios.post()
+  
+}
+
+
+const saveUserAddress = async (req, res) => {
+  const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+  const userID = verifyToken(token); // Verify token and get userID
+  const {
+    addressType, address, pincode,
+    state, gender, emailAddress,
+    country, cityDistrictTown, phoneNo,
+    fullName
+  } = req.body
+
+  const UserAddress = {
+    addressType, address, pincode,
+    state, gender, emailAddress,
+    country, cityDistrictTown, phoneNo,
+    fullName, userID
+  }
+
+  await addressModel.create(UserAddress);
+  res.redirect('/profileMenu?menu=manageAddress')
+}
 
 
 //Section for GET Request End here.......
@@ -290,7 +387,7 @@ const userLogin = (async (req, res) => {
   try {
     const { emailAddress, password } = req.body
     const userExist = await UserModel.findOne({ emailAddress: emailAddress });
-    console.log('userEmailfromDB : ', emailAddress);
+    console.log('userEmailfromDB : ', userExist);
     //check the user is exist or not
     if (userExist) {
       const isPasswordMatch = await bcrypt.compare(password, userExist.password)
@@ -298,8 +395,11 @@ const userLogin = (async (req, res) => {
         if (userExist.status === true) {
           // const userData = await UserModel.create(GlobalUser);
           const Token = createToken(userExist._id)
+          console.log(Token)
           res.cookie('jwtUser', Token, { httpOnly: true, maxAge: MaxExpTime * 1000 });
+          // res.redirect(`/?id=${userExist._id}`)
           res.redirect('/')
+          // res.render('user/index',{userId: userExist._id})
         }
         else {
           res.render('user/login', { error: "User Blocked!" })
@@ -444,6 +544,7 @@ module.exports = {
   userLogin,
   logout,
   profile,
+  profileMenu,
   google,
   shoppingCart,
   sendEmailOtp,
@@ -452,10 +553,12 @@ module.exports = {
   postForgotEnterOtp,
   resetPassword,
   createPassword,
+  saveUserAddress,
   filterProducts,
   enterOtp,
   sentOTP,
   createUser,
   resendOtp,
   productOverview,
+  saveImage
 }

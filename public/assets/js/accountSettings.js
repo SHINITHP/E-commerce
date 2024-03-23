@@ -1,7 +1,7 @@
 const changeIcon = document.getElementById('changeIcon');
 const dropDownLi1 = document.getElementById('DropDownLi1');
 const dropDownLi2 = document.getElementById('DropDownLi2');
-let isDropDownVisible = false;
+let isDropDownVisible = true;
 
 changeIcon.addEventListener('click', function () {
     let icon = document.getElementById('icon');
@@ -10,11 +10,12 @@ changeIcon.addEventListener('click', function () {
         icon.innerHTML = '&#xf107;'; // Change to the new icon
         dropDownLi1.style.display = 'block';
         dropDownLi2.style.display = 'block';
+
+      
     } else {
-        icon.innerHTML = '&#xf105;'; // Change back to the original icon
+         icon.innerHTML = '&#xf105;'; // Change back to the original icon
         dropDownLi1.style.display = 'none';
         dropDownLi2.style.display = 'none';
-
     }
 
     // Toggle the state
@@ -86,9 +87,8 @@ function cropImage(id, divId) {
 
                         croppedCanvas.toBlob(function (blob) {
                             const blobUrl = URL.createObjectURL(blob);
-                            croppedImageView.src = blobUrl;
-                            // console.log(croppedImageView.src)
-                            // After cropping the image, send the Blob URL to the server
+                            croppedImageView.src =blobUrl;
+                            console.log(croppedImageView.src)
 
                             croppers[newImage.src].destroy();
 

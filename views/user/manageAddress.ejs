@@ -121,27 +121,27 @@
                                 <li><i class="fa-regular fa-user menuIcon" style="color: black;"></i><span class="spanText">Account
                                         Settings</span>
                                     <span>
-                                        <i id="icon" class="fa rightAngle">&#xf105;</i>
+                                        <i id="icon" class="fa rightAngle">&#xf107;</i>
                                     </span>
                                 </li>
                             </a>
     
     
-                            <a href="" id="DropDownLi1" style="display: none;">
-                                <li style="padding-left: 68px;">Profile Information <span><i
+                            <a href="/Profile" id="DropDownLi1">
+                                <li style="padding-left: 68px; height:50px;">Profile Information <span><i
                                             style="font-size:24px;color:#494949;padding-left:63px;"
                                             class="fa rightAngle">&#xf105;</i></span></li>
                             </a>
     
-                            <a href="" id="DropDownLi2" style="display: none;">
-                                <li style="padding-left: 68px;">Manage Address <span><i
+                            <a href="profileMenu?menu=manageAddress" id="DropDownLi2">
+                                <li style="padding-left: 68px;height:50px;background-color: #afafaf;">Manage Address <span><i
                                             style="font-size:24px;color:#494949;padding-left:79px;"
                                             class="fa rightAngle">&#xf105;</i></span></li>
                             </a>
     
     
     
-                            <a href="">
+                            <a href="profileMenu?menu=myOrders">
                                 <li><i class="fa-solid fa-cart-shopping cartIcon menuIcon" style="color: black;"></i><span
                                         class="spanText">My
                                         Orders</span>
@@ -150,7 +150,7 @@
                                     </span>
                                 </li>
                             </a>
-                            <a href="">
+                            <a href="profileMenu?menu=wishlist">
                                 <li><i class="fa fa-heart menuIcon" style="color: black;"></i><span class="spanText">Wishlist</span>
                                     <span>
                                         <i style="font-size:24px;color:#494949;" class="fa rightAngle">&#xf105;</i>
@@ -184,6 +184,8 @@
                                     <i class="fa-solid fa-plus plusBtn" id="addIcon" style="color: #030303;"></i>
                                     <p style="padding-left: 30px;font-size: 14pt;font-family: Poppins;">ADD A NEW ADDRESS</p>
                                 </div>    
+
+                                
                                     <div class="container" id="addAddress"> 
                                         <div class="row">
                                             <div class="col-7" style="padding-top: 5px;">
@@ -194,178 +196,172 @@
                                             </div>
                                         </div>
                                    
-                                    <form action="" class="addForm" id="addAddressForm">
-                                        <!-- <div class="row">
-                                            <div class="col-7">
-                                               
-                                            </div>
-                                            <div class="col-5" style="display: flex;justify-content: end; padding-top: 7px;">
-                                                  
-                                            </div>
-                                        </div> -->
-                                      
-                                      
-                                        <br>
+                                    <form action="/profileMenu" class="addForm" id="addAddressForm" method="post">
+                                       
                                         <div class="row">
                                             <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
-                                                <label class="lbl" for="firstName">First Name
-                                                    <input type="text" class="form-control firstNameInput" name="BrandName"
-                                                        id="firstName" placeholder="Enter First Name" required>
+                                                <label class="lbl" for="firstName">Full Name
+                                                    <input type="text" class="form-control firstNameInput" name="fullName"
+                                                        id="firstName" placeholder="Enter Full Name" required>
                                                 </label>
                 
                                                 <label class="lbl" for="MobileNo"> Mobile Number
-                                                    <input type="tel" class="form-control firstNameInput" name="mobileNo" id="MobileNo"
+                                                    <input type="tel" class="form-control firstNameInput" name="phoneNo" id="MobileNo"
                                                         placeholder="Enter Mobile Number" required>
                                                 </label>
         
                                                 <label class="lbl" for="EmailAddress"> City/District/Town
-                                                    <input type="text" class="form-control firstNameInput" name="emailAddress"
-                                                        id="EmailAddress" placeholder="City/District/Town" required>
+                                                    <input type="text" class="form-control firstNameInput" name="cityDistrictTown"
+                                                        id="cityDistrictTown" placeholder="City/District/Town" required>
                                                 </label>
                                                
                                                 <label class="lbl" for="State"> Country
-                                                    <select name="state" class="dropbtn firstNameInput"  id="State" >
-                                                        <option value="Mens">India</option>
-                                                        <option value="Womens">Karnadaka</option>
-                                                        <option value="Kids">TamilNadu</option>
+                                                    <select name="country" class="dropbtn firstNameInput"  id="State">
+                                                        <option value="India">India</option>
+                                                        <option value="Australia">Australia</option>
+                                                        <option value="New Zealand">New Zealand</option>
                                                     </select>
                                                 </label>
         
                                             </div>
         
                                             <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
-                                                <label class="lbl" for="firstName"> Last Name
-                                                    <input type="text" class="form-control firstNameInput" name="BrandName"
-                                                        id="lastName" placeholder="Enter Last Name" required>
+                                                <label class="lbl" for="EmailAddress"> Email Address
+                                                    <input type="email" class="form-control firstNameInput" name="emailAddress"
+                                                        id="EmailAddress" placeholder="Enter Email Address" required>
                                                 </label>
                                                 <label class="lbl" for="gender" > Gender
                                                     <div class="firstNameInput" style="padding-top: 10px; font-size: 12pt;">
-                                                        <input type="radio" id="gender" name="gender" value="male"> Male
-                                                        <input type="radio" name="gender" value="female"> Female
+                                                        <input type="radio" id="gender" name="gender" value="Male"> Male
+                                                        <input type="radio" name="gender" value="Female"> Female
                                                     </div>
                                                    
                                                 </label>
                                                 <label class="lbl" for="State"> State
                                                     <select name="state" class="dropbtn firstNameInput"  id="State" >
-                                                        <option value="Mens">Kerala</option>
-                                                        <option value="Womens">Karnadaka</option>
-                                                        <option value="Kids">TamilNadu</option>
+                                                        <option value="Kerala">Kerala</option>
+                                                        <option value="Karnadaka">Karnadaka</option>
+                                                        <option value="TamilNadu">TamilNadu</option>
                                                     </select>
                                                 </label>
                                                 <label class="lbl" for="PinCode"> Pin-Code
-                                                    <input type="number" class="form-control firstNameInput" name="pinCode"
+                                                    <input type="text" class="form-control firstNameInput" name="pincode"
                                                         id="PinCode" placeholder="Enter Pin-Code" required>
                                                 </label>
                                             </div>
         
                                             <div class="col-12">
                                                 <label class="lbl" for="txtAddress" style="width: 100%;">Address
-                                                    <textarea name="" id="txtAddress" cols="30" rows="10" class="addressTxtArea" placeholder="Enter your Address"></textarea>
+                                                    <textarea name="address" id="txtAddress" cols="30" rows="10" class="addressTxtArea" placeholder="Enter your Address"></textarea>
                                                 </label>
                                             </div>
                                             <div class="col-7" style="display: flex;padding-left: 30px;">
-                                                <input type="radio" id="gender" name="gender" value="Home"> Home
-                                                <input type="radio" name="gender" value="Workspace" style="margin-left: 20px;">  Workspace
+                                                <input type="radio" id="gender" name="addressType" value="Home"> Home
+                                                <input type="radio" name="addressType" value="Workspace" style="margin-left: 20px;">  Workspace
                                             </div>
         
                                         </div>
         
                                         <a  style="width: 100%;display: flex; justify-content: center; margin-bottom: 20px;">
-                                            <button class="saveChanges" id="svaebtn">Save Changes</button>
+                                            <button type="submit" class="saveChanges" id="svaebtn">Submit</button>
                                         </a>
         
                                     </form>
                                 </div>
                                
 
-                                <br>
-                                <div class="container con2"  id="defaultDiv">
+                             
+                                <% userAddress.forEach((data,index) => { %> 
+                                <div class="container con2"  id="defaultDiv" style="margin-top: 15px;">
                                     <div class="row con2Row1">
                                         <div class="col-6 rowcol6-1">
-                                            <p>Home</p>
+                                            <p><%=data.addressType%></p>
                                         </div>
                                         <div class="col-6 rowcol6-2">
-                                            <button class="btn" id="remove">Remove</button>
-                                            <button class="btn" id="update">Update</button>
-                                            <button class="btn" style="display: none;" id="cancelBtn">Cancel</button>
+                                            <button class="btn remove" data-index="<%= index %>" id="">Remove</button>
+                                            <button class="btn update" data-index="<%= index %>" onclick="updateAddress('<%= index %>')">Update</button>
+
+                                            <button class="btn cancelBtn" data-index="<%= index %>" onclick="cancelUpdate('<%= index %>')" style="display: none;" id="">Cancel</button>
                                         </div>    
                                     </div>
 
                                     <div class="row con2Row2">
-                                        <h5>Shibith.P</h5>
-                                        <h6>1234567890</h6>
+                                        <h5><%=data.fullName%></h5>
+                                        <h6><%=data.phoneNo%></h6>
                                     </div>
 
                                     <div class="row con2Row3">
-                                        <p>Beena nivas, Uruvachal, Near imc hospital, Mattannur, Kerala - 670702</p>
+                                        <p><%=data.address%> , <%=data.cityDistrictTown%>, <%=data.state%>-<%=data.pincode%></p>
                                     </div>
 
                                   
 
-
-                                    <form action="" class="editForm" id="updateForm">
+                                    <!-- update-Form starts here -->
+                                    <form action="" class="editForm updateForm" id="form_<%= index %>">
                                         <p class="updateTxt">Update Address</p>
                                         <br>
                                         <div class="row">
                                             <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
-                                                <label class="lbl" for="firstName">First Name
+                                                <label class="lbl" for="firstName">Full Name
                                                     <input type="text" class="form-control firstNameInput" name="BrandName"
-                                                        id="firstName" placeholder="Enter First Name" required>
+                                                        id="firstName" placeholder="Enter Full Name" required value="<%=data.fullName%>">
                                                 </label>
                 
                                                 <label class="lbl" for="MobileNo"> Mobile Number
                                                     <input type="text" class="form-control firstNameInput" name="mobileNo" id="MobileNo"
-                                                        placeholder="Enter Mobile Number" required>
+                                                        placeholder="Enter Mobile Number" required value="<%=data.phoneNo%>">
                                                 </label>
         
                                                 <label class="lbl" for="EmailAddress"> City/District/Town
-                                                    <input type="email" class="form-control firstNameInput" name="emailAddress"
-                                                        id="EmailAddress" placeholder="City/District/Town" required>
+                                                    <input type="text" class="form-control firstNameInput" name="emailAddress"
+                                                        id="EmailAddress" placeholder="City/District/Town" required value="<%=data.cityDistrictTown%>">
                                                 </label>
                                                
                                                 <label class="lbl" for="State"> Country
                                                     <select name="state" class="dropbtn firstNameInput"  id="State" >
-                                                        <option value="Mens">India</option>
-                                                        <option value="Womens">Karnadaka</option>
-                                                        <option value="Kids">TamilNadu</option>
+                                                        <option value="" <%= data.country === '' ? 'selected' :'' %>>Select Country</option>
+                                                        <option value="India" <%= data.country === 'India' ? 'selected' : '' %>  >India</option>
+                                                        <option value="Australia" <%= data.country === 'Australia' ? 'selected' : '' %>>Australia</option>
+                                                        <option value="New Zealand" <%= data.country === 'New Zealand' ? 'selected' : '' %>>New Zealand</option>
                                                     </select>
                                                 </label>
         
                                             </div>
         
                                             <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
-                                                <label class="lbl" for="firstName"> Last Name
-                                                    <input type="text" class="form-control firstNameInput" name="BrandName"
-                                                        id="lastName" placeholder="Enter Last Name" required>
+                                                <label class="lbl" for="EmailAddress"> Email Address
+                                                    <input type="email" class="form-control firstNameInput" name="emailAddress"
+                                                        id="EmailAddress" placeholder="Enter Email Address" required value="<%=data.emailAddress%>">
                                                 </label>
                                                 <label class="lbl" for="gender" > Gender
                                                     <div class="firstNameInput" style="padding-top: 10px; font-size: 12pt;">
-                                                        <input type="radio" id="gender" name="gender" value="male"> Male
-                                                        <input type="radio" name="gender" value="female"> Female
+                                                        <input type="radio" id="gender" name="gender" value="Male" <%= data.gender === 'Male' ? 'checked' : '' %> > Male
+                                                        <input type="radio" name="gender" value="Female"  <%= data.gender === 'Female' ? 'checked' : '' %>> Female
                                                     </div>
                                                    
                                                 </label>
                                                 <label class="lbl" for="State"> State
                                                     <select name="state" class="dropbtn firstNameInput"  id="State" >
-                                                        <option value="Mens">Kerala</option>
-                                                        <option value="Womens">Karnadaka</option>
-                                                        <option value="Kids">TamilNadu</option>
+                                                        <option value="" <%= data.state === '' ? 'selected' :'' %>>Select State</option>
+                                                        <option value="Kerala" <%= data.state === 'Kerala' ? 'selected' : '' %> >Kerala</option>
+                                                        <option value="Karnadaka" <%= data.state === 'Karnadaka' ? 'selected' : '' %> >Karnadaka</option>
+                                                        <option value="TamilNadu" <%= data.state === 'TamilNadu' ? 'selected' : '' %> >TamilNadu</option>
                                                     </select>
                                                 </label>
                                                 <label class="lbl" for="PinCode"> Pin-Code
                                                     <input type="text" class="form-control firstNameInput" name="pinCode"
-                                                        id="PinCode" placeholder="Enter Pin-Code" required>
+                                                        id="PinCode" placeholder="Enter Pin-Code" required value="<%=data.pincode%>">
                                                 </label>
                                             </div>
         
                                             <div class="col-12">
                                                 <label class="lbl" for="txtAddress" style="width: 100%;">Address
-                                                    <textarea name="" id="txtAddress" cols="30" rows="10" class="addressTxtArea" placeholder="Enter your Address"></textarea>
+                                                    <textarea name="" id="txtAddress" cols="30" rows="10" class="addressTxtArea" placeholder="Enter your Address"><%=data.address%></textarea>
                                                 </label>
                                             </div>
                                             <div class="col-7" style="display: flex;padding-left: 30px;">
-                                                <input type="radio" id="gender" name="gender" value="Home"> Home
-                                                <input type="radio" name="gender" value="Workspace" style="margin-left: 20px;">  Workspace
+                                                <input type="radio" id="gender" name="addressType" value="Home" <%= data.addressType === 'Home' ? 'checked' : '' %>> Home
+                                                <input type="radio" name="addressType" value="Workspace" style="margin-left: 20px;" <%= data.addressType === 'Workspace' ? 'checked' : '' %>>  Workspace
                                             </div>
         
                                         </div>
@@ -375,28 +371,15 @@
                                         </a>
         
                                     </form>
+                                      <!-- update-Form End here -->
                                     <br>
                                 </div>
-    
+                                <% }) %>
                    
-
-
-                            
-
-
                         </div>
-
-
-
-
-
-
 
                     </div>
 
-
-
-                    
                 </div>
 
             </div>
@@ -408,21 +391,31 @@
         <%- include('../../views/user/footer.ejs') %>
             <!-- Footer end  here... -->
     
-    
-    
+
             <script>
-                document.getElementById('update').addEventListener('click' , function(){
-                    document.getElementById('update').style.display='none'
-                    document.getElementById('remove').style.display='none'
-                    document.getElementById('updateForm').style.display='block'
-                    document.getElementById('cancelBtn').style.display='block'
-                })
-                document.getElementById('cancelBtn').addEventListener('click' , function(){
-                    document.getElementById('cancelBtn').style.display='none'
-                    document.getElementById('remove').style.display='block'
-                    document.getElementById('updateForm').style.display='none'
-                    document.getElementById('update').style.display='block'
-                })
+                function updateAddress(index) {
+                    const updateBtn = document.querySelector(`.update[data-index="${index}"]`);
+                    const removeBtn = document.querySelector(`.remove[data-index="${index}"]`);
+                    const cancelBtn = document.querySelector(`.cancelBtn[data-index="${index}"]`);
+                    console.log(cancelBtn);
+                    const form = document.getElementById(`form_${index}`);
+                        form.style.display = 'block'; // Show the corresponding form
+                        updateBtn.style.display='none'
+                        removeBtn.style.display='none'
+                        cancelBtn.style.display='block'
+                }
+                function cancelUpdate(index){
+                    const updateBtn = document.querySelector(`.update[data-index="${index}"]`);
+                    const removeBtn = document.querySelector(`.remove[data-index="${index}"]`);
+                    const cancelBtn = document.querySelector(`.cancelBtn[data-index="${index}"]`);
+                    console.log(cancelBtn);
+                    const form = document.getElementById(`form_${index}`);
+                        form.style.display = 'none'; // Show the corresponding form
+                        updateBtn.style.display='block'
+                        removeBtn.style.display='block'
+                        cancelBtn.style.display='none'
+                }
+                
 
                 document.getElementById('addAddressDiv').addEventListener('click' , function(){
                     document.getElementById('addAddressDiv').style.display='none'
@@ -434,7 +427,6 @@
                     document.getElementById('addAddress').style.display='none'
                     document.getElementById('addAddressDiv').style.display='block'
                     document.getElementById('addAddressDiv').style.display='flex'
-
                 })
 
             </script>

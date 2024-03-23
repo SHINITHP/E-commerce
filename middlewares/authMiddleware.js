@@ -12,8 +12,7 @@ const userAuth = async (req, res, next) => {
                 if (err) {
                     res.render('user/login', { error: " " })
                 }
-                    // console.log('decoded data means :',decoded);
-                    // req.decoded = decoded
+
                     next()
             })
 

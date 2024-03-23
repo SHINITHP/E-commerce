@@ -134,7 +134,7 @@ img {
     top: 51%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 50vw;
+    width: 60vw;
     height: 600px;
     padding: 0 5px 30px;
     background-color: white;
@@ -190,6 +190,7 @@ img {
 
 .btnRow {
     display: flex;
+    justify-content: center;
     justify-content: center;
     margin-bottom: 30px;
 }
@@ -259,6 +260,8 @@ img {
 }
 
 .firstNameInput {
+    font-size: 11pt;
+    font-family: Poppins;
     width: 100%;
     height: 40px;
 }
@@ -292,7 +295,9 @@ img {
     font-size: 24px;
     color: #494949;
 }
-
+.col3 ul li:hover {
+    background-color: #afafaf;
+}
 
 
 

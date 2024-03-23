@@ -260,7 +260,7 @@
                                                         </li>
                                                         <li><a href="single-product.html"><i class="fa fa-heart"></i></a>
                                                         </li>
-                                                        <li><a href="single-product.html"><i
+                                                        <li><a href="/?Product=<%= item._id %>"><i
                                                                     class="fa fa-shopping-cart"></i></a></li>
                                                     </ul>
                                                 </div>
@@ -383,7 +383,7 @@
                     <div class="col-lg-12">
                         <div class="women-item-carousel">
                             <div class="owl-women-item owl-carousel">
-                                <% ProductData.forEach((item)=> { %>
+                                <% ProductData.forEach((item,index)=> { %>
 
                                     <% if(item.CategoryName=="Kids" && item.Inventory === "Listed" ){ %>
                                         <div class="item">
@@ -394,7 +394,7 @@
                                                         </li>
                                                         <li><a href="single-product.html"><i class="fa fa-heart"></i></a>
                                                         </li>
-                                                        <li><a href="single-product.html"><i
+                                                        <li ><a class="shopingCartBtn<%=index%>" onclick="shoppingCart('<%=index%>','<%= item._id %>')"  href="single-product.html"><i
                                                                     class="fa fa-shopping-cart"></i></a></li>
                                                     </ul>
                                                 </div>
@@ -425,7 +425,11 @@
                 </div>
             </div>
         </section>
-
+        <script>
+            function shoppingCart(index,productId){
+              let btnShopingCart = document.querySelector(`.shoppingCartBtn${index}`)
+            }
+        </script>
 
         <!-- ***** Kids Area Ends ***** -->
 
@@ -660,36 +664,38 @@
             <script src="assets/js/custom.js"></script>
 
             <script> 
-               
+                var a=false;
                 document.addEventListener("DOMContentLoaded", function() {
-                    var menuTrigger = document.getElementById("menuTrigger");
-                    var menu = document.getElementById("menuDropDown");
+                    let menuTrigger = document.getElementById("menuTrigger");
+                    let menu = document.getElementById("menuDropDown");
                     const menuTriggerSpan = document.querySelector('#menuTrigger span')
-
+                    
                   
                     // Toggle menu visibility when the menu trigger is clicked
-                    menuTrigger.addEventListener("click", function() { 
+                    menuTrigger.addEventListener("click", function() {  
+                        a=!a; 
                         menuTrigger.style.display='none';
                         menuTriggerSpan.style.display='none'
                         menu.style.display ="block";
-                    });
-                    // Hide the menu when clicking outside of it
-                    document.addEventListener("click", function(event) {
-                      if (!menu.contains(event.target)&& event.target !== menuTrigger ) {
-                        menu.style.display = "none";
-                        menuTrigger.style.display='block';
-                        menuTriggerSpan.style.display='block'
-                      }
-                  
-                    });
+                        <!-- console.log(menu.style.display =="block") -->
+                        // Hide the menu when clicking outside of it
+                        if(menu.style.display =="block"){
+                            document.addEventListener("click", function(event) {
+                                if (!menu.contains(event.target)&& event.target !== menuTrigger ) {
+                                  menu.style.display = "none";
+                                  menuTrigger.style.display='block';
+                                  menuTriggerSpan.style.display='block'
+                                }                     
+                              });
+                        }
+                    }); 
+
                     menu.addEventListener("click", function(event) {
                         menu.style.display = "none";
                         menuTrigger.style.display = "block";
-                         menuTriggerSpan.style.display='block';
+                        menuTriggerSpan.style.display='block';
                       });
-
-
-
+                      console.log(a)
                   });
 
 
@@ -706,6 +712,10 @@
 
                     });
                 });
+
+
+
+
 
             </script>
 

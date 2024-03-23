@@ -18,9 +18,12 @@ const {
     enterOtp,
     google,
     sentOTP,
+    profileMenu,
     resendOtp,
     productOverview,
-    filterProducts
+    filterProducts,
+    saveUserAddress,
+    saveImage
 } = require("../../controller/userConroller.js");
 const { userAuth } = require('../../middlewares/authMiddleware.js')
 const passport = require('passport')
@@ -28,8 +31,7 @@ require('../../controller/googleOuath.js')
 const jwt = require('jsonwebtoken');
 
 
-
-router.route('/').get(landingPage);//landinglage  passport.authenticate('google',{successRedirect: '/',failureRedirect:'/login'}),
+router.route('/').get(landingPage)//landinglage  passport.authenticate('google',{successRedirect: '/',failureRedirect:'/login'}),
 router.route('/register').get(registerPage).post(sentOTP)//user registration 
 router.route('/enterOtp').get(enterOtp).post(createUser)//enterOtp
 router.route('/login').get(loginPage).post(userLogin)//loginpage
@@ -52,8 +54,9 @@ router.route('/productOverview').get(productOverview)//productOverview
 router.route('/allProducts').get(landingPage)//allProducts
 router.route('/filterProducts').get(filterProducts)
 router.route('/filterCategory').get(landingPage)//listCategory
-router.route('/Profile').get(userAuth,profile)//profile
+router.route('/Profile').get(userAuth,profile).post(saveImage)//profile
 router.route('/logout').get(logout)//logout
+router.route('/profileMenu').get(userAuth,profileMenu).post(saveUserAddress)
 
 
 

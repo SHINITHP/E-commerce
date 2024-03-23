@@ -278,3 +278,7 @@ img {
     font-weight: bold;
     color: rgb(123, 123, 123);
 }
+.col3 ul li:hover {
+    background-color: #afafaf;
+}
+

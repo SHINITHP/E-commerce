@@ -7,14 +7,19 @@ const passport = require('passport')
 const session = require('express-session');
 const passportSetup = require('./controller/googleOuath.js')
 require('dotenv').config()
+const fetch = require('node-fetch'); 
+const bodyParser = require('body-parser');
 
 const userRouter = require("./routes/user/userRoutes")
 const adminRoutes = require('./routes/admin/adminRoutes.js')
 
 app.set("view engine","ejs")
 app.use(express.static(path.join(__dirname,"public"))); 
-app.use(express.json())
-app.use(express.urlencoded({extended:false}));
+// app.use(express.json())
+// app.use(express.urlencoded({extended:false}));
+// Middleware to parse JSON bodies
+app.use(bodyParser.json());
+
 app.use(cookieParser());
 
 app.use(session({
@@ -30,12 +35,12 @@ app.use(passport.session());
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'))  
 
-// app.use('/',userRouter);
-// app.use('/adminLogin',adminRoutes)
+app.use('/',userRouter);
+app.use('/adminLogin',adminRoutes)
 
-app.get('/', (req,res) => {
-  res.render('user/manageAddress')
-})
+// app.get('/', (req,res) => {
+//   res.render('user/manageAddress')
+// })
 const port = process.env.port||8000
 app.listen(port,(err)=>{
     if(err) console.log(err);

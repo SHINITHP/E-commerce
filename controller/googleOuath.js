@@ -30,7 +30,7 @@ passport.use(
     (accessToken, refreshToken, profile, done) => { 
       // User find or create to db 
     //    done(null, profile); 
-    // console.log('1232131412 ',profile)
+    console.log('1232131412 ',profile)
 
     usermodel.findOne({emailAddress:profile.emails[0].value})
     .select("-password")
