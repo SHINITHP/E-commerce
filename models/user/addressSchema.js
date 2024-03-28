@@ -44,6 +44,10 @@ const addressModel = new mongoose.Schema({
     addressType:{
         type:String,
         required:true
+    },
+    selected:{
+        type:Boolean,
+        default:false
     }
 
 })

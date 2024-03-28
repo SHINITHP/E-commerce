@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const shoppingCartModel = new mongoose.Schema({
+const orderSummaryModel = new mongoose.Schema({
     userID:{
         type:mongoose.Schema.ObjectId, ref:"userRegister",
         required:true
@@ -24,4 +24,4 @@ const shoppingCartModel = new mongoose.Schema({
 })
 
 
-module.exports = mongoose.model("shoppingCart", shoppingCartModel);
+module.exports = mongoose.model("orderSummary", orderSummaryModel);

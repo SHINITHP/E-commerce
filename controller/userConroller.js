@@ -1,6 +1,9 @@
 const reqErrorHandler = require("../middlewares/reqErrorHandler.js")
 const UserModel = require('../models/user/registerSchema.js')
 const addressModel = require('../models/user/addressSchema.js')
+const addtToCartModel = require('../models/user/addToCartSchema.js')
+const orderDetailsModel = require('../models/user/orderSummary.js')
+const orderSchema = require('../models/user/OrderSchema.js')
 const OTPModel = require('../models/user/otpModel.js')
 const productModel = require('../models/admin/productModel.js')
 const bcrypt = require('bcrypt')
@@ -10,7 +13,6 @@ const { request } = require("express");
 const subCategorySchema = require('../models/admin/category.js')
 const passport = require("passport")
 require('dotenv').config()
-const fetch = require('node-fetch'); 
 const axios = require('axios')
 
 
@@ -26,6 +28,16 @@ let GlobalUser = {
 
 let otp;
 
+
+// Define the verifyToken function
+function verifyToken(token) {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded.id; // Return the decoded userID
+  } catch (err) {
+    return null; // Return null if verification fails
+  }
+}
 
 //Create jwt Token 
 const MaxExpTime = 3 * 24 * 60 * 60 // expire in 3days
@@ -141,8 +153,17 @@ const resetPassword = (req, res) => {
 
 
 //get method for shoppingcart
-const shoppingCart = (req, res) => {
-  res.render('user/shoppingCart')
+const shoppingCart = async (req, res) => {
+  const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+  const userID = verifyToken(token); // Verify token and get userID
+  try {
+    const cartItems = await addtToCartModel.find({ userID: userID }).populate('productID');
+    res.render('user/shoppingCart', { cartItems })
+  } catch (error) {
+    console.error("Error fetching cart products:", error);
+  }
+
+
 }
 
 //logout get Request
@@ -158,17 +179,9 @@ const filterProducts = async (req, res) => {
     res.render('user/allProducts', { ProductData, category: req.query.category, subCategories })
   }
 }
-process.env.JWT_SECRET
 
-// Define the verifyToken function
-function verifyToken(token) {
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded.id; // Return the decoded userID
-  } catch (err) {
-    return null; // Return null if verification fails
-  }
-}
+
+
 
 
 //profile
@@ -179,7 +192,7 @@ const profile = async (req, res) => {
     const userInfo = await addressModel.aggregate([
       {
         $lookup: {
-          from: "userregisters",
+          from: "userRegister",
           localField: 'userID',
           foreignField: '_id',
           as: 'UserAddress'
@@ -191,12 +204,11 @@ const profile = async (req, res) => {
         }
       }
     ]);
-    if (!userID) {
-      res.render('user/login', { error: " " }); // Render login page if token is invalid
-    } else {
-      // Render profile page with userID
-          res.render('user/Profile', { error: '', userInfo })
-    }
+
+    console.log(userInfo)
+
+    // Render profile page with userID
+    res.render('user/Profile', { error: '', userInfo })
     // Handle result here
   } catch (error) {
     console.error('Token verification failed:', error);
@@ -208,12 +220,16 @@ const profileMenu = async (req, res) => {
   if (req.path == '/profileMenu') {
     const token = req.cookies.jwtUser; // Assuming token is stored in cookies
     const userID = verifyToken(token); // Verify token and get userID
+    console.log(userID)
     const userAddress = await addressModel.find({ userID: userID })
     if (req.query.menu == 'manageAddress') {
       res.render('user/manageAddress', { userAddress })
     }
     else if (req.query.menu == 'myOrders') {
-      res.render('user/myOrders')
+      const orderDetails = await orderSchema.find({ userID: userID })
+      .populate('productID')
+      console.log(orderDetails)
+      res.render('user/myOrders',{orderDetails})
     }
     else if (req.query.menu == 'wishlist') {
       res.render('user/wishlist')
@@ -221,39 +237,174 @@ const profileMenu = async (req, res) => {
   }
 }
 
-const saveImage = async(req,res) => {
+const saveImage = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
   const userID = verifyToken(token); // Verify token and get userID
-
 }
 
-const saveIndexData = async(req,res) => {
-  const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-  const userID = verifyToken(token); // Verify token and get userID
-  axios.post()
-  
-}
 
 
 const saveUserAddress = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
   const userID = verifyToken(token); // Verify token and get userID
-  const {
-    addressType, address, pincode,
-    state, gender, emailAddress,
-    country, cityDistrictTown, phoneNo,
-    fullName
-  } = req.body
+  if (req.query.type === 'addAddress') {
+    const {
+      addressType, address, pincode,
+      state, gender, emailAddress,
+      country, cityDistrictTown, phoneNo,
+      fullName
+    } = req.body
 
-  const UserAddress = {
-    addressType, address, pincode,
-    state, gender, emailAddress,
-    country, cityDistrictTown, phoneNo,
-    fullName, userID
+    const UserAddress = {
+      addressType, address, pincode,
+      state, gender, emailAddress,
+      country, cityDistrictTown, phoneNo,
+      fullName, userID
+    }
+
+    await addressModel.create(UserAddress);
+    res.redirect('/profileMenu?menu=manageAddress')
+  }
+  else if (req.query.type === 'manageAddress') {
+    const addressID = req.body.addressID
+    const selected = req.body.selected
+    // console.log('body ',addressID,req.body.selected)
+    await addressModel.updateMany({}, { $set: { selected: false } })
+    await addressModel.findOneAndUpdate({ _id: addressID }, { $set: { selected: selected } })
+    res.redirect('/profileMenu?menu=manageAddress')
+  }
+}
+
+
+const overviewFilter = async (req, res) => {
+  // const ProductSize = req.body.ProductSize
+  // const productId = req.body.productId
+  productModel.findById(productId)
+    .then(sizeExist => {
+      // Convert sizeExist to a plain JavaScript object to avoid circular references
+      const productData = sizeExist.toObject();
+      // Send the converted object in the response
+      res.json({ ProductData: productData });
+    })
+    .catch(error => {
+      // Handle errors
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+
+
+  const data = productModel.aggregate([
+    {
+      $group: {
+        _id: `${ProductSize}`, // Group by size field
+        count: { $sum: 1 } // Count occurrences of each size
+      }
+    },
+    {
+      $project: {// Exclude _id field from output
+        size: "$_id", // Rename _id to size
+        count: 1 // Include count field
+      }
+    }
+  ])
+}
+
+
+
+const checkOut = async (req, res) => {
+
+  const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+  const userID = verifyToken(token); // Verify token and get userID
+  try {
+    const cartDetails = await orderDetailsModel.find({ userID: userID }).populate('productID')
+    const userInfo = await addressModel.find({ userID: userID, selected: true })
+    const addresses = await addressModel.find({ userID: userID })
+    res.render('user/checkOut', { cartDetails, userInfo, addresses })
+  } catch (error) {
+    console.error("Error fetching cart products:", error);
   }
 
-  await addressModel.create(UserAddress);
-  res.redirect('/profileMenu?menu=manageAddress')
+}
+
+
+const orderDetails = async (req, res) => {
+  const cartItems = JSON.parse(req.body.cartData);
+
+  let data = cartItems.map((val) => {
+    let details;
+    if (val.userID && val.productID._id && val.quantity && val.size && val.price) {
+      return details = {
+        userID: val.userID,
+        productID: val.productID._id,
+        quantity: val.quantity,
+        size: val.size,
+        price: val.price
+      }
+    }
+  }).filter(item => item); // Filter out undefined values
+
+  for (const item of data) {
+    const productExists = await orderDetailsModel.exists({
+      userID: item.userID,
+      productID: item.productID,
+      quantity: item.quantity,
+      size: item.size,
+      price: item.price
+    });
+
+    if (!productExists) {
+      await orderDetailsModel.create(item);
+    }
+  }
+
+}
+
+const checkOutTasks = async (req, res) => {
+  if (req.query.task === 'removeProducts') {
+    const orderSummaryId = req.body.id;
+    console.log(orderSummaryId)
+    await orderDetailsModel.deleteMany({ _id: orderSummaryId })
+    res.redirect('/checkOut');
+  }
+  else if (req.query.task === 'selectDeleveryAddress') {
+    try {
+      const addressID = req.body.addressID
+      // console.log('body ',addressID,req.body.selected)
+      await addressModel.updateMany({}, { $set: { selected: false } })
+      await addressModel.findOneAndUpdate({ _id: addressID }, { $set: { selected: true } })
+      // res.redirect('/')
+    } catch (error) {
+      console.log('Error on select Delivery Address')
+    }
+  }
+  else if(req.query.task === 'saveOrderDetails'){
+  
+    const paymentMethod = req.body.paymentMethod;
+    const ProductData = JSON.parse(req.body.ProductData);
+    const addressID = req.body.addressID;
+    //  console.log('i am here...',ProductData)
+
+     try {
+      let details;
+      const orderDetails = ProductData.map((val) => {
+        return details ={
+          userID:val.userID,
+          productID:val.productID._id,
+          addressID:addressID,
+          Quantity: val.quantity,
+          Amount: val.price * val.quantity,
+          Size:val.size,
+          PaymentMethod:paymentMethod
+        }
+      })
+      // console.log('details :', ProductData)
+      await orderSchema.create(orderDetails)
+      res.redirect('/profileMenu?menu=myOrders')
+     } catch (error) {
+      console.log(error)
+     }
+    
+  }
+
 }
 
 
@@ -262,6 +413,32 @@ const saveUserAddress = async (req, res) => {
 //..................................................................................................................................................
 
 //Section for Post Method Starts here.....
+
+// save the products to cart database
+const addToCart = async (req, res) => {
+  try {
+    const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+    const userID = verifyToken(token); // Verify token and get userID
+    const size = req.body.size;
+
+    const productID = req.body.productID;
+    const price = req.body.price;
+    const quantity = req.body.quantity;
+
+    const data = {
+      userID,
+      productID,
+      quantity,
+      price,
+      size
+    }
+    // console.log('Received cart data:', size);
+    await addtToCartModel.create(data)
+    res.json({ message: 'Success' })
+  } catch (error) {
+    console.log('Error While save the shoppingCart Data!')
+  }
+}
 
 
 //send OTP for the registration of user 
@@ -426,7 +603,7 @@ const postsendEmailOtp = async (req, res) => {
     const checkUserPresent = await UserModel.findOne({ emailAddress });
     console.log(checkUserPresent);
     if (checkUserPresent) {
-      console.log("User data: ", checkUserPresent);
+      // console.log("User data: ", checkUserPresent);
       otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
         lowerCaseAlphabets: false,
@@ -519,8 +696,10 @@ const createPassword = async (req, res) => {
 //get method for product overview
 const productOverview = async (req, res) => {
   try {
+
     const id = req.query.id
     const ProductData = await productModel.find({ _id: id })
+
     const productColor = await productModel.find({ ProductName: ProductData[0].ProductName })
     const firstProduct = ProductData[0];
     const CategoryName = firstProduct.CategoryName;
@@ -539,6 +718,7 @@ const productOverview = async (req, res) => {
 //export all the above functions
 module.exports = {
   registerPage,
+  addToCart,
   landingPage,
   loginPage,
   userLogin,
@@ -560,5 +740,9 @@ module.exports = {
   createUser,
   resendOtp,
   productOverview,
-  saveImage
+  saveImage,
+  overviewFilter,
+  checkOut,
+  checkOutTasks,
+  orderDetails
 }

@@ -152,7 +152,7 @@ img {
 }
 
 .con2 {
-    min-height: 220px;
+    min-height: 180px;
     border: 3px solid rgb(184, 184, 184);
     cursor: pointer;
 }
@@ -160,13 +160,13 @@ img {
 .con2Row1 {}
 
 .rowcol6-1 {
-    height: 130px;
+    height: 100px;
     padding: 10px;
 }
 
 .rowcol6-2 {
     padding: 0;
-    height: 130px;
+    height: 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -189,13 +189,13 @@ img {
 }
 
 .rowcol6-1 img {
-    height: 110px;
-    width: 110px;
+    height: 80px;
+    width: 80px;
 }
 
 .rowcol6-3 {
     padding-left: 0;
-    height: 130px;
+    height: 100px;
     display: flex;
     padding-top: 10px;
     justify-content: end;
@@ -220,7 +220,7 @@ img {
 }
 
 .rowcol4-3 {
-    height: 85px;
+    height: 60px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -228,7 +228,7 @@ img {
 }
 
 .rowcol4-2 {
-    height: 85px;
+    height: 60px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -246,7 +246,7 @@ img {
 }
 
 .rowcol4-1 {
-    height: 85px;
+    height: 60px;
     display: flex;
     flex-direction: column;
     align-items: center;

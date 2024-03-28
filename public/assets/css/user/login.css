@@ -191,6 +191,10 @@
 
 .col2 {
     height: 410px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     /* background-color: red; */
 }
 
@@ -317,7 +321,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .timer {
     text-align: right;
-    width: 74%;
+    width:44%;
     font-size: 30px;
     font-family: Poppins;
     font-weight: 600;

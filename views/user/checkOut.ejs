@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Css Styles -->
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/user/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/user/font-awesome.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <link rel="stylesheet" href="/assets/css/user/templatemo-hexashop.css">
+
+    <link rel="stylesheet" href="/assets/css/user/owl-carousel.css">
+
+    <link rel="stylesheet" href="/assets/css/user/lightbox.css">
+
+    <link rel="stylesheet" href="/assets/css/user/profile.css">
+
+    <link rel="stylesheet" href="/assets/css/user/manageAddress.css">
+
+    <link rel="stylesheet" href="/assets/css/user/checkOut.css">
+
+
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+
+    <title>Document</title>
+</head>
+
+<body>
+
+
+
+
+    <!-- ***** Header Area Start ***** -->
+    <header class="header-area header-sticky" style="position: fixed;">
+        <a class='menu-trigger' id="menuTrigger" style="position: relative;">
+            <span>Menu</span>
+        </a>
+        <div class="container Nav-con-1">
+            <div class="row row1">
+                <div class="col-10">
+                    <nav class="main-nav" style=" margin-left: 20px;">
+
+                        <!-- ***** Logo Start ***** -->
+                        <a href="/" class="logo" style="padding: 0;">
+                            <img src="/assets/images/logo.png">
+                        </a>
+                        <!-- ***** Logo End ***** -->
+                        <!-- ***** Menu Start ***** -->
+                        <ul class="nav">
+                            <li class="scroll-to-section"><a href="/#top" class="active">Home</a></li>
+                            <li class="scroll-to-section"><a href="/#men">Men's</a></li>
+                            <li class="scroll-to-section"><a href="/#women">Women's</a></li>
+                            <li class="scroll-to-section"><a href="/#kids">Kid's</a></li>
+                            <li class="scroll-to-section"><a href="/#Contact">Contact</a></li>
+                        </ul>
+
+
+                    </nav>
+
+
+                </div>
+                <div class="col-2 col2">
+                    <a href=""><i class="fa-solid fa-magnifying-glass searchIcon" style="color: #404040;"></i></a>
+                    <a href="/shoppingcart">
+                        <i class="fa-solid fa-cart-shopping cartIcon" style="color: #404040;"></i>
+                    </a>
+                    <a href="/Profile" class="profileLogo">
+                        <img src="/assets/images/profile-Icon.png" class="profileIcon">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ***** Header Area End ***** -->
+
+
+
+
+    <!-- Product Details and address starts here -->
+    <div class="container-fluid outerDiv" id="blur">
+        <div class="container-fluid conF-2" id="OrderBox">
+            <div class="col-8">
+                <div class="col-12 addressRow" style="border: 1px solid rgb(189, 189, 189); ">
+                    <div class="col-9" style="display: flex;flex-direction: column; justify-content: center;">
+                        <h1>Delivery Address</h1>
+                        <% userInfo.forEach((info)=> { %>
+                            <p style="padding-left: 10px;">
+                                <%=info.address%> <span>
+                                        <%=info.cityDistrictTown%>
+                                    </span> <span>,<%=info.state%></span><span>-<%=info.pincode%></span>
+                            </p>
+                            <% }) %>
+                    </div>
+                    <div class="col-3"
+                        style="display: flex;align-items: center;justify-content: end;padding-right: 15px;">
+                        <button class="btn update" id="changeBtn" data-index="">Change</button>
+                    </div>
+                </div>
+
+                <div class="col-12 orderSummary">
+                    <h1>Order Summary</h1>
+                    <% cartDetails.forEach((item,index)=> { %>
+                        <% i=index %>
+                            <div class="col-12 orderedItems" style="border: 1px solid rgb(189, 189, 189);;">
+                                <div class="container" style="padding: 0; display: flex;">
+                                    <div class="col-2 imageCol">
+                                        <img src="<%=item.productID.files[0].url%>"
+                                            style="width: 100px;height: 100px;border: 1px solid rgb(189, 189, 189);"
+                                            alt="">
+
+                                        <div class="proQty">
+                                            <input type="button" class="inc-dec"
+                                                onclick="quantityIncrement('<%=index%>','<%=item.productID.SalesRate%>','decrement')"
+                                                value="-">
+                                            <input type="text" id="showQty<%=index%>" class="Qty" readonly
+                                                value="<%=item.quantity%>">
+                                            <input type="button" class="inc-dec"
+                                                onclick="quantityIncrement('<%=index%>','<%=item.productID.SalesRate%>','increment')"
+                                                value="+">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-10 pro-Details">
+                                        <h5>
+                                            <%=item.productID.ProductName%>
+                                        </h5>
+                                        <p>Size : <span>
+                                                <%=item.size%>
+                                            </span></p>
+                                        <p>Brand Name : <span>
+                                                <%=item.productID.BrandName%>
+                                            </span></p>
+                                        <h5 style="padding-top:5px ; ">₹<span id="totalPrice<%=index%>"
+                                                style="padding-right: 15px;" class="TotalAmount">
+                                                <%=item.productID.SalesRate * item.quantity%>
+                                            </span> ₹<span id="discount<%=index%>" class="discount">
+                                                <%=(item.productID.SalesRate*item.productID.DiscountPrecentage / 100) *
+                                                    item.quantity %>
+                                            </span>
+                                        </h5>
+                                        <a href="/checkOut"><input type="button"
+                                                onclick="removeProducts('<%=item._id%>')" class="btn remove-Pro" name=""
+                                                value="Remove" id=""></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+                </div>
+
+            </div>
+            <div class="col-4">
+                <div class="col-11" style="height: 500px;border: 1px solid rgb(189, 189, 189);">
+                    <div class="row priceDetailsRow">
+                        PRICE DETAILS
+                    </div>
+                    <div class="row priceDetails">
+                        <div class="col-8 priceDetails-Left">
+                            <p>Price(<%= i + 1%> items)</p>
+                            <p>Discount</p>
+                            <p>---------------------------</p>
+                            <p>Total Price</p>
+                        </div>
+                        <div class="col-4 priceDetails-Left"
+                            style="display: flex;flex-direction: column;justify-content: center;align-items: center;padding-left: 0;">
+                            <p>₹ <span id="cartTotal"></span></p>
+                            <p>-₹<span id="discountAmt"></span></p>
+                            <p style="padding-right: 27px;">-----------</p>
+                            <p>₹<span id="toTalAmount"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="row selectPayment">
+                        <p>----------------------------------------</p>
+                        <h5>Payment Method</h5>
+                        <label for="Selectpayment">
+                            <input type="radio" id="Selectpayment" class="paymentRadioBtn" value="Cash On Delivery">
+                            <span style="padding-left: 10px;">Cash On Delivery</span>
+                        </label>
+
+                        <label style=" display: flex;align-items: center;justify-content: center;"><a
+                                class="primary-btn PlaceOrder" onclick="successMessage()">Place Order</a></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Product Details and address end here -->
+
+        <!-- change Address starts here.... -->
+        <div class="container-fluid conF-1" id="addressBox" style="display: none;">
+            <div class="row" style="margin: 0;">
+                <div class="col-8 leftSide">
+                    <div class="col-12" id="addAddressDiv">
+                        <i class="fa-solid fa-plus plusBtn" id="addIcon" style="color: #030303;"></i>
+                        <p style="padding-left: 30px;font-size: 14pt;font-family: Poppins;">ADD A NEW ADDRESS</p>
+                    </div>
+
+                    <div class="container" id="addAddress">
+                        <div class="row">
+                            <div class="col-7" style="padding-top: 5px;">
+                                <p class="addAddressTxt">Add Address</p>
+                            </div>
+                            <div class="col-5" style="padding-top:8px; display: flex;justify-content: end;">
+                                <button class="btn" style="display: none;" id="addAddressCancel">Cancel</button>
+                            </div>
+                        </div>
+
+                        <form action="/profileMenu" class="addForm" id="addAddressForm" method="post">
+                            <div class="row">
+                                <div class="col-6"
+                                    style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                    <label class="lbl" for="firstName">Full Name
+                                        <input type="text" class="form-control firstNameInput" name="fullName"
+                                            id="firstName" placeholder="Enter Full Name" required>
+                                    </label>
+
+                                    <label class="lbl" for="MobileNo"> Mobile Number
+                                        <input type="tel" class="form-control firstNameInput" name="phoneNo"
+                                            id="MobileNo" placeholder="Enter Mobile Number" required>
+                                    </label>
+
+                                    <label class="lbl" for="EmailAddress"> City/District/Town
+                                        <input type="text" class="form-control firstNameInput" name="cityDistrictTown"
+                                            id="cityDistrictTown" placeholder="City/District/Town" required>
+                                    </label>
+
+                                    <label class="lbl" for="State"> Country
+                                        <select name="country" class="dropbtn firstNameInput" id="State">
+                                            <option value="India">India</option>
+                                            <option value="Australia">Australia</option>
+                                            <option value="New Zealand">New Zealand</option>
+                                        </select>
+                                    </label>
+
+                                </div>
+
+                                <div class="col-6"
+                                    style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                    <label class="lbl" for="EmailAddress"> Email Address
+                                        <input type="email" class="form-control firstNameInput" name="emailAddress"
+                                            id="EmailAddress" placeholder="Enter Email Address" required>
+                                    </label>
+                                    <label class="lbl" for="gender"> Gender
+                                        <div class="firstNameInput" style="padding-top: 10px; font-size: 12pt;">
+                                            <input type="radio" id="gender" name="gender" value="Male"> Male
+                                            <input type="radio" name="gender" value="Female"> Female
+                                        </div>
+
+                                    </label>
+                                    <label class="lbl" for="State"> State
+                                        <select name="state" class="dropbtn firstNameInput" id="State">
+                                            <option value="Kerala">Kerala</option>
+                                            <option value="Karnadaka">Karnadaka</option>
+                                            <option value="TamilNadu">TamilNadu</option>
+                                        </select>
+                                    </label>
+                                    <label class="lbl" for="PinCode"> Pin-Code
+                                        <input type="text" class="form-control firstNameInput" name="pincode"
+                                            id="PinCode" placeholder="Enter Pin-Code" required>
+                                    </label>
+                                </div>
+
+                                <div class="col-12" style="min-height: 120px;">
+                                    <label class="lbl" for="txtAddress" style="width: 100%; height: 100px;">Address
+                                        <textarea name="address" id="txtAddress" cols="30" rows="10"
+                                            class="addressTxtArea" placeholder="Enter your Address"></textarea>
+                                    </label>
+                                </div>
+                                <div class="col-7" style="display: flex;padding-left: 30px;">
+                                    <input type="radio" id="gender" name="addressType" value="Home"> Home
+                                    <input type="radio" name="addressType" value="Workspace" style="margin-left: 20px;">
+                                    Workspace
+                                </div>
+
+                            </div>
+
+                            <a style="width: 100%;display: flex; justify-content: center; margin-bottom: 20px;">
+                                <button type="submit" class="saveChanges" id="svaebtn"
+                                    style="display: block;">Submit</button>
+                            </a>
+                        </form>
+                    </div>
+
+
+
+                    <% addresses.forEach((info,index)=> { %>
+                        <div class="row deliveryAddress"
+                            style="margin: 0;margin-top: 15px;padding-left: 25px;padding-right: 25px;">
+
+                            <div class="col-12 heading" style="padding: 0;">
+                                <div class="col-6" style="display: flex; padding: 0; padding-top: 10px;">
+                                    <i class="fa-solid fa-truck"
+                                        style="color: rgb(10, 110, 10); padding-top: 3px;"></i><span>
+                                        <h1>Delivery Address</h1>
+                                    </span>
+                                </div>
+                                <div class="col-6"
+                                    style="display: flex;justify-content: end; align-items: center; padding: 0;padding-right: 10px;">
+                                    <button class="btn update" data-index="<%=index%>"
+                                        onclick="updateAddress('<%=index%>')">Update</button>
+                                    <a href=""><button class="btn remove" data-index="<%=index%>"
+                                            onclick="selectDeliveryAddress('<%=info._id%>')" id="">Deliver
+                                            Here</button></a>
+                                    <button class="btn cancelBtn" data-index="<%=index%>"
+                                        onclick="cancelUpdate('<%=index%>')" style="display: none;"
+                                        id="">Cancel</button>
+                                </div>
+                            </div>
+
+                            <div class="col-12 addressRow" style="padding: 0;">
+                                <div class="col-12 addressInfo" style="padding: 0;">
+                                    <a href=""> <span class="UserName">
+                                            <%=info.fullName%> <span class="useraddressType">
+                                                    <%=info.addressType%>
+                                                </span> <span style="margin-left: 25px; font-size: 11pt">
+                                                    <%=info.phoneNo%>
+                                                </span>
+                                        </span></a>
+                                    <p>
+                                        <%=info.address%> <span>
+                                                <%=info.cityDistrictTown%>
+                                            </span>
+                                            <span>,<%=info.state%></span><span>-<%=info.pincode%></span>
+                                    </p>
+                                </div>
+                            </div>
+
+
+                            <!-- update-Form starts here -->
+                            <form action="" class="editForm updateForm" id="form_<%= index %>">
+                                <p class="updateTxt">Update Address</p>
+                                <br>
+                                <div class="row">
+                                    <div class="col-6"
+                                        style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                        <label class="lbl" for="firstName">Full Name
+                                            <input type="text" class="form-control firstNameInput" name="BrandName"
+                                                id="firstName" placeholder="Enter Full Name" required
+                                                value="<%=info.fullName%>">
+                                        </label>
+
+                                        <label class="lbl" for="MobileNo"> Mobile Number
+                                            <input type="text" class="form-control firstNameInput" name="mobileNo"
+                                                id="MobileNo" placeholder="Enter Mobile Number" required
+                                                value="<%=info.phoneNo%>">
+                                        </label>
+
+                                        <label class="lbl" for="EmailAddress"> City/District/Town
+                                            <input type="text" class="form-control firstNameInput" name="emailAddress"
+                                                id="EmailAddress" placeholder="City/District/Town" required
+                                                value="<%=info.cityDistrictTown%>">
+                                        </label>
+
+                                        <label class="lbl" for="State"> Country
+                                            <select name="state" class="dropbtn firstNameInput" id="State">
+                                                <option value="" <%=info.country==='' ? 'selected' :'' %>>Select
+                                                    Country</option>
+                                                <option value="India" <%=info.country==='India' ? 'selected' : '' %>
+                                                    >India</option>
+                                                <option value="Australia" <%=info.country==='Australia' ? 'selected'
+                                                    : '' %>>Australia</option>
+                                                <option value="New Zealand" <%=info.country==='New Zealand' ? 'selected'
+                                                    : '' %>>New Zealand</option>
+                                            </select>
+                                        </label>
+
+                                    </div>
+
+                                    <div class="col-6"
+                                        style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                        <label class="lbl" for="EmailAddress"> Email Address
+                                            <input type="email" class="form-control firstNameInput" name="emailAddress"
+                                                id="EmailAddress" placeholder="Enter Email Address" required
+                                                value="<%=info.emailAddress%>">
+                                        </label>
+                                        <label class="lbl" for="gender"> Gender
+                                            <div class="firstNameInput" style="padding-top: 10px; font-size: 12pt;">
+                                                <input type="radio" id="gender" name="gender" value="Male"
+                                                    <%=info.gender==='Male' ? 'checked' : '' %> > Male
+                                                <input type="radio" name="gender" value="Female"
+                                                    <%=info.gender==='Female' ? 'checked' : '' %>> Female
+                                            </div>
+
+                                        </label>
+                                        <label class="lbl" for="State"> State
+                                            <select name="state" class="dropbtn firstNameInput" id="State">
+                                                <option value="" <%=info.state==='' ? 'selected' :'' %>>Select State
+                                                </option>
+                                                <option value="Kerala" <%=info.state==='Kerala' ? 'selected' : '' %>
+                                                    >Kerala</option>
+                                                <option value="Karnadaka" <%=info.state==='Karnadaka' ? 'selected' : ''
+                                                    %> >Karnadaka</option>
+                                                <option value="TamilNadu" <%=info.state==='TamilNadu' ? 'selected' : ''
+                                                    %> >TamilNadu</option>
+                                            </select>
+                                        </label>
+                                        <label class="lbl" for="PinCode"> Pin-Code
+                                            <input type="text" class="form-control firstNameInput" name="pinCode"
+                                                id="PinCode" placeholder="Enter Pin-Code" required
+                                                value="<%=info.pincode%>">
+                                        </label>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="lbl" for="txtAddress" style="width: 100%;">Address
+                                            <textarea name="" id="txtAddress" cols="30" rows="10" class="addressTxtArea"
+                                                placeholder="Enter your Address"><%=info.address%></textarea>
+                                        </label>
+                                    </div>
+                                    <div class="col-7" style="display: flex;padding-left: 30px;">
+                                        <input type="radio" id="gender" name="addressType" value="Home"
+                                            <%=info.addressType==='Home' ? 'checked' : '' %>> Home
+                                        <input type="radio" name="addressType" value="Workspace"
+                                            style="margin-left: 20px;" <%=info.addressType==='Workspace' ? 'checked'
+                                            : '' %>> Workspace
+                                    </div>
+
+                                </div>
+
+                                <a style="width: 100%;display: flex; justify-content: center; margin-bottom: 20px;">
+                                    <button class="" id="savebtn">Save Changes</button>
+                                </a>
+
+                            </form>
+                            <!-- update-Form End here -->
+                            <br>
+                        </div>
+                        <% }) %>
+
+                </div>
+                <div class="col-4">
+                    <div class="col-11" style="height: 500px;border: 1px solid rgb(189, 189, 189);">
+                        <div class="row priceDetailsRow">
+                            PRICE DETAILS
+                        </div>
+                        <div class="row priceDetails">
+                            <div class="col-8 priceDetails-Left">
+                                <p>Price(<%= i + 1%> items)</p>
+                                <p>Discount</p>
+                                <p>---------------------------</p>
+                                <p>Total Price</p>
+                            </div>
+                            <div class="col-4 priceDetails-Left"
+                                style="display: flex;flex-direction: column;justify-content: center;align-items: center;padding-left: 0;">
+                                <p>₹12,345</p>
+                                <p>-₹12,345</p>
+                                <p style="padding-right: 27px;">-----------</p>
+                                <p>₹12,345</p>
+                            </div>
+                        </div>
+
+                        <div class="row selectPayment">
+                            <p>----------------------------------------</p>
+                            <h5>Payment Method</h5>
+                            <label for="Selectpayment">
+                                <input type="radio" id="Selectpayment" class="paymentRdobtn"  value="">
+                                <span style="padding-left: 10px;">Cash On Delivery</span>
+                            </label>
+
+                            <label style=" display: flex;align-items: center;justify-content: center;"><a
+                                    class="primary-btn PlaceOrder" onclick="successMessage()">Place Order</a></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="SuccessDiv">
+        <div class="col-12 confirmation"
+            style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
+            <div class="row px-3" style="width: 80%;">
+                <ul id="progressbar" style="width: 100%;">
+                    <li class="step0 active " id="step1">Address</li>
+                    <li class="step0 active text-center" id="step2">Payment Menthod</li>
+                    <li class="step0  text-muted text-right" id="step3">Confirmation</li>
+                </ul>
+            </div>
+
+            <p style="margin-top: 10px;">Hey Shinith.P</p>
+            <h2>Your Order Is Confirmed</h2>
+            <h6>Shall we go ahead and make this order official!</h6>
+            <h6>Just confirm your order please.</h6>
+            <div class="row btnRow" style="margin: 0;margin-top: 15px;">
+                <a class="primary-btn" onclick="CancelOrder()">Cancel</a>
+                <a class="primary-btn " onclick="ConfirmOrder('<%= JSON.stringify(cartDetails) %>','<%= JSON.stringify(userInfo) %>')" style="margin-left: 10px;">Confirm</a>
+            </div>
+        </div>
+        <div class="row SuccessRow" style="display: none;">
+            <i class="fa-regular fa-circle-check" style="color: #10aa0e;font-size: 40pt;padding-bottom: 10px;"></i>
+            <p>Hey Shinith.P</p>
+            <h2>Your Order Is Confirmed</h2>
+            <h6>We'll send you a shipping confirmation email</h6>
+            <h6>as soon as your order ships.</h6>
+            <a href="/profileMenu?menu=myOrders" class="primary-btn PlaceOrder">Check Status</a>
+            <!-- /profileMenu?menu=myOrders -->
+        </div>
+    </div>
+    <!-- change Address end here.... -->
+
+
+    <!-- eFooter starts here... -->
+    <%- include('../../views/user/footer.ejs') %>
+        <!-- Footer end  here... -->
+
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            const Selectpayment = document.getElementById('Selectpayment');
+
+            if(Selectpayment.checked){
+                Selectpayment.value='Cash On Delivery'
+            }
+            
+            function CancelOrder() {
+                let blur = document.getElementById('blur');
+                blur.classList.remove('active');
+
+                let popup = document.getElementById('SuccessDiv');
+                popup.classList.remove('active');
+            }
+
+            function ConfirmOrder(ProductData,userAddress) {
+                let fetchAddress= JSON.parse(userAddress)
+                const addressID = fetchAddress.map((val) => val._id) 
+                const paymentMethod = document.getElementById('Selectpayment').value
+               axios.post('/checkOut?task=saveOrderDetails', {ProductData : ProductData,paymentMethod : paymentMethod,addressID:addressID}) // Sending productID as data
+               .then(function (response) {
+                   // Handle success response if needed
+               })
+               .catch(function (error) {
+                   console.error('Error adding product to cart:', error);
+                   // Handle error if needed
+               });
+
+                const confirmation = document.querySelector('.confirmation')
+                const SuccessRow = document.querySelector('.SuccessRow')
+
+                confirmation.style.display = 'none'
+                SuccessRow.style.display = 'block'
+                SuccessRow.style.display = 'flex'
+
+                
+            }
+
+            
+        
+            function successMessage() {
+               
+
+                if (Selectpayment.checked) {
+                    console.log('i am here....')
+                    let blur = document.getElementById('blur');
+                    blur.classList.toggle('active');
+
+                    let popup = document.getElementById('SuccessDiv');
+                    popup.classList.toggle('active');
+                }
+                else{
+                    
+                    const confirmation = confirm('Please Select Your Payment Method');
+                    if (!confirmation) {
+                        document.querySelector('.selectPayment h5').style.color='red'
+                        event.preventDefault(); // Prevent form submission
+                    }
+                }
+
+
+            }
+
+            const cartTotal = document.getElementById('cartTotal')
+            const totalAmount = document.querySelectorAll('.TotalAmount');
+            const discount = document.querySelectorAll('.discount');
+            const toTalAmount = document.getElementById('toTalAmount')
+            let sum = 0;
+
+
+            for (let i = 0; i < discount.length; i++) {
+                sum = sum + parseFloat(discount[i].innerText)
+                document.getElementById('discountAmt').innerHTML = sum
+            }
+            sum = 0;
+            for (let i = 0; i < totalAmount.length; i++) {
+                console.log('i am heree....')
+                sum = sum + parseFloat(totalAmount[i].innerText)
+                console.log(sum)
+                cartTotal.innerHTML = sum - parseFloat(document.getElementById('discountAmt').innerText)
+            }
+
+            toTalAmount.innerHTML = parseFloat(cartTotal.innerHTML) - parseFloat(document.getElementById('discountAmt').innerText)
+
+            function quantityIncrement(index, price, type) {
+                const showQty = document.getElementById(`showQty${index}`)
+                const totalInput = document.getElementById(`totalPrice${index}`)
+                const discountAmt = document.getElementById(`discount${index}`)
+                let ExactDiscAmt;
+                if (type === 'increment') {
+                    let totalPrice = parseFloat(totalInput.value)
+                    let quantity = parseFloat(showQty.value)
+                    ExactDiscAmt = parseFloat(discountAmt.innerText) / parseFloat(showQty.value)
+                    showQty.value = quantity + 1
+                    let addQty = parseFloat(showQty.value)
+                    console.log(addQty, price)
+                    totalInput.innerHTML = addQty * price
+                    cartTotal.innerHTML = parseFloat(cartTotal.innerText) + parseFloat(price)
+                    discountAmt.innerHTML = parseFloat(discountAmt.innerText) + parseFloat(ExactDiscAmt)
+                    document.getElementById('discountAmt').innerHTML = parseFloat(document.getElementById('discountAmt').innerText) + parseFloat(ExactDiscAmt)
+                    toTalAmount.innerHTML = parseFloat(cartTotal.innerHTML) - parseFloat(document.getElementById('discountAmt').innerText)
+                }
+                else if (type === 'decrement') {
+                    let totalPrice = parseFloat(totalInput.value)
+                    let quantity = parseFloat(showQty.value)
+                    ExactDiscAmt = parseFloat(discountAmt.innerText) / parseFloat(showQty.value)
+                    showQty.value = quantity - 1
+                    let addQty = parseFloat(showQty.value)
+                    console.log(addQty, price)
+                    totalInput.innerHTML = addQty * price
+                    cartTotal.innerHTML = parseFloat(cartTotal.innerText) - parseFloat(price)
+                    discountAmt.innerHTML = parseFloat(discountAmt.innerText) - parseFloat(ExactDiscAmt)
+                    document.getElementById('discountAmt').innerHTML = parseFloat(document.getElementById('discountAmt').innerText) - parseFloat(ExactDiscAmt)
+                    toTalAmount.innerHTML = parseFloat(cartTotal.innerHTML) - parseFloat(document.getElementById('discountAmt').innerText)
+
+                }
+            }
+
+
+
+
+            function selectDeliveryAddress(addressID) {
+                axios.post('/checkOut?task=selectDeleveryAddress', { addressID: addressID }) // Sending productID as data
+                    .then(function (response) {
+                        // Handle success response if needed
+                    })
+                    .catch(function (error) {
+                        console.error('Error adding product to cart:', error);
+                        // Handle error if needed
+                    });
+            }
+
+
+
+
+            function removeProducts(id) {
+                axios.post('/checkOut?task=removeProducts', { id: id }) // Sending productID as data
+                    .then(function (response) {
+                        // Handle success response if needed
+                    })
+                    .catch(function (error) {
+                        console.error('Error adding product to cart:', error);
+                        // Handle error if needed
+                    });
+            }
+
+
+            const conF2 = document.getElementById('OrderBox')
+            const conF1 = document.getElementById('addressBox')
+            document.getElementById('changeBtn').addEventListener('click', function () {
+                console.log('i am heree....')
+                conF2.style.display = 'none'
+                conF1.style.display = 'block'
+            })
+
+
+            function updateAddress(index) {
+                const updateBtn = document.querySelector(`.update[data-index="${index}"]`);
+                const removeBtn = document.querySelector(`.remove[data-index="${index}"]`);
+                const cancelBtn = document.querySelector(`.cancelBtn[data-index="${index}"]`);
+                console.log(cancelBtn);
+                const form = document.getElementById(`form_${index}`);
+                form.style.display = 'block'; // Show the corresponding form
+                updateBtn.style.display = 'none'
+                removeBtn.style.display = 'none'
+                cancelBtn.style.display = 'block'
+            }
+            function cancelUpdate(index) {
+                const updateBtn = document.querySelector(`.update[data-index="${index}"]`);
+                const removeBtn = document.querySelector(`.remove[data-index="${index}"]`);
+                const cancelBtn = document.querySelector(`.cancelBtn[data-index="${index}"]`);
+                console.log(cancelBtn);
+                const form = document.getElementById(`form_${index}`);
+                form.style.display = 'none'; // Show the corresponding form
+                updateBtn.style.display = 'block'
+                removeBtn.style.display = 'block'
+                cancelBtn.style.display = 'none'
+            }
+
+            document.getElementById('addAddressDiv').addEventListener('click', function () {
+                document.getElementById('addAddressDiv').style.display = 'none'
+                document.getElementById('addAddress').style.display = 'block'
+                document.getElementById('addAddressCancel').style.display = 'block'
+            })
+
+            document.getElementById('addAddressCancel').addEventListener('click', function () {
+                document.getElementById('addAddress').style.display = 'none'
+                document.getElementById('addAddressDiv').style.display = 'block'
+                document.getElementById('addAddressDiv').style.display = 'flex'
+            })
+
+        </script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+        <!-- <script src="/assets/js/profile.js">  </script> -->
+
+
+
+
+
+
+</body>
+
+</html>

@@ -23,7 +23,12 @@ const {
     productOverview,
     filterProducts,
     saveUserAddress,
-    saveImage
+    saveImage,
+    addToCart,
+    overviewFilter,
+    checkOut,
+    orderDetails,
+    checkOutTasks
 } = require("../../controller/userConroller.js");
 const { userAuth } = require('../../middlewares/authMiddleware.js')
 const passport = require('passport')
@@ -31,7 +36,7 @@ require('../../controller/googleOuath.js')
 const jwt = require('jsonwebtoken');
 
 
-router.route('/').get(landingPage)//landinglage  passport.authenticate('google',{successRedirect: '/',failureRedirect:'/login'}),
+router.route('/').get(landingPage).post(addToCart)//landinglage 
 router.route('/register').get(registerPage).post(sentOTP)//user registration 
 router.route('/enterOtp').get(enterOtp).post(createUser)//enterOtp
 router.route('/login').get(loginPage).post(userLogin)//loginpage
@@ -45,19 +50,21 @@ router.route('/google/redirect').get(passport.authenticate('google'), (req, res)
     res.cookie('jwtUser', token);
     res.redirect('/')
 })
-router.route('/shoppingcart').get(userAuth,shoppingCart)//shoppingcart 
+router.route('/shoppingcart').get(userAuth,shoppingCart).post(orderDetails)//shoppingcart 
 router.route('/sendEmailOtp').get(sendEmailOtp).post(postsendEmailOtp)//enter email page to send otp for forgotpassword
 router.route('/forgotEnterOtp').get(forgotEnterOtp).post(postForgotEnterOtp)// Enter otp for forgotpassword
 router.route('/resetPassword').get(resetPassword).patch(createPassword)// resetpassword page
 router.route('/resendOtp').post(resendOtp)//resend otp 
-router.route('/productOverview').get(productOverview)//productOverview 
+router.route('/productOverview').get(productOverview).post(overviewFilter)//productOverview 
 router.route('/allProducts').get(landingPage)//allProducts
 router.route('/filterProducts').get(filterProducts)
 router.route('/filterCategory').get(landingPage)//listCategory
-router.route('/Profile').get(userAuth,profile).post(saveImage)//profile
-router.route('/logout').get(logout)//logout
-router.route('/profileMenu').get(userAuth,profileMenu).post(saveUserAddress)
+router.route('/Profile').get(userAuth,profile)
+router.route('/checkOut').get(userAuth,checkOut).post(checkOutTasks)
 
+router.route('/logout').get(logout)//logout
+router.route('/profileMenu').get(profileMenu).post(saveUserAddress)
+router.route('/')
 
 
 module.exports = router

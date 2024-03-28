@@ -122,7 +122,7 @@
                                 <h4>We Are Hexashop</h4>
                                 <span>Discover the amazing products here...</span>
                                 <div class="main-border-button">
-                                    <a href="allProducts">Purchase Now!</a>
+                                    <a href="allProducts?page=1">Purchase Now!</a>
                                 </div>
                             </div>
                             <img src="/assets/images/left-banner-image.jpg" alt="">
@@ -249,7 +249,7 @@
                             <div class="owl-women-item owl-carousel">
                  
 
-                                <% ProductData.forEach((item)=> { %>
+                                <% ProductData.forEach((item,index)=> { %>
 
                                     <% if(item.CategoryName=="Mens" && item.Inventory === "Listed" ){ %>
                                         <div class="item">
@@ -260,8 +260,6 @@
                                                         </li>
                                                         <li><a href="single-product.html"><i class="fa fa-heart"></i></a>
                                                         </li>
-                                                        <li><a href="/?Product=<%= item._id %>"><i
-                                                                    class="fa fa-shopping-cart"></i></a></li>
                                                     </ul>
                                                 </div>
                                                 <img src=<%=item.files[1].url %> alt="">
@@ -316,7 +314,7 @@
                         <div class="women-item-carousel">
                             <div class="owl-women-item owl-carousel">
                                
-                                <% ProductData.forEach((item)=> { %>
+                                <% ProductData.forEach((item,index)=> { %>
 
                                     
 
@@ -329,8 +327,6 @@
                                                         </li>
                                                         <li><a href="single-product.html"><i class="fa fa-heart"></i></a>
                                                         </li>
-                                                        <li><a href="single-product.html"><i
-                                                                    class="fa fa-shopping-cart"></i></a></li>
                                                     </ul>
                                                 </div>
                                                 <img src=<%=item.files[1].url %> alt="">
@@ -393,9 +389,7 @@
                                                         <li><a href="/productOverview?id=<%= item._id %>"><i class="fa fa-eye"></i></a>
                                                         </li>
                                                         <li><a href="single-product.html"><i class="fa fa-heart"></i></a>
-                                                        </li>
-                                                        <li ><a class="shopingCartBtn<%=index%>" onclick="shoppingCart('<%=index%>','<%= item._id %>')"  href="single-product.html"><i
-                                                                    class="fa fa-shopping-cart"></i></a></li>
+                                                        </li>                            
                                                     </ul>
                                                 </div>
                                                 <img src=<%=item.files[1].url %> alt="">
@@ -425,11 +419,8 @@
                 </div>
             </div>
         </section>
-        <script>
-            function shoppingCart(index,productId){
-              let btnShopingCart = document.querySelector(`.shoppingCartBtn${index}`)
-            }
-        </script>
+
+     
 
         <!-- ***** Kids Area Ends ***** -->
 
@@ -640,6 +631,8 @@
             <!-- Footer end  here... -->
 
 
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 
             <!-- jQuery -->
             <script src="/assets/js/jquery-2.1.0.min.js"></script>
@@ -661,9 +654,29 @@
             <script src="/assets/js/isotope.js"></script>
 
             <!-- Global Init -->
-            <script src="assets/js/custom.js"></script>
+            <script src="/assets/js/custom.js"></script>
 
             <script> 
+
+
+                function shoppingCart(index,productID,Price) {
+                    let btnShoppingCart = document.getElementById(`shoppingCartBtn${index}`);
+                
+                        console.log('I am here...');
+                        axios.post('/', { productID: productID, price:Price }) // Sending productID as data
+                            .then(function(response) {
+                                console.log('Product added to cart successfully');
+                                // Handle success response if needed
+                            })
+                            .catch(function(error) {
+                                console.error('Error adding product to cart:', error);
+                                // Handle error if needed
+                            });
+                }
+                
+
+
+
                 var a=false;
                 document.addEventListener("DOMContentLoaded", function() {
                     let menuTrigger = document.getElementById("menuTrigger");

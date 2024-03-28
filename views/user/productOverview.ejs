@@ -40,6 +40,9 @@
      <link rel="stylesheet" href="/assets/css/user/owl-carousel.css">
  
      <link rel="stylesheet" href="/assets/css/user/lightbox.css">
+
+     <link rel="stylesheet" href="/assets/css/user/style2.css">
+
 </head>
 
 <body>
@@ -78,7 +81,7 @@
     <!-- Product Details Section Begin -->
     <section class="product-details spad">
         <div class="container">
-            <% ProductData.forEach((item) => { %> 
+            <% ProductData.forEach((item,index) => { %> 
             <div class="row">
                 <div class="col-lg-6">
                     <div class="product__details__pic">
@@ -123,17 +126,17 @@
                         </div>
                         <div class="product__details__price">
                             <i class="fa-solid fa-indian-rupee-sign" style="color: #ab1717; font-size:20pt;"></i> 
-                            <%= item.SalesRate%> </div>
-                            <!-- <span>$ 83.0</span> -->
+                            <%= item.SalesRate%> <span style="padding-bottom: 20px;"><i class="fa-solid fa-indian-rupee-sign" style=" font-size:12pt;"></i> <%=item.SalesRate*item.DiscountPrecentage / 100 %></span></div>
+                            
                         <p><%= item.ProductDescription%></p>
                         <div class="product__details__button">
                             <div class="quantity">
                                 <span>Quantity:</span>
                                 <div class="pro-qty">
-                                    <input type="text" value="1">
+                                    <input type="text" id="quantity">
                                 </div>
                             </div>
-                            <a href="#" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</a>
+                            <a  onclick="shoppingCart('<%=index%>','<%= item._id %>','<%= item.SalesRate %>')" href="/shoppingCart"  id="shopingCartBtn" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</a>
                             <ul>
                                 <li><a href="#"><span class="icon_heart_alt"></span></a></li>
                                 <!-- <li><a href="#"><span class="icon_adjust-horiz"></span></a></li> -->
@@ -148,35 +151,36 @@
                                   
                                     <div class="stock__checkbox">
                                     <% if(item.StockQuantity > 0) {%>
-                                        <label for="stockin" style="color: green;">In Stock </label>
+                                        <label for="stockin" id="stockIn" style="color: green;">In Stock </label>
                                     <% } else { %>
-                                        <label for="stockin" style="color: red;">Out of Stock</label>
+                                        <label for="stockin" id="outOfStock" style="color: red;">Out of Stock</label>
                                     <% } %>
                                     </div>
                                 </li>
                                 <li>
                                     <span>Available color:</span>
                                 
-                                    <div class="color__checkbox">
+                                    <div class="color__checkbox"> 
 
                                         <% productColor.forEach((color) => {  %> 
                                             <label for="<%= color.ColorNames %>">
-                                                <input type="radio" name="color__radio" id="<%= color.ColorNames %>" value="<%= color.ColorNames %>">
+                                                <input type="radio" <%= item.ColorNames === color.ColorNames ? 'checked' : '' %> name="color__radio" id="<%= color.ColorNames %>" value="<%= color.ColorNames %>">
                                                 <span class="checkmark" style="background-color: <%= color.ColorNames %>;"></span>
                                             </label>
                                         <% }) %>
-                        
+                                        
+
                                     </div>
                                 </li>
                                 <li>
-                                    <span>Available size:</span>
-                                    <div class="size__btn">
-                                        <% item.ProductSize.map(size => { %>
+                                    <span style="height: 40px;display: flex; align-items: center;">Available size :</span>
+                                    <div class="size__btn" style="display: flex;align-items: center;">
+                                        <% item.ProductSize.map((size,i )=> { %>
 
-                                        <label for="xs-btn" class="active">
-                                            <input type="radio" id="xs-btn">
-                                            <%= size.size %>
-                                        </label>
+                                            <label for="" id="sizeBtn<%=i%>" onclick="CheckSizeStock(<%= JSON.stringify(ProductData) %>, '<%= i %>')" class="active" style="width: 35px; height: 35px; border: 1px solid rgb(184, 184, 184);display: flex; align-items: center; justify-content: center;">
+                                                <input type="radio" id="xs-btn<%=i%>" value="<%= size.size %>">
+                                                <%= size.size %>
+                                              </label>
 
                                         <% }); %>
                                       
@@ -351,25 +355,70 @@
 
 
 
-    <!-- Search Begin -->
-    <div class="search-model">
-        <div class="h-100 d-flex align-items-center justify-content-center">
-            <div class="search-close-switch">+</div>
-            <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
-            </form>
-        </div>
-    </div>
-    <!-- Search End -->
-
-
-
-
-
+   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
    
  
+    <script>
+        let quantity = document.getElementById('quantity');
+        quantity.value = "1";
+        let totalQty;
+        let size;
+        
+        document.querySelector('.inc .qtybtn', addEventListener('click' , function(){
+            quantity.value+1;
+            console.log(quantity)
+            console.log("q :",quantity.value)
+            totalQty=quantity.value
+        }))
+        
 
+        function CheckSizeStock(product,index){
+            size = document.getElementById(`xs-btn${index}`).value
+            const sizeBtn = document.getElementById(`sizeBtn${index}`)
+            const stockIn = document.getElementById('stockIn')
+            const outOfStock = document.getElementById('outOfStock')
+            sizeBtn.style.backgroundColor='rgb(223, 223, 223)'
+
+
+            const productdata= product[0];
+
+        if (productdata && Array.isArray(productdata.ProductSize)) {
+            const productSize = productdata.ProductSize[index].quantity;
+            
+            if(productSize < 1){
+                stockIn.innerHTML='Out Of Stock'
+                stockIn.style.color='red'
+            }else{
+                stockIn.innerHTML='In Stock'
+                stockIn.style.color='green'
+            }
+            console.log(productSize);
+        } else {
+            console.log("Product or ProductSize array not found.");
+        }
+        }
+
+        
+        
+        function shoppingCart(index,productID,Price) {
+            let btnShoppingCart = document.getElementById('shopingCartBtn');
+            
+                console.log('I am here...');
+                axios.post('/', { productID: productID, price:Price ,quantity:totalQty,size:size}) // Sending productID as data
+                    .then(function(response) {
+                        console.log(response);
+                        btnShoppingCart.innerHTML='Check On Cart'
+                        // Handle success response if needed
+                    })
+                    .catch(function(error) {
+                        console.error('Error adding product to cart:', error);
+                        // Handle error if needed
+                    });
+        }
+
+
+    </script>
 
 
 

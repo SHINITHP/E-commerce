@@ -15,16 +15,20 @@
         rel="stylesheet">
 
     <!-- Css Styles -->
-    <link rel="stylesheet" href="assets/css/user/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="assets/css/user/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="assets/css/user/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="assets/css/user/jquery-ui.min.css" type="text/css">
-    <link rel="stylesheet" href="assets/css/user/magnific-popup.css" type="text/css">
-    <link rel="stylesheet" href="assets/css/user/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="assets/css/user/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="assets/css/user/style.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/user/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/user/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/user/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/user/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/user/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/user/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/user/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/user/style.css" type="text/css">
 
     <!-- Additional CSS Files -->
+
+    <link rel="stylesheet" href="/assets/css/user/shoppingCart.css">
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/user/bootstrap.min.css">
 
     <link rel="stylesheet" type="text/css" href="/assets/css/user/font-awesome.css">
 
@@ -38,6 +42,10 @@
 
     <link rel="stylesheet" href="/assets/css/user/lightbox.css">
 
+
+
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
 </head>
 
 <body>
@@ -45,194 +53,317 @@
 
 
     <!-- ***** Header Area Start ***** -->
-    <%- include('../../views/user/navbar.ejs') %>
-        <!-- ***** Header Area End ***** -->
-
-        <!-- Shop Cart Section Begin -->
-        <section class="shop-cart spad ">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="shop__cart__table">
-                            <table>
-                                <thead>
-                                    <tr style="text-align: center;">
-                                        <th>Product Name</th>
-                                        <th>Price</th>
-                                        <th>Quantity</th>
-                                        <th>Total</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody  style="text-align: center;">
-                                    
-                                    <tr>
-                                        <td class="cart__product__item">
-                                            <img src="assets/images/shop-cart/cp-4.jpg" alt="">
-                                            <div class="cart__product__item__title">
-                                                <h6>Cotton Shirt</h6>
-                                                <div class="rating">
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="cart__price">$ 55.0</td>
-                                        <td class="cart__quantity">
-                                            <div class="pro-qty">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </td>
-                                        <td class="cart__total">$ 110.0</td>
-                                        <td class="cart__close"><span><i class="fa-solid fa-xmark" style="color: #000000;"></i></span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <div class="cart__btn">
-                            <a href="#" style="border: 1px solid #aeaeae;">Continue Shopping</a>
-                        </div>
-                    </div>
-                    
-                </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="discount__content">
-                            <h6>Discount codes</h6>
-                            <form action="#">
-                                <input type="text" placeholder="Enter your coupon code">
-                                <button type="submit" class="site-btn">Apply</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 offset-lg-2">
-                        <div class="cart__total__procced">
-                            <h6>Cart total</h6>
-                            <ul>
-                                <li>Subtotal <span>$ 750.0</span></li>
-                                <li>Total <span>$ 750.0</span></li>
-                            </ul>
-                            <a href="#" class="primary-btn">Proceed to checkout</a>
-                        </div>
-                    </div>
-                </div>
+   <header class="header-area header-sticky" style="position: fixed;"> 
+    <a class='menu-trigger' id="menuTrigger" style="position: relative;">
+        <span>Menu</span>
+    </a>
+    <div class="container Nav-con-1" >
+        <div class="row row1">
+            <div class="col-10" >
+                <nav class="main-nav" style=" margin-left: 20px;">
+                   
+                    <!-- ***** Logo Start ***** -->
+                    <a href="/" class="logo">
+                        <img src="/assets/images/logo.png">
+                    </a>
+                    <!-- ***** Logo End ***** -->
+                    <!-- ***** Menu Start ***** -->
+                    <ul class="nav">
+                        <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
+                        <li class="scroll-to-section"><a href="#men">Men's</a></li>
+                        <li class="scroll-to-section"><a href="#women">Women's</a></li>
+                        <li class="scroll-to-section"><a href="#kids">Kid's</a></li>
+                        <li class="scroll-to-section"><a href="#Contact">Contact</a></li>
+                    </ul>  
+                      
+                    <!-- <a class='menu-trigger'>
+                        <span>Menu</span>
+                    </a> -->
+                   
+                </nav>
+               
+                
             </div>
-        </section>
-        <!-- Shop Cart Section End -->
-
-        <!-- Instagram Begin -->
-        <div class="instagram">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                        <div class="instagram__item set-bg" data-setbg="assets/images/instagram/insta-1.jpg">
-                            <div class="instagram__text">
-                                <i class="fa fa-instagram"></i>
-                                <a href="#">@ ashion_shop</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                        <div class="instagram__item set-bg" data-setbg="assets/images/instagram/insta-2.jpg">
-                            <div class="instagram__text">
-                                <i class="fa fa-instagram"></i>
-                                <a href="#">@ ashion_shop</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                        <div class="instagram__item set-bg" data-setbg="assets/images/instagram/insta-3.jpg">
-                            <div class="instagram__text">
-                                <i class="fa fa-instagram"></i>
-                                <a href="#">@ ashion_shop</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                        <div class="instagram__item set-bg" data-setbg="assets/images/instagram/insta-4.jpg">
-                            <div class="instagram__text">
-                                <i class="fa fa-instagram"></i>
-                                <a href="#">@ ashion_shop</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                        <div class="instagram__item set-bg" data-setbg="assets/images/instagram/insta-5.jpg">
-                            <div class="instagram__text">
-                                <i class="fa fa-instagram"></i>
-                                <a href="#">@ ashion_shop</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                        <div class="instagram__item set-bg" data-setbg="assets/images/instagram/insta-6.jpg">
-                            <div class="instagram__text">
-                                <i class="fa fa-instagram"></i>
-                                <a href="#">@ ashion_shop</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-2 col2">
+                <a href=""><i class="fa-solid fa-magnifying-glass searchIcon" style="color: #404040;"></i></a> 
+                <a href="/shoppingcart">
+                    <i class="fa-solid fa-cart-shopping cartIcon" style="color: #404040;"></i>
+                </a> 
+                <a href="/Profile" class="profileLogo">
+                    <img src="/assets/images/profile-Icon.png" class="profileIcon">
+                </a> 
             </div>
         </div>
-        <!-- Instagram End -->
+    </div>
+</header>
+
+
+        <!-- show product datas -->
+        <div class="container-fluid con-f1">
+            <div class="row row-1">
+                <div class="col-4 colms">
+                    <h5>Product Name</h5>
+                </div>
+                <div class="col-2 colms">
+                    <h5>Price</h5>
+                </div>
+                <div class="col-2 colms">
+                    <h5>Quantity</h5>
+                </div>
+                <div class="col-2 colms">
+                    <h5>Total Amount</h5>
+                </div>
+                <div class="col-1 colms"></div>
+            </div>
+            <% cartItems.forEach((item,index)=> { %>
+                <% var itemId=item._id; %>
+                    <div class="row row-2">
+                        <div class="col-4 colms2 col_5">
+                            <a href="/productOverview?id=<%= item.productID._id %>"><img class="cartImage"
+                                    src="<%= item.productID.files[0].url %>" alt=""></a>
+                            <div class="col-9 col5-col12">
+                                <span><a href="/productOverview?id=<%= item.productID._id %>">
+                                        <%= item.productID.ProductName %>
+                                    </a></span>
+                                <p style="font-weight: bold;">Size: <%= item.size %>
+                                </p>
+
+                                <p style="font-weight: bold;" class="availability">
+                                    <% item.productID.ProductSize.forEach((size, index)=> { %>
+                                        <% if (size.size==item.size) { %>
+                                            <% if(size.quantity < 1){ %>
+                                                Out Of Stock
+                                                <% } else { %>
+                                                    In Stock
+                                                    <% } %>
+                                                        <% } %>
+                                                            <% }) %>
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="col-2 colms2">
+                            <p style="font-size: 14pt; padding-right: 15px;"><i class="fa-solid fa-indian-rupee-sign"
+                                    style=" font-size:13pt; padding-right: 5px;"></i>
+                                <%= item.productID.SalesRate %>
+                            </p> -₹<span class="discount" id="discount<%=index%>"style="text-decoration: line-through;color:rgb(63, 63, 63);">
+                                <%=(item.productID.SalesRate*item.productID.DiscountPrecentage / 100) * item.quantity %>
+                            </span>
+                        </div>
+                        <div class="col-2 colms2">
+                            <div class="quantity">
+                                <div class="proQty">
+                                    <input type="button"
+                                        onclick="quantityIncrement('<%=index%>','<%= item.productID.SalesRate %>','decrement')"
+                                        id="decrement<%=index%>" class="inc-dec" value="-">
+                                    <input type="text" class="Qty" id="showQty<%=index%>" readonly
+                                        value="<%=item.quantity%>">
+                                    <input type="button" id="increment<%=index%>"
+                                        onclick="quantityIncrement('<%=index%>','<%= item.productID.SalesRate %>','increment')"
+                                        class="inc-dec" value="+">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2 colms2">
+                            <!-- <p class="totalAmount" id="totalPrice" style="font-size: 13pt; font-family: Poppins;"> -->
+                            <i class="fa-solid fa-indian-rupee-sign" style=" font-size:13pt;padding-right: 3px;"></i>
+                            <input type="text" id="totalPrice<%=index%>" class="TotalAmount" readonly
+                                value=" <%= item.productID.SalesRate * item.quantity %>">
+                            <!-- </p> -->
+                        </div>
+                        <div class="col-1 colms2">
+                            <div class="cart__close">
+                                <span><i class="fa-solid fa-xmark" style="color: #000000;"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <% }) %>
+                        <br>
+                        <div class="row row-3">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="cart__btn">
+                                    <a href="allProducts?page=1" style="border: 1px solid #aeaeae;">Continue
+                                        Shopping</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row-3">
+                            <div class="col-lg-6">
+                                <div class="discount__content">
+                                    <h6>Discount codes</h6>
+                                    <form action="#">
+                                        <input type="text" placeholder="Enter your coupon code">
+                                        <button type="submit" class="site-btn">Apply</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 offset-lg-2">
+                                <div class="cart__total__procced">
+                                    <h6>Cart total</h6>
+                                    <ul>
+                                        <li>Discount <span
+                                                style="display: flex; align-items: center;justify-content: center;">-<i
+                                                    class="fa-solid fa-indian-rupee-sign" style=" font-size:13pt;"></i>
+                                                <input type="text" id="discountAmt" class="cartAmount" readonly
+                                                    value="">
+                                            </span></li>
+                                        <li>Total <span
+                                                style="display: flex; align-items: center;justify-content: center;"><i
+                                                    class="fa-solid fa-indian-rupee-sign" style=" font-size:13pt;"></i>
+                                                <input type="text" id="cartTotal" class="cartAmount" readonly value="">
+                                            </span></li>
+
+                                    </ul>
+                                    <a href="/checkOut" onclick="saveOrder('<%= JSON.stringify(cartItems) %>')"
+                                        class="primary-btn checkoutBtn">Proceed to checkout</a>
+                                </div>
+                            </div>
+                        </div>
+        </div>
+
+
 
         <!-- Footer starts here... -->
         <%- include('../../views/user/footer.ejs') %>
-        <!-- Footer end  here... -->
+            <!-- Footer end  here... -->
 
-            <!-- Search Begin -->
-            <div class="search-model">
-                <div class="h-100 d-flex align-items-center justify-content-center">
-                    <div class="search-close-switch">+</div>
-                    <form class="search-model-form">
-                        <input type="text" id="search-input" placeholder="Search here.....">
-                    </form>
-                </div>
-            </div>
-            <!-- Search End -->
+
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <script>
+
+
+                const cartTotal = document.getElementById('cartTotal')
+                const totalAmount = document.querySelectorAll('.TotalAmount');
+                const discount = document.querySelectorAll('.discount');
+    
+                let sum = 0;
+                
+                
+                for (let i = 0; i < discount.length; i++) {
+                    sum = sum + parseFloat(discount[i].innerText)
+                    console.log(discount[i].innerText)
+                    document.getElementById('discountAmt').value = sum
+                }
+                sum = 0;
+                for (let i = 0; i < totalAmount.length; i++) {
+                    console.log('i am heree....')
+                    sum = sum + parseFloat(totalAmount[i].value)
+                    console.log(sum)
+                    cartTotal.value = sum-parseFloat(document.getElementById('discountAmt').value)
+                }
+
+                const availability = document.querySelectorAll('.availability')
+
+                for(let i=0; i<availability.length;i++){
+
+                    if (availability[i].innerText === 'In Stock') {
+                        availability[i].style.color = 'green'
+                    } else {
+                        availability[i].style.color = 'red'
+                    }
+
+                }
+                
+
+    
+                function quantityIncrement(index, price, type) {
+                    const showQty = document.getElementById(`showQty${index}`)
+                    const totalInput = document.getElementById(`totalPrice${index}`)
+                    const discountAmt = document.getElementById(`discount${index}`)
+                    let ExactDiscAmt;
+                    if (type === 'increment') {
+                        let totalPrice = parseFloat(totalInput.value)
+                        let quantity = parseFloat(showQty.value)
+                        ExactDiscAmt = parseFloat(discountAmt.innerText)/parseFloat(showQty.value)
+                        showQty.value = quantity + 1
+                        let addQty = parseFloat(showQty.value)
+                        console.log(addQty, price)
+                        totalInput.value = addQty * price
+                        cartTotal.value = parseFloat(cartTotal.value) + parseFloat(price)
+                        discountAmt.innerHTML = parseFloat(discountAmt.innerText) + parseFloat(ExactDiscAmt)
+                        document.getElementById('discountAmt').value = parseFloat(document.getElementById('discountAmt').value) + parseFloat(ExactDiscAmt)
+                    }
+                    else if (type === 'decrement') {
+                        let totalPrice = parseFloat(totalInput.value)
+                        let quantity = parseFloat(showQty.value)
+                        ExactDiscAmt = parseFloat(discountAmt.innerText)/parseFloat(showQty.value)
+                        showQty.value = quantity - 1
+                        let addQty = parseFloat(showQty.value)
+                        console.log(addQty, price)
+                        totalInput.value = addQty * price
+                        cartTotal.value = parseFloat(cartTotal.value) - parseFloat(price)
+                        discountAmt.innerHTML = parseFloat(discountAmt.innerText) - parseFloat(ExactDiscAmt)
+                        document.getElementById('discountAmt').value = parseFloat(document.getElementById('discountAmt').value) - parseFloat(ExactDiscAmt)
+                    }
+                }
+
+
+
+
+
+                function saveOrder(data) {
+                    console.log('I am here...');
+                    axios.post('/shoppingcart', { cartData: data }) // Sending productID as data
+                        .then(function (response) {
+                            console.log('Product added to cart successfully', response);
+                            // Handle success response if needed
+                        })
+                        .catch(function (error) {
+                            console.error('Error adding product to cart:', error);
+                            // Handle error if needed
+                        });
+                }
+
+
+
+           
+
+
+
+
+
+            </script>
+
+
+
 
             <!-- Js Plugins -->
-            <script src="assets/js/jquery-3.3.1.min.js"></script>
-            <script src="assets/js/bootstrap.min.js"></script>
-            <script src="assets/js/jquery.magnific-popup.min.js"></script>
-            <script src="assets/js/jquery-ui.min.js"></script>
-            <script src="assets/js/mixitup.min.js"></script>
-            <script src="assets/js/jquery.countdown.min.js"></script>
-            <script src="assets/js/jquery.slicknav.js"></script>
-            <script src="assets/js/owl.carousel.min.js"></script>
-            <script src="assets/js/jquery.nicescroll.min.js"></script>
-            <script src="assets/js/main.js"></script>
+            <script src="/assets/js/jquery-3.3.1.min.js"></script>
+            <script src="/assets/js/bootstrap.min.js"></script>
+            <script src="/assets/js/jquery.magnific-popup.min.js"></script>
+            <script src="/assets/js/jquery-ui.min.js"></script>
+            <script src="/assets/js/mixitup.min.js"></script>
+            <script src="/assets/js/jquery.countdown.min.js"></script>
+            <script src="/assets/js/jquery.slicknav.js"></script>
+            <script src="/assets/js/owl.carousel.min.js"></script>
+            <script src="/assets/js/jquery.nicescroll.min.js"></script>
+            <script src="/assets/js/main.js"></script>
 
 
 
-            <!-- jQuery -->
-            <script src="assets/js/jquery-2.1.0.min.js"></script>
+            
+            <!-- <script src="/assets/js/jquery-2.1.0.min.js"></script>
 
-            <!-- Bootstrap -->
-            <script src="assets/js/popper.js"></script>
+           
+            <script src="/assets/js/popper.js"></script>
 
-            <!-- Plugins -->
-            <script src="assets/js/owl-carousel.js"></script>
-            <script src="assets/js/accordions.js"></script>
-            <script src="assets/js/datepicker.js"></script>
-            <script src="assets/js/scrollreveal.min.js"></script>
-            <script src="assets/js/waypoints.min.js"></script>
-            <script src="assets/js/jquery.counterup.min.js"></script>
-            <script src="assets/js/imgfix.min.js"></script>
-            <script src="assets/js/slick.js"></script>
-            <script src="assets/js/lightbox.js"></script>
-            <script src="assets/js/isotope.js"></script>
+           
+            <script src="/assets/js/owl-carousel.js"></script>
+            <script src="/assets/js/accordions.js"></script>
+            <script src="/assets/js/datepicker.js"></script>
+            <script src="/assets/js/scrollreveal.min.js"></script>
+            <script src="/assets/js/waypoints.min.js"></script>
+            <script src="/assets/js/jquery.counterup.min.js"></script>
+            <script src="/assets/js/imgfix.min.js"></script>
+            <script src="/assets/js/slick.js"></script>
+            <script src="/assets/js/lightbox.js"></script>
+            <script src="/assets/js/isotope.js"></script>
 
-            <!-- Global Init -->
-            <script src="assets/js/custom.js"></script>
+            
+            <script src="/assets/js/custom.js"></script> -->
 
 </body>
 
