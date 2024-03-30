@@ -28,7 +28,7 @@ const {
     overviewFilter,
     checkOut,
     orderDetails,
-    checkOutTasks
+    checkOutTasks,updateProfile,updateCheckout,removeCartProduct
 } = require("../../controller/userConroller.js");
 const { userAuth } = require('../../middlewares/authMiddleware.js')
 const passport = require('passport')
@@ -50,7 +50,7 @@ router.route('/google/redirect').get(passport.authenticate('google'), (req, res)
     res.cookie('jwtUser', token);
     res.redirect('/')
 })
-router.route('/shoppingcart').get(userAuth,shoppingCart).post(orderDetails)//shoppingcart 
+router.route('/shoppingcart').get(userAuth,shoppingCart).post(orderDetails).delete(removeCartProduct)//shoppingcart 
 router.route('/sendEmailOtp').get(sendEmailOtp).post(postsendEmailOtp)//enter email page to send otp for forgotpassword
 router.route('/forgotEnterOtp').get(forgotEnterOtp).post(postForgotEnterOtp)// Enter otp for forgotpassword
 router.route('/resetPassword').get(resetPassword).patch(createPassword)// resetpassword page
@@ -59,12 +59,11 @@ router.route('/productOverview').get(productOverview).post(overviewFilter)//prod
 router.route('/allProducts').get(landingPage)//allProducts
 router.route('/filterProducts').get(filterProducts)
 router.route('/filterCategory').get(landingPage)//listCategory
-router.route('/Profile').get(userAuth,profile)
+router.route('/Profile').get(userAuth,profile).patch(updateProfile)
 router.route('/checkOut').get(userAuth,checkOut).post(checkOutTasks)
-
+router.route('/checkOut').put(updateCheckout)
 router.route('/logout').get(logout)//logout
 router.route('/profileMenu').get(profileMenu).post(saveUserAddress)
-router.route('/')
-
+router.route('/profileMenu').put(saveUserAddress)
 
 module.exports = router

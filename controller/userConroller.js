@@ -158,6 +158,7 @@ const shoppingCart = async (req, res) => {
   const userID = verifyToken(token); // Verify token and get userID
   try {
     const cartItems = await addtToCartModel.find({ userID: userID }).populate('productID');
+    // console.log(cartItems)
     res.render('user/shoppingCart', { cartItems })
   } catch (error) {
     console.error("Error fetching cart products:", error);
@@ -189,25 +190,9 @@ const profile = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
   const userID = await verifyToken(token); // Verify token and get userID
   try {
-    const userInfo = await addressModel.aggregate([
-      {
-        $lookup: {
-          from: "userRegister",
-          localField: 'userID',
-          foreignField: '_id',
-          as: 'UserAddress'
-        }
-      },
-      {
-        $project: {
-          "UserAddress.password": 0 // Exclude the password field
-        }
-      }
-    ]);
-
-    console.log(userInfo)
-
+    const userInfo = await addressModel.find({ userID: userID, selected: true })
     // Render profile page with userID
+    console.log(userInfo)
     res.render('user/Profile', { error: '', userInfo })
     // Handle result here
   } catch (error) {
@@ -227,9 +212,10 @@ const profileMenu = async (req, res) => {
     }
     else if (req.query.menu == 'myOrders') {
       const orderDetails = await orderSchema.find({ userID: userID })
-      .populate('productID')
-      console.log(orderDetails)
-      res.render('user/myOrders',{orderDetails})
+        .populate('productID')
+        .populate('addressID')
+      console.log('orderdetails', orderDetails)
+      res.render('user/myOrders', { orderDetails })
     }
     else if (req.query.menu == 'wishlist') {
       res.render('user/wishlist')
@@ -268,10 +254,40 @@ const saveUserAddress = async (req, res) => {
   else if (req.query.type === 'manageAddress') {
     const addressID = req.body.addressID
     const selected = req.body.selected
-    // console.log('body ',addressID,req.body.selected)
     await addressModel.updateMany({}, { $set: { selected: false } })
     await addressModel.findOneAndUpdate({ _id: addressID }, { $set: { selected: selected } })
     res.redirect('/profileMenu?menu=manageAddress')
+  }
+  else if (req.query.type === 'deleteAddress') {
+    try {
+      const id = req.body.id
+      await addressModel.findByIdAndDelete(id)
+      res.redirect('/profileMenu?menu=manageAddress')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  else if (req.query.type === 'updateAddress') {
+    try {
+      const id = req.query.id;
+      const data = {
+        fullName: req.body.fullName,
+        emailAddress: req.body.emailAddress,
+        phoneNo: req.body.mobileNo,
+        cityDistrictTown: req.body.cityDistrictTown,
+        state: req.body.state,
+        country: req.body.country,
+        pincode: req.body.pinCode,
+        gender: req.body.gender,
+        address: req.body.address,
+        addressType: req.body.addressType
+      }
+
+      await addressModel.findByIdAndUpdate(id, data, { new: true });
+      res.redirect('/profileMenu?menu=manageAddress')
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 
@@ -358,14 +374,8 @@ const orderDetails = async (req, res) => {
 
 }
 
-const checkOutTasks = async (req, res) => {
-  if (req.query.task === 'removeProducts') {
-    const orderSummaryId = req.body.id;
-    console.log(orderSummaryId)
-    await orderDetailsModel.deleteMany({ _id: orderSummaryId })
-    res.redirect('/checkOut');
-  }
-  else if (req.query.task === 'selectDeleveryAddress') {
+const updateCheckout = async (req, res) => {
+  if (req.query.task === 'selectDeleveryAddress') {
     try {
       const addressID = req.body.addressID
       // console.log('body ',addressID,req.body.selected)
@@ -376,33 +386,92 @@ const checkOutTasks = async (req, res) => {
       console.log('Error on select Delivery Address')
     }
   }
-  else if(req.query.task === 'saveOrderDetails'){
-  
+  else if (req.query.task === 'updateAddress') {
+    try {
+      const id = req.query.id;
+      const data = {
+        fullName: req.body.fullName,
+        emailAddress: req.body.emailAddress,
+        phoneNo: req.body.mobileNo,
+        cityDistrictTown: req.body.cityDistrictTown,
+        state: req.body.state,
+        country: req.body.country,
+        pincode: req.body.pinCode,
+        gender: req.body.gender,
+        address: req.body.address,
+        addressType: req.body.addressType
+      }
+
+      await addressModel.findByIdAndUpdate(id, data, { new: true });
+      res.redirect('/checkOut')
+    } catch (error) {
+      console.log('Error on select Delivery Address')
+    }
+  }
+}
+
+
+
+const checkOutTasks = async (req, res) => {
+  const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+  const userID = verifyToken(token); // Verify token and get userID
+  if (req.query.task === 'removeProducts') {
+    const orderSummaryId = req.body.id;
+    console.log(orderSummaryId)
+    await orderDetailsModel.deleteMany({ _id: orderSummaryId })
+    res.redirect('/checkOut');
+  }
+  else if (req.query.task === 'saveOrderDetails') {
+
     const paymentMethod = req.body.paymentMethod;
     const ProductData = JSON.parse(req.body.ProductData);
     const addressID = req.body.addressID;
     //  console.log('i am here...',ProductData)
 
-     try {
+    try {
       let details;
       const orderDetails = ProductData.map((val) => {
-        return details ={
-          userID:val.userID,
-          productID:val.productID._id,
-          addressID:addressID,
+        return details = {
+          userID: val.userID,
+          productID: val.productID._id,
+          addressID: addressID,
           Quantity: val.quantity,
           Amount: val.price * val.quantity,
-          Size:val.size,
-          PaymentMethod:paymentMethod
+          Size: val.size,
+          PaymentMethod: paymentMethod
         }
       })
       // console.log('details :', ProductData)
       await orderSchema.create(orderDetails)
       res.redirect('/profileMenu?menu=myOrders')
-     } catch (error) {
+    } catch (error) {
       console.log(error)
-     }
-    
+    }
+
+  }
+  else if (req.query.task === 'addAddress') {
+
+    console.log('Iam heree')
+    try {
+      const {
+        addressType, address, pincode,
+        state, gender, emailAddress,
+        country, cityDistrictTown, phoneNo,
+        fullName
+      } = req.body
+
+      const UserAddress = {
+        addressType, address, pincode,
+        state, gender, emailAddress,
+        country, cityDistrictTown, phoneNo,
+        fullName, userID
+      }
+
+      await addressModel.create(UserAddress);
+      res.redirect('/checkOut')
+    } catch (error) {
+      console.log(error)
+    }
   }
 
 }
@@ -413,6 +482,55 @@ const checkOutTasks = async (req, res) => {
 //..................................................................................................................................................
 
 //Section for Post Method Starts here.....
+
+
+const removeCartProduct = async (req, res) => {
+  const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+  const userID = verifyToken(token); // Verify token and get userID
+  try {
+    if (req.query.task === 'deleteCartItem') {
+      console.log('I am here to delete', req.query.id);
+      
+      await addtToCartModel.findOneAndDelete({ _id: req.query.id, userID: userID });
+      res.redirect('/shoppingcart');
+    }
+  } catch (error) {
+    console.log(error);
+    
+    res.status(500).send('Internal Server Error');
+  }
+}
+
+const updateProfile = async (req, res) => {
+  const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+  const userID = verifyToken(token); // Verify token and get userID
+  const newData = {
+    $set: {
+      fullName: req.body.fullName,
+      emailAddress: req.body.emailAddress,
+      phoneNo: req.body.mobileNo,
+      cityDistrictTown: req.body.cityDistrictTown,
+      state: req.body.state,
+      country: req.body.country,
+      pincode: req.body.pinCode
+    }
+  };
+
+  const result = await addressModel.updateOne({ userID: userID, selected: true }, {
+    $set: {
+      fullName: req.body.fullName,
+      emailAddress: req.body.emailAddress,
+      phoneNo: req.body.mobileNo,
+      cityDistrictTown: req.body.cityDistrictTown,
+      state: req.body.state,
+      country: req.body.country,
+      pincode: req.body.pinCode
+    }
+  });
+
+  res.redirect('/Profile')
+
+}
 
 // save the products to cart database
 const addToCart = async (req, res) => {
@@ -719,6 +837,8 @@ const productOverview = async (req, res) => {
 module.exports = {
   registerPage,
   addToCart,
+  removeCartProduct,
+  updateCheckout,
   landingPage,
   loginPage,
   userLogin,
@@ -744,5 +864,6 @@ module.exports = {
   overviewFilter,
   checkOut,
   checkOutTasks,
-  orderDetails
+  orderDetails,
+  updateProfile
 }

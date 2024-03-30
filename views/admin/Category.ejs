@@ -139,10 +139,10 @@
                                 <% categoryData.forEach((data,index)=> { %>
                                     <tr class="tableRow">
                                         <th scope="row" style="width: 30px;"><%= index +1 %></th>
-                                        <td>
+                                        <td style="text-align: left;padding-left: 30px;">
                                             <img src="<%=data.image[0].url%>"
                                                 style="border: 1px solid rgb(80, 80, 80);" class="imageBox" alt="">
-                                            <span>
+                                            <span style="padding-left: 20px;">
                                                  <%=data.subCategory%>
                                             </span>
                                         </td>

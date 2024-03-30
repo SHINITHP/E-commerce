@@ -92,8 +92,8 @@
 
     <div class="container-fluid outerDiv" id="blur" style="padding: 0px;">
         <div class="container-fluid conF-1">
-            <h3 class="myAccount">My Account</h3>
-            <div class="row" style="min-height: 100vh;">
+            <!-- <h3 class="myAccount">My Account</h3>  -->
+            <div class="row" style="min-height: 100vh;margin-top: 100px;">
                 <div class="col-md-3 col-sm-12 col3">
 
                     <div class="row" style="display: flex;align-items: center; padding-left: 20px; padding-top: 20px;">
@@ -173,29 +173,30 @@
                     <div class="row" style="height: 80px;display: flex;align-items: center;justify-content: space-between;padding-left: 40px;padding-right: 40px;">
                         <h3>Profile Information</h3>
                         <button class="btnEdit" id="edit">Edit</button>
+                        <button class="btnEdit" id="cancelEdit" style="display: none;">Cancel</button>
                     </div>
                     <div class="container"> 
-                        <form action="">
+                        <form action="/Profile?_method=PATCH" method="post">
                         <div class="row">
                             <% userInfo.forEach((data) => { %> 
                            
                             <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
                                 <label class="lbl" for="firstName">Full Name
                                     <input type="text" class="form-control firstNameInput" name="fullName"
-                                        id="firstName" placeholder="Enter Full Name" required value="<%=data.fullName%>">
+                                        id="fullName" placeholder="Enter Full Name" required value="<%=data.fullName%>" readonly>
                                 </label>
 
                                 <label class="lbl" for="EmailAddress"> Email Address
                                     <input type="email" class="form-control firstNameInput" name="emailAddress"
-                                        id="EmailAddress" placeholder="Enter Email Address" required value="<%=data.emailAddress%>">
+                                        id="EmailAddress" placeholder="Enter Email Address" required value="<%=data.emailAddress%>" readonly>
                                 </label>
                                 <label class="lbl" for="EmailAddress"> City/District/Town
                                     <input type="text" class="form-control firstNameInput" name="cityDistrictTown"
-                                        id="EmailAddress" placeholder="City/District/Town" required value="<%=data.cityDistrictTown%>">
+                                        id="cityDistrictTown" placeholder="City/District/Town" required value="<%=data.cityDistrictTown%>" readonly>
                                 </label>
                             
                                 <label class="lbl" for="State"> State
-                                    <select name="state" class="dropbtn firstNameInput"  id="State" >
+                                    <select name="state" class="dropbtn firstNameInput" style="outline: none;"  id="State"  >
                                         <option value="" <%= data.state === '' ? 'selected' :'' %>>Select State</option>
                                         <option value="Kerala" <%= data.state === 'Kerala' ? 'selected' : '' %> >Kerala</option>
                                         <option value="Karnadaka" <%= data.state === 'Karnadaka' ? 'selected' : '' %> >Karnadaka</option>
@@ -206,7 +207,7 @@
                             <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
                                 <label class="lbl" for="MobileNo"> Mobile Number
                                     <input type="text" class="form-control firstNameInput" name="mobileNo" id="MobileNo"
-                                        placeholder="Enter Mobile Number" required value="<%=data.phoneNo%>">
+                                        placeholder="Enter Mobile Number" required value="<%=data.phoneNo%>" readonly>
                                 </label>
                                 <label class="lbl" for="gender"> Gender
                                     <div class="firstNameInput" style="padding-top: 10px; font-size: 12pt;">
@@ -215,7 +216,7 @@
                                     </div>
                                 </label>
                                 <label class="lbl" for="State"> Country
-                                    <select name="state" class="dropbtn firstNameInput"  id="State" >
+                                    <select name="country" class="dropbtn firstNameInput"  style="outline: none;"   id="State"  >
                                         <option value="" <%= data.country === '' ? 'selected' :'' %>>Select Country</option>
                                         <option value="India" <%= data.country === 'India' ? 'selected' : '' %>  >India</option>
                                         <option value="Australia" <%= data.country === 'Australia' ? 'selected' : '' %>>Australia</option>
@@ -224,15 +225,15 @@
                                 </label>
                                 <label class="lbl" for="PinCode"> Pin-Code
                                     <input type="text" class="form-control firstNameInput" name="pinCode"
-                                        id="PinCode" placeholder="Enter Pin-Code" required value="<%=data.pincode%>">
+                                        id="PinCode" placeholder="Enter Pin-Code" required value="<%=data.pincode%>" readonly>
                                 </label>
                             </div>
-
+                        
                             <% }) %>
                           
                         </div>
                          <a  style="width: 100%;display: flex; justify-content: center;">
-                            <button class="saveChanges" id="svaebtn">Save Changes</button>
+                            <input type="submit" class="saveChanges" id="savebtn">
                          </a>
                         </form>
                     </div>

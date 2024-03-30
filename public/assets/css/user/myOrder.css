@@ -12,13 +12,15 @@
     justify-content: center;
     border: 1px solid rgb(189, 189, 189);
 }
-.btncancelOrder{
+
+.btncancelOrder {
     padding: 0;
     width: 110px;
     font-size: 11pt;
     font-family: Poppins;
     height: 35px;
 }
+
 .deliveryAddress h4 {
     display: flex;
     justify-content: space-between;
@@ -35,12 +37,14 @@
     justify-content: center;
 
 }
-.rightRow{
+
+.rightRow {
     min-height: 230px;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
+
 .rightRow h4 {
     font-size: 16pt;
     font-weight: 600;
@@ -129,8 +133,108 @@
     background-color: #fff;
     z-index: 0
 }
-.card{
+
+.card {
     margin-top: 40px;
     background-color: transparent;
     border: none;
+}
+
+#SuccessDiv {
+    position: fixed;
+    top: 51%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30vw;
+    height: 420px;
+    background-color: white;
+    border: 1px solid rgb(189, 189, 189);
+    border-radius: 5px;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.05s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#SuccessDiv.active {
+    visibility: visible;
+    opacity: 1;
+    transition: 0.05s ease;
+}
+
+.outerDiv#blur.active {
+    filter: blur(15px);
+}
+
+.cancel-Confirmation {
+    /* background-color: tan; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.submit-Order{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.dropbtn {
+    margin-top: 10px;
+    background-color: white;
+    border: 1px solid rgb(204, 204, 204);
+    color: #495057;
+    width: 65%;
+    height: 34px;
+    font-size: 10pt;
+    cursor: pointer;
+    border-radius: 5px;
+    outline: none;
+    font-family: Poppins;
+}
+
+.dropbtn span {
+    padding-left: 20px;
+    font-size: 12pt;
+}
+
+.commentInput {
+    outline: none;
+    border: none;
+    width: 100%;
+    font-size: 12pt;
+    border-bottom: 1px solid rgb(156, 156, 156);
+}
+
+.cancel-Confirmation label {
+    margin-top: 15px;
+    font-size: 9pt;
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    color: rgb(150, 150, 150);
+}
+#submitBtn{
+    margin-top: 15px;
+    width: 140px;
+    font-size: 11pt;
+    /* border-radius: 25px; */
+}
+.stop-scrolling {
+    overflow: hidden;
+}
+#cancelBtn{
+    margin-right: 10px;
+    margin-top: 15px;
+    width: 140px;
+}
+#checkstatusBtn{
+    margin-right: 10px;
+    margin-top: 15px;
+    width: 140px;
 }

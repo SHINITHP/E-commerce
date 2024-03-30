@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const addressModel = new mongoose.Schema({
     userID:{
-        type:mongoose.Schema.ObjectId,
+        type:mongoose.Schema.ObjectId,ref:"userRegister",
         required:true
     },
     fullName:{

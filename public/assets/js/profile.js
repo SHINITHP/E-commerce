@@ -120,8 +120,27 @@ document.getElementById('edit').addEventListener('click', function (event) {
     if (!confirmation) {
         event.preventDefault(); // Prevent form submission
     } else {
-        const saveBtn = document.getElementById('svaebtn')
+        document.getElementById('fullName').removeAttribute("readonly");
+        document.getElementById('EmailAddress').removeAttribute("readonly");
+        document.getElementById('cityDistrictTown').removeAttribute("readonly");
+        document.getElementById('MobileNo').removeAttribute("readonly");
+        document.getElementById('PinCode').removeAttribute("readonly");
+        const saveBtn = document.getElementById('savebtn')
+        document.getElementById('edit').style.display='none'
         saveBtn.style.display = 'block'
+        document.getElementById('cancelEdit').style.display='block'
     }
 
+})
+
+document.getElementById('cancelEdit').addEventListener('click', function(){
+    document.getElementById('fullName').readOnly = true;
+    document.getElementById('EmailAddress').readOnly = true;
+    document.getElementById('cityDistrictTown').readOnly = true;
+    document.getElementById('MobileNo').readOnly = true;
+    document.getElementById('PinCode').readOnly = true;
+    const saveBtn = document.getElementById('savebtn')
+    saveBtn.style.display = 'none'
+    document.getElementById('cancelEdit').style.display='none'
+    document.getElementById('edit').style.display='block'
 })

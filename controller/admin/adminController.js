@@ -1,5 +1,6 @@
 const UserModel = require('../../models/user/registerSchema.js')
 const ProductModel = require('../../models/admin/productModel.js')
+const orderModel = require('../../models/user/OrderSchema.js')
 const bcrypt = require('bcrypt')
 const cloudinary = require('../admin/cloudinary.js')
 const fs = require('fs')
@@ -118,6 +119,15 @@ const logout = (req, res) => {
     res.redirect('/adminLogin')
 }
 
+const orderHistory = async(req,res) => {
+    const orderDetails = await orderModel.find({})
+    .populate('productID')
+    .populate('userID')
+    .populate('addressID')
+    console.log('order details', orderDetails)
+    res.render('admin/orderHistory',{orderDetails})
+}
+
 
 //Section for GET Request End here.......
 
@@ -125,6 +135,21 @@ const logout = (req, res) => {
 
 //Section for Post Method Starts here.....
 
+
+const OrderTasks = async(req,res) => {
+    // console.log('i am here....')
+
+    try {
+        if(req.query.task==='updateStatus'){
+           const orderID = req.body.orderID
+           const newStatus = req.body.orderStatus
+
+           await orderModel.findByIdAndUpdate(orderID, {Status: newStatus})
+        }
+    } catch (error) {
+        
+    }
+}
 
 //adminlogin post method
 const adminLoginPost = async (req, res) => {
@@ -513,5 +538,7 @@ module.exports = {
     postAddCategory,
     categoryEdit,
     postEditProduct,
-    logout
+    logout,
+    OrderTasks,
+    orderHistory
 }

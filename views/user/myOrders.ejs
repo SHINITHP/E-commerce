@@ -28,6 +28,7 @@
         <!-- <link rel="stylesheet" href="/assets/css/user/lightbox.css"> -->
         <link rel="stylesheet" href="/assets/css/user/wishlist.css">
         <link rel="stylesheet" href="/assets/css/user/myOrder.css">
+
         <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
 
@@ -69,7 +70,7 @@
 
                     </div>
                     <div class="col-2 col2">
-                        <a href=""><i class="fa-solid fa-magnifying-glass searchIcon" style="color: #404040;"></i></a>
+                        <a ><i class="fa-solid fa-magnifying-glass searchIcon" id="searchBtn" style="color: #404040;"></i></a>
                         <a href="/shoppingcart">
                             <i class="fa-solid fa-cart-shopping cartIcon" style="color: #404040;"></i>
                         </a>
@@ -82,11 +83,18 @@
         </header>
         <!-- ***** Header Area End ***** -->
 
+        
+<div class="row searchBar" style="height: 70px;  display: flex;justify-content: center;padding-top: 90px; display: none;cursor: pointer;">
+    <label for="" style="width: 70vw;height: 50px; background-color: #e7e7e7;display: flex;align-items: center;padding-left: 20px;">
+        <input type="text" style="border: none;outline: none; width: 64vw;background: transparent;" placeholder="Search For Products , Brands and More...">
+        <a href="" style="width: 6vw;text-align: center;"><i class="fa-solid fa-magnifying-glass" style="color: #000000; font-size: 18pt;"></i></a>
+    </label>
+</div>
 
 
         <div class="container-fluid outerDiv" id="blur" style="padding: 0px;">
-            <div class="container-fluid conF-1">
-                <h3 class="myAccount">My Account</h3>
+            <div class="container-fluid conF-1" style="margin-top: 100px;">
+                <!-- <h3 class="myAccount">My Account</h3> -->
                 <div class="row" style="min-height: 100vh;">
                     <div class="col-md-3 col-sm-12 col3">
 
@@ -168,49 +176,8 @@
                             </a>
                         </ul>
                     </div>
-                    <div class="col-md-9 col-sm-12 col9" id="trackOrder"  style="display: none;">
-                        <div class="row deliveryAddress">
-                            <div class="col-6 leftRow" >
-                                <h4>Delivery Address</h4>
-                                <p style="font-size: 13pt;margin-top: 13px;font-family:Poppins; font-weight: 500;">Shinith.P </p>
-                                <p style="font-size: 11pt;font-weight: 400; width: 350px; padding: 0; margin-top: 5px;">
-                                    Beena Nivas Uruvachal Po. Uruvachal <span>Kannur
-                                    </span> <span>,Kerala</span><span>-670702</span>
-                                </p>
-                                <h6 style="margin-top: 10px;font-family: Poppins;font-size: 12pt;">Phone Number : <span style="padding-left: 2px;font-size: 11pt;color:#404040;">7306552573</span></h6>
-                                <h6 style="margin-top: 10px;font-family: Poppins;font-size: 12pt;">Email : <span style="padding-left: 2px;font-size: 11pt;color:#404040;">shinithp78@gmail.com</span></h6>
-                            </div>
-                            <div class="col-6 rightRow">
-                                <h4>Product Details <span><input type="button" class="btn btncancelOrder" value="Cancel Order"></span></h4>
-                                <a href="" style="display:flex;align-items: center;">
-                                     <img src=""  alt="" style="height: 80px;width: 80px; ">
-                                    <p style="padding-left: 20px;">Abstract Short Sleeve Shirt</p>
-                                </a>
-                                <h6 style="padding-top: 10px;">Brand Name : <span style="color: #404040;">Shae by SASSAFRAS</span></h6>
-                                <h6 style="padding-top: 10px;">Price : ₹<span style="color: #404040;">3240</span></h6>
-                            </div>
-                        </div>
 
-                        <div class="card card-timeline px-2 border-none">
-                            <ul class="bs4-order-tracking">
-                                <li class="step active">
-                                    <div><i class="fas fa-user"></i></div> Order Placed
-                                </li>
-                                <li class="step active">
-                                    <div><i class="fas fa-bread-slice"></i></div>Order Confirmed
-                                </li>
-                                <li class="step">
-                                    <div><i class="fas fa-truck"></i></div> Out for delivery
-                                </li>
-                                <li class="step ">
-                                    <div><i class="fas fa-birthday-cake"></i></div> Delivered
-                                </li>
-                            </ul>
-                            <h5 class="text-center"><b>In transit</b>. The order has been shipped!</h5>
-                        </div>
-                    </div>
 
-    
 
                     <div class="col-md-9 col-sm-12 col9" id="orderList">
                         <h3 style="width: 100%;">My Orders</h3>
@@ -234,7 +201,9 @@
                                         </ul>
                                     </div>
                                     <div class="col-4 rowcol6-3">
-                                        <button class="btn" id="remove" onclick="TrackOrder()">Track Order</button>
+                                        <button class="btn" id="remove"
+                                            onclick="TrackOrder('<%=item._id%>','<%= JSON.stringify(orderDetails) %>')">Track
+                                            Order</button>
 
                                     </div>
                                 </div>
@@ -254,25 +223,110 @@
                                         </div>
                                         <div class="col-4 rowcol4-3">
                                             <h5>Status</h5>
-                                            <p>Delivered</p>
+                                            <p>
+                                                <%=item.Status%>
+                                            </p>
                                         </div>
                                     </div>
                             </div>
                             <% }) %>
                     </div>
-                    
+
+
+                    <!-- track order -->
+                    <div class="col-md-9 col-sm-12 col9" id="trackOrder" style="display: none;">
+                        <div class="row deliveryAddress">
+                            <div class="col-6 leftRow">
+                                <h4>Delivery Address</h4>
+                                <p id="name"
+                                    style="font-size: 13pt;margin-top: 13px;font-family:Poppins; font-weight: 500;">
+                                </p>
+                                <p id="address"
+                                    style="font-size: 11pt;font-weight: 400; width: 350px; padding: 0; margin-top: 5px;">
+                                </p>
+                                <h6 style="margin-top: 10px;font-family: Poppins;font-size: 12pt;">Phone Number : <span
+                                        style="padding-left: 2px;font-size: 11pt;color:#404040;" id="mob-number"></span>
+                                </h6>
+                                <h6 style="margin-top: 10px;font-family: Poppins;font-size: 12pt;">Email : <span
+                                        style="padding-left: 2px;font-size: 11pt;color:#404040;" id="email"></span>
+                                </h6>
+                            </div>
+                            <div class="col-6 rightRow">
+                                <h4>Product Details <span><input type="button" onclick="cancelOrder()"
+                                            class="btn btncancelOrder" value="Cancel Order"></span></h4>
+                                <a href="" style="display:flex;align-items: center;">
+                                    <img src="" alt="" style="height: 80px;width: 80px; " id="productImg">
+                                    <p style="padding-left: 20px;" id="productName"></p>
+                                </a>
+                                <h6 style="padding-top: 10px;">Brand Name : <span style="color: #404040;"
+                                        id="brandName"></span></h6>
+                                <h6 style="padding-top: 10px;">Price : ₹<span style="color: #404040; padding-left: 5px;"
+                                        id="price"></span></h6>
+                            </div>
+                        </div>
+
+
+
+                        <div class="card card-timeline px-2 border-none">
+                            <ul class="bs4-order-tracking">
+                                <li class="step" id="lineOne">
+                                    <div><i class="fas fa-user"></i></div>Order Placed
+                                </li>
+                                <li class="step" id="lineTwo">
+                                    <div><i class="fas fa-bread-slice"></i></div>Order Confirmed
+                                </li>
+                                <li class="step" id="lineThree">
+                                    <div><i class="fas fa-truck"></i></div>Out For Delivery
+                                </li>
+                                <li class="step" id="lineFour">
+                                    <div><i class="fas fa-birthday-cake"></i></div>Delivered
+                                </li>
+                            </ul>
+                            <h5 class="text-center"></h5>
+                        </div>
+                    </div>
+
+
+
+
+
                 </div>
             </div>
         </div>
 
-        <script>
-            function TrackOrder() {
-                const orderList = document.getElementById('orderList')
-                const trackOrder = document.getElementById('trackOrder')
-                orderList.style.display = 'none'
-                trackOrder.style.display = 'block'
-            }
-        </script>
+
+        <div id="SuccessDiv">
+            <div class="container cancel-Confirmation">
+                <img src="/assets/images/CancelOrder.png"
+                    style="height: 80px;width: 130px; margin-bottom: 10px;padding-right: 29px;" alt="">
+                <h6>Are you Sure?</h6>
+                <p style="width: 300px;text-align: center; margin-top: 10px;">Are you sure you want to proceed with
+                    canceling the order!</p>
+                <select name="CancelReason" id="canceldropdown" class="dropbtn">
+                    <option value="Order Placed By Mistake">Reason For Cancellation</option>
+                    <option value="Order Placed By Mistake">Order Placed By Mistake</option>
+                    <option value="Item arrived too late">Item arrived too late</option>
+                    <option value="Financial reasons">Financial reasons</option>
+                    <option value="Other ">Other</option>
+                </select>
+                <label for="">Comment(optional)
+                    <input type="text" class="commentInput">
+                </label>
+                <div class="row">
+                    <input type="button" class="btn" id="cancelBtn" value="Cancel">
+                    <input type="button" class="btn" id="submitBtn" onclick="submitRequest()" value="Submit Request">
+                </div>
+
+            </div>
+
+            <div class="container submit-Order" style="display: none;">
+                <i class="fa-regular fa-circle-check" style="color: #10aa0e;font-size: 40pt;padding-bottom: 10px;"></i>
+                <p style="width: 400px;text-align: center; margin-top: 10px;">Your order cancellation request is being
+                    processed. Expect confirmation shortly</p>
+                <a href=""><input type="button" class="btn" id="checkstatusBtn" value="Check Status"></a>
+            </div>
+        </div>
+
 
 
         <!-- eFooter starts here... -->
@@ -280,39 +334,147 @@
             <!-- Footer end  here... -->
 
 
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <script>
 
 
+                document.getElementById('searchBtn').addEventListener('click', function(){
+                    document.querySelector('.searchBar').style.display='block'
+                    document.querySelector('.searchBar').style.display='flex'
+                    document.querySelector('.outerDiv').style.paddingTop = '10px';
+                    document.querySelector('.conF-1').style.marginTop = '50px';
+                })
+
+
+                function TrackOrder(orderId, orderDetails) {
+                    const orderList = document.getElementById('orderList')
+                    const trackOrder = document.getElementById('trackOrder')
+                    orderList.style.display = 'none'
+                    trackOrder.style.display = 'block'
+
+                    const productData = JSON.parse(orderDetails)
+                    const data = productData.filter((val) => {
+                        return val._id == orderId ? true : false
+                    })
+
+                    console.log('orderDetails', data)
+
+
+                    document.getElementById('name').innerHTML = data[0].addressID.fullName
+                    document.getElementById('address').innerHTML = `${data[0].addressID.address} , ${data[0].addressID.state} , ${data[0].addressID.cityDistrictTown}-${data[0].addressID.pincode}`
+                    document.getElementById('mob-number').innerHTML = data[0].addressID.phoneNo
+                    document.getElementById('email').innerHTML = data[0].addressID.emailAddress
+                    document.getElementById('productImg').src = data[0].productID.files[0].url
+                    document.getElementById('productName').innerHTML = data[0].productID.ProductName
+                    document.getElementById('brandName').innerHTML = data[0].productID.BrandName
+                    document.getElementById('price').innerHTML = data[0].Amount
+
+                    let lineOne = document.getElementById('lineOne');
+                    let lineTwo = document.getElementById('lineTwo');
+                    let lineThree = document.getElementById('lineThree');
+                    let lineFour = document.getElementById('lineFour');
+                    let textcenter = document.querySelector('.text-center')
+                    console.log(data[0].Status)
+                    if (data[0].Status === 'Order Placed') {
+                        lineOne.classList.toggle('active');
+                        textcenter.innerHTML = 'Your order has been successfully placed.'
+                    }
+                    else if (data[0].Status === 'Order Confirmed') {
+                        lineOne.classList.toggle('active');
+                        lineTwo.classList.toggle('active');
+                        textcenter.innerHTML = 'Your order has been confirmed and is being processed!'
+                    }
+                    else if (data[0].Status === 'Out For Delivery') {
+                        lineOne.classList.toggle('active');
+                        lineTwo.classList.toggle('active');
+                        lineThree.classList.toggle('active');
+                        textcenter.innerHTML = 'Your order is on its way and is currently marked as Out For Delivery.'
+                    }
+                    else if (data[0].Status === 'Delivered') {
+                        lineOne.classList.toggle('active');
+                        lineTwo.classList.toggle('active');
+                        lineThree.classList.toggle('active');
+                        lineFour.classList.toggle('active');
+                        textcenter.innerHTML = 'Your order has been successfully delivered.'
+                    }
+
+
+                }
+
+
+                function submitRequest() {
+                    const SuccessDiv = document.getElementById('SuccessDiv')
+                    const cancelConfirmation = document.querySelector('.cancel-Confirmation')
+                    const submitOrder = document.querySelector('.submit-Order')
+
+                    SuccessDiv.style.height = '300px'
+                    cancelConfirmation.style.display = 'none'
+                    submitOrder.style.display = 'block'
+                    submitOrder.style.display = 'flex'
+                }
+
+                document.getElementById('cancelBtn').addEventListener('click', function () {
+
+                    let blur = document.getElementById('blur');
+                    blur.classList.remove('active');
+
+                    let popup = document.getElementById('SuccessDiv');
+                    popup.classList.remove('active');
+
+                    let body = document.querySelector('body');
+
+                    // Add a class to the body to stop scrolling
+                    body.classList.remove('stop-scrolling');
+
+                })
+
+                function cancelOrder() {
+
+                    let blur = document.getElementById('blur');
+                    blur.classList.toggle('active');
+
+                    let popup = document.getElementById('SuccessDiv');
+                    popup.classList.toggle('active');
+
+                    let body = document.querySelector('body');
+
+                    // Add a class to the body to stop scrolling
+                    body.classList.add('stop-scrolling');
+
+                }
+
+                const changeIcon = document.getElementById('changeIcon');
+                const dropDownLi1 = document.getElementById('DropDownLi1');
+                const dropDownLi2 = document.getElementById('DropDownLi2');
+                let isDropDownVisible = true;
+
+                changeIcon.addEventListener('click', function () {
+                    let icon = document.getElementById('icon');
+
+                    if (isDropDownVisible) {
+                        icon.innerHTML = '&#xf107;'; // Change to the new icon
+                        dropDownLi1.style.display = 'block';
+                        dropDownLi2.style.display = 'block';
+
+
+                    } else {
+                        icon.innerHTML = '&#xf105;'; // Change back to the original icon
+                        dropDownLi1.style.display = 'none';
+                        dropDownLi2.style.display = 'none';
+                    }
+
+                    // Toggle the state
+                    isDropDownVisible = !isDropDownVisible;
+                });
+
+
+
+            </script>
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"
                 integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg=="
                 crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-            <script src="/assets/js/accountSettings.js"></script>
-
-
-
-
-            <!-- jQuery -->
-            <!-- <script src="/assets/js/jquery-2.1.0.min.js"></script> -->
-
-            <!-- Bootstrap -->
-            <!-- <script src="/assets/js/popper.js"></script>
-            <script src="/assets/js/bootstrap.min.js"></script> -->
-
-            <!-- Plugins -->
-            <!-- <script src="/assets/js/owl-carousel.js"></script>
-            <script src="/assets/js/accordions.js"></script>
-            <script src="/assets/js/datepicker.js"></script>
-            <script src="/assets/js/scrollreveal.min.js"></script>
-            <script src="/assets/js/waypoints.min.js"></script>
-            <script src="/assets/js/jquery.counterup.min.js"></script>
-            <script src="/assets/js/imgfix.min.js"></script>
-            <script src="/assets/js/slick.js"></script>
-            <script src="/assets/js/lightbox.js"></script>
-            <script src="/assets/js/isotope.js"></script> -->
-
-            <!-- Global Init -->
-            <!-- <script src="/assets/js/custom.js"></script> -->
 
 
     </body>

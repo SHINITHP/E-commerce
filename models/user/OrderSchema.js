@@ -32,7 +32,12 @@ const orderModel = new mongoose.Schema({
     PaymentMethod:{
         type:String,
         require:true
-    }
+    },
+    Status:{
+        type:String,
+        default:'Order Placed',
+        require:true
+    },
 
 })
 

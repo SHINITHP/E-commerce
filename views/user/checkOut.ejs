@@ -221,7 +221,7 @@
                             </div>
                         </div>
 
-                        <form action="/profileMenu" class="addForm" id="addAddressForm" method="post">
+                        <form action="/checkOut?task=addAddress" class="addForm" id="addAddressForm" method="post">
                             <div class="row">
                                 <div class="col-6"
                                     style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
@@ -291,8 +291,7 @@
                             </div>
 
                             <a style="width: 100%;display: flex; justify-content: center; margin-bottom: 20px;">
-                                <button type="submit" class="saveChanges" id="svaebtn"
-                                    style="display: block;">Submit</button>
+                                <input type="submit" class="saveChanges"  style="display: block;" value="Submit"  id="savebtn">
                             </a>
                         </form>
                     </div>
@@ -313,7 +312,7 @@
                                 <div class="col-6"
                                     style="display: flex;justify-content: end; align-items: center; padding: 0;padding-right: 10px;">
                                     <button class="btn update" data-index="<%=index%>"
-                                        onclick="updateAddress('<%=index%>')">Update</button>
+                                        onclick="updateAddress('<%=index%>','<%=info._id%>')">Update</button>
                                     <a href=""><button class="btn remove" data-index="<%=index%>"
                                             onclick="selectDeliveryAddress('<%=info._id%>')" id="">Deliver
                                             Here</button></a>
@@ -343,14 +342,14 @@
 
 
                             <!-- update-Form starts here -->
-                            <form action="" class="editForm updateForm" id="form_<%= index %>">
+                            <form action="/checkOut?task=updateAddress&_method=PUT&id=<%=info._id%>"  method="post"  class="editForm updateForm" id="form_<%= index %>">
                                 <p class="updateTxt">Update Address</p>
                                 <br>
                                 <div class="row">
                                     <div class="col-6"
                                         style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
                                         <label class="lbl" for="firstName">Full Name
-                                            <input type="text" class="form-control firstNameInput" name="BrandName"
+                                            <input type="text" class="form-control firstNameInput" name="fullName"
                                                 id="firstName" placeholder="Enter Full Name" required
                                                 value="<%=info.fullName%>">
                                         </label>
@@ -362,21 +361,22 @@
                                         </label>
 
                                         <label class="lbl" for="EmailAddress"> City/District/Town
-                                            <input type="text" class="form-control firstNameInput" name="emailAddress"
-                                                id="EmailAddress" placeholder="City/District/Town" required
+                                            <input type="text" class="form-control firstNameInput"
+                                                name="cityDistrictTown" id="EmailAddress"
+                                                placeholder="City/District/Town" required
                                                 value="<%=info.cityDistrictTown%>">
                                         </label>
 
                                         <label class="lbl" for="State"> Country
-                                            <select name="state" class="dropbtn firstNameInput" id="State">
+                                            <select name="country" class="dropbtn firstNameInput" id="State">
                                                 <option value="" <%=info.country==='' ? 'selected' :'' %>>Select
                                                     Country</option>
                                                 <option value="India" <%=info.country==='India' ? 'selected' : '' %>
                                                     >India</option>
                                                 <option value="Australia" <%=info.country==='Australia' ? 'selected'
                                                     : '' %>>Australia</option>
-                                                <option value="New Zealand" <%=info.country==='New Zealand' ? 'selected'
-                                                    : '' %>>New Zealand</option>
+                                                <option value="New Zealand" <%=info.country==='New Zealand'
+                                                    ? 'selected' : '' %>>New Zealand</option>
                                             </select>
                                         </label>
 
@@ -385,8 +385,9 @@
                                     <div class="col-6"
                                         style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
                                         <label class="lbl" for="EmailAddress"> Email Address
-                                            <input type="email" class="form-control firstNameInput" name="emailAddress"
-                                                id="EmailAddress" placeholder="Enter Email Address" required
+                                            <input type="email" class="form-control firstNameInput"
+                                                name="emailAddress" id="EmailAddress"
+                                                placeholder="Enter Email Address" required
                                                 value="<%=info.emailAddress%>">
                                         </label>
                                         <label class="lbl" for="gender"> Gender
@@ -404,10 +405,10 @@
                                                 </option>
                                                 <option value="Kerala" <%=info.state==='Kerala' ? 'selected' : '' %>
                                                     >Kerala</option>
-                                                <option value="Karnadaka" <%=info.state==='Karnadaka' ? 'selected' : ''
-                                                    %> >Karnadaka</option>
-                                                <option value="TamilNadu" <%=info.state==='TamilNadu' ? 'selected' : ''
-                                                    %> >TamilNadu</option>
+                                                <option value="Karnadaka" <%=info.state==='Karnadaka' ? 'selected'
+                                                    : '' %> >Karnadaka</option>
+                                                <option value="TamilNadu" <%=info.state==='TamilNadu' ? 'selected'
+                                                    : '' %> >TamilNadu</option>
                                             </select>
                                         </label>
                                         <label class="lbl" for="PinCode"> Pin-Code
@@ -419,7 +420,8 @@
 
                                     <div class="col-12">
                                         <label class="lbl" for="txtAddress" style="width: 100%;">Address
-                                            <textarea name="" id="txtAddress" cols="30" rows="10" class="addressTxtArea"
+                                            <textarea name="address" id="txtAddress" cols="30" rows="10"
+                                                class="addressTxtArea"
                                                 placeholder="Enter your Address"><%=info.address%></textarea>
                                         </label>
                                     </div>
@@ -434,7 +436,7 @@
                                 </div>
 
                                 <a style="width: 100%;display: flex; justify-content: center; margin-bottom: 20px;">
-                                    <button class="" id="savebtn">Save Changes</button>
+                                    <input type="submit" id="savebtn" value="Save Changes">
                                 </a>
 
                             </form>
@@ -640,10 +642,8 @@
             }
 
 
-
-
             function selectDeliveryAddress(addressID) {
-                axios.post('/checkOut?task=selectDeleveryAddress', { addressID: addressID }) // Sending productID as data
+                axios.put('/checkOut?task=selectDeleveryAddress', { addressID: addressID }) // Sending productID as data
                     .then(function (response) {
                         // Handle success response if needed
                     })
@@ -677,7 +677,7 @@
             })
 
 
-            function updateAddress(index) {
+            function updateAddress(index,id) {
                 const updateBtn = document.querySelector(`.update[data-index="${index}"]`);
                 const removeBtn = document.querySelector(`.remove[data-index="${index}"]`);
                 const cancelBtn = document.querySelector(`.cancelBtn[data-index="${index}"]`);

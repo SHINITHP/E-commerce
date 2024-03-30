@@ -97,7 +97,7 @@
                 
             </div>
             <div class="col-2 col2">
-                <a href=""><i class="fa-solid fa-magnifying-glass searchIcon" style="color: #404040;"></i></a> 
+                <a style="cursor: pointer;"><i class="fa-solid fa-magnifying-glass searchIcon" id="searchBtn" style="color: #404040;"></i></a> 
                 <a href="/shoppingcart">
                     <i class="fa-solid fa-cart-shopping cartIcon" style="color: #404040;"></i>
                 </a> 
@@ -110,6 +110,12 @@
 </header>
 <!-- ***** Header Area End ***** -->
 
+<div class="row searchBar" style="height: 70px;  display: flex;justify-content: center;padding-top: 10px; display: none;cursor: pointer;">
+    <label for="" style="width: 70vw;height: 50px; background-color: #e7e7e7;display: flex;align-items: center;padding-left: 20px;">
+        <input type="text" style="border: none;outline: none; width: 64vw;background: transparent;" placeholder="Search For Products , Brands and More...">
+        <a href="" style="width: 6vw;text-align: center;"><i class="fa-solid fa-magnifying-glass" style="color: #000000; font-size: 18pt;"></i></a>
+    </label>
+</div>
 
     <!-- ***** Main Banner Area Start ***** -->
     <div class="main-banner" id="top" >
@@ -657,7 +663,11 @@
             <script src="/assets/js/custom.js"></script>
 
             <script> 
-
+                document.getElementById('searchBtn').addEventListener('click', function(){
+                    document.querySelector('.searchBar').style.display='block'
+                    document.querySelector('.searchBar').style.display='flex'
+                    document.querySelector('.main-banner').style.paddingTop = '10px';
+                })
 
                 function shoppingCart(index,productID,Price) {
                     let btnShoppingCart = document.getElementById(`shoppingCartBtn${index}`);

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+    <link rel="stylesheet" href="/assets/css/admin/dashboard.css">
+
+    <link rel="stylesheet" href="/assets/css/admin/productList.css">
+
+    <link rel="stylesheet" href="/assets/css/admin/orderHistory.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+
+
+    <title>Category</title>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <%- include('../../views/admin/adminNavbar.ejs') %>
+        <!-- Navbar -->
+        <br>
+
+        <div class="container-fluid conF-2 outerDiv" id="blur" style="padding: 0px;">
+            <div class="row1">
+
+                <div class="con-1 ">
+                    <div class="box-1">
+                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png" class="adminIcon" alt=""> <span
+                                class="adminName">Admin</span></a>
+                    </div>
+                    <a href="adminDashboard">
+                        <button class="btns btnDashboard"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Dashboard</span></button>
+                    </a>
+                    <a href="ProductList">
+                        <button class="btns btnProducts"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Products</span></button>
+                    </a>
+                    <a href="Category">
+                        <button class="btns btnCategory btnColor"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue"><span>Category</span></button>
+                    </a>
+
+                    <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Order History</span></button>
+                    <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Coupon</span></button>
+                    <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Sales Report</span></button>
+                    <a href="CustomerDetails">
+                        <button class="btns btnUser"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">User Report</span> </button>
+                    </a>
+                    <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Banner</span></button>
+                    <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Wallet</span></button>
+                </div>
+
+                <div class="con-2">
+                    <div class="row row2">
+                        <div class="col-3 cols">
+                            <h3>Order Details</h3>
+                        </div>
+                    </div>
+
+                    <div class="row filterRow">
+                        <div class="col-7 filter-col7">
+                            <div class="filterBox">
+                                <a href="" id="all">All Status</a>
+                                <span><a href="" id="Processing">Order Placed</a></span>
+                                <span><a href="" id="Delivered">Delivered</a></span>
+                                <span><a href="" id="Cancelled">Cancelled</a></span>
+                            </div>
+                        </div>
+                        <div class="col-5 filter-col5">
+                            <div class="dateBox">
+                                <input type="date" class="dateInput" id="startDate">
+                            </div>
+                            <div class="dateBox2">
+                                <input type="date" class="dateInput" id="endDate">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row Pro-Row">
+                        <div class="SI">
+                            SI-No
+                        </div>
+                        <div class="Pro-Name" style="display: flex;justify-content: center;align-items: center;">
+                            <h5>Product Name</h5>
+                        </div>
+                        <div class="headBox">
+                            <h5>Customer No</h5>
+                        </div>
+                        <div class="headBox">
+                            <h5>Amount</h5>
+                        </div>
+                        <div class="headBox">
+                            <h5>Order Date</h5>
+                        </div>
+                        <div class="headBox">
+                            <h5>Payment</h5>
+                        </div>
+                        <div class="headBox">
+                            <h5>Status</h5>
+                        </div>
+                        <div class="action">
+                            <h5>Action</h5>
+                        </div>
+                    </div>
+                    <% let Status %>
+                        <% orderDetails.forEach((items,index)=> { %>
+                            <% Status=items.Status %>
+                                <div class="row Pro-Details-Row">
+                                    <div class="SI">
+                                        <%=index + 1 %>
+                                    </div>
+                                    <div class="Pro-Name">
+                                        <h5>
+                                            <%=items.productID.ProductName %>
+                                        </h5>
+                                    </div>
+                                    <div class="headBox">
+                                        <h5>
+                                            <%=items.userID.phoneNo %>
+                                        </h5>
+                                    </div>
+                                    <div class="headBox">
+                                        <h5>
+                                            <%=items.Amount%>
+                                        </h5>
+                                    </div>
+                                    <div class="headBox">
+                                        <h5>
+                                            <%=items.OrderDate.toLocaleDateString()%>
+                                        </h5>
+                                    </div>
+                                    <div class="headBox">
+                                        <h5>
+                                            <%=items.PaymentMethod%>
+                                        </h5>
+                                    </div>
+                                    <div class="headBox">
+                                        <h5>
+                                            <%=items.Status%>
+                                        </h5>
+                                    </div>
+                                    <div class="action">
+                                        <a id="editIcon" onclick="changeOrderStatus('<%=items.Status%>','<%=items._id%>')"
+                                            style="cursor: pointer;"><img src="/assets/images/edit.png" alt=""
+                                                style="width: 25px;height: 25px;"></a>
+                                    </div>
+                                </div>
+                                <% }) %>
+                </div>
+            </div>
+        </div>
+
+        <div class="popup">
+            <img src="/assets/images/ordering.png"
+                style="height: 80px;width: 130px; margin-bottom: 10px;padding-right: 29px;" alt="">
+            <h2>Change Order Status</h2>
+            <p>Before proceeding, could you confirm your intention to change the order status</p>
+            <select name="orderStatus" id="orderstatusDropDown" class="dropbtn" style="width: 300px;">
+                <option value="Order Placed">Order Placed</option>
+                <option value="Order Confirmed">Order Confirmed</option>
+                <option value="Out For Delivery">Out For Delivery</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancel Order">Cancel Order</option>
+            </select>
+            <div class="row">
+                <a href=""><input type="button" class="btn" id="btnCancel" value="Cancel"></a>
+                <a href=""><input type="button" class="btn btnSubmit" onclick="changeStatus()" value="Submit"></a>
+            </div>
+        </div>
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            let orderID;
+
+            function changeStatus(){
+                let selectElement = document.getElementById('orderstatusDropDown')
+
+                const orderStatus = selectElement.value;
+                
+                axios.patch('/adminLogin/orderHistory?task=updateStatus&_method=PATCH', {orderID:orderID,orderStatus:orderStatus})// Sending productID as data
+                .then(function (response) {
+                    // Handle success response if needed
+                })
+                .catch(function (error) {
+                    console.error('Error adding product to cart:', error);
+                    // Handle error if needed
+                });
+
+            }
+
+            function changeOrderStatus(Status,id) {
+                console.log(id)
+                orderID=id;
+                let blur = document.getElementById('blur');
+                blur.classList.toggle('active');
+
+                let popup = document.querySelector('.popup');
+                popup.classList.toggle('active');
+
+                let body = document.querySelector('body');
+
+                // Add a class to the body to stop scrolling
+                body.classList.add('stop-scrolling');
+
+                let selectElement = document.getElementById('orderstatusDropDown');
+
+                // Loop through each option and check if its value matches the Status
+                for (let i = 0; i < selectElement.options.length; i++) {
+                    console.log('i am here');
+                    if (selectElement.options[i].value === Status) {
+                        // Set the selected attribute if the option's value matches the Status
+                        selectElement.options[i].selected = true;
+                    }
+                }
+            }
+
+           
+
+            document.getElementById('btnCancel').addEventListener('click', function () {
+                let blur = document.getElementById('blur');
+                blur.classList.remove('active'); 
+
+                let popup = document.querySelector('.popup');
+                popup.classList.remove('active');
+
+                let body = document.querySelector('body');
+
+                // Add a class to the body to stop scrolling
+                body.classList.remove('stop-scrolling');
+
+            })
+
+        </script>
+
+
+        <!-- jQuery -->
+        <!-- <script src="/assets/js/jquery-2.1.0.min.js"></script> -->
+
+        <!-- Bootstra/p -->
+        <!-- <script src="/assets/js/popper.js"></script>
+        <script src="/assets/js/bootstrap.min.js"></script> -->
+
+        <!-- Plugins /-->
+        <!-- <script src="/assets/js/owl-carousel.js"></script>
+        <script src="/assets/js/accordions.js"></script>
+        <script src="/assets/js/datepicker.js"></script>
+        <script src="/assets/js/scrollreveal.min.js"></script>
+        <script src="/assets/js/waypoints.min.js"></script>
+        <script src="/assets/js/jquery.counterup.min.js"></script>
+        <script src="/assets/js/imgfix.min.js"></script>
+        <script src="/assets/js/slick.js"></script>
+        <script src="/assets/js/lightbox.js"></script>
+        <script src="/assets/js/isotope.js"></script> -->
+
+        <!-- Global Init -->
+        <!-- <script src="assets/js/custom.js"></script> -->
+
+        <script>
+
+            $(function () {
+                var selectedClass = "";
+                $("p").click(function () {
+                    selectedClass = $(this).attr("data-rel");
+                    $("#portfolio").fadeTo(50, 0.1);
+                    $("#portfolio div").not("." + selectedClass).fadeOut();
+                    setTimeout(function () {
+                        $("." + selectedClass).fadeIn();
+                        $("#portfolio").fadeTo(50, 1);
+                    }, 500);
+
+                });
+            });
+
+        </script>
+
+</body>
+
+</html>

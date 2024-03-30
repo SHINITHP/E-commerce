@@ -102,8 +102,8 @@
 
         <div class="container-fluid outerDiv" id="blur" style="padding: 0px;">
             <div class="container-fluid conF-1">
-                <h3 class="myAccount">My Account</h3>
-                <div class="row" style="min-height: 100vh;">
+                <!-- <h3 class="myAccount">My Account</h3> -->
+                <div class="row" style="min-height: 100vh;margin-top: 100px;">
                     <div class="col-md-3 col-sm-12 col3">
                         <div class="row"
                             style="display: flex;align-items: center; padding-left: 20px; padding-top: 20px;">
@@ -275,7 +275,7 @@
                                 </div>
 
                                 <a style="width: 100%;display: flex; justify-content: center; margin-bottom: 20px;">
-                                    <button type="submit" class="saveChanges" id="svaebtn">Submit</button>
+                                    <button type="submit" class="saveChanges" id="savebtn">Submit</button>
                                 </a>
 
                             </form>
@@ -285,9 +285,10 @@
 
                         <% userAddress.forEach((data,index)=> { %>
                             <div class="container con2" id="defaultDiv" style="margin-top: 15px;">
+                              
                                 <div class="row con2Row1">
                                     <div class="col-6 rowcol6-1">
-                                        <a  onclick="saveDaliveryAddress('<%=data._id%>','<%=index%>')"  href="/profileMenu?menu=manageAddress" id="Delivery-Address<%=index%>"style="display: flex; align-items: center;"> 
+                                        <a  onclick="saveDaliveryAddress('<%=data._id%>','<%=index%>')"  href="" id="Delivery-Address<%=index%>"style="display: flex; align-items: center;"> 
                                             <input style="transform: scale(1.3);" <%=data.selected=== true ? 'checked' : '' %>  type="radio" id="selectAddress<%=index%>" value="true">
                                             <span style="display: flex; align-items: center;">
                                                 <p>
@@ -297,7 +298,7 @@
 
                                     </div>
                                     <div class="col-6 rowcol6-2">
-                                        <button class="btn remove" data-index="<%= index %>" id="">Remove</button>
+                                        <a href=""><button class="btn remove" data-index="<%= index %>" id="" onclick="removeAddress('<%= data._id %>')">Remove</button></a>
                                         <button class="btn update" data-index="<%= index %>"
                                             onclick="updateAddress('<%= index %>')">Update</button>
 
@@ -306,7 +307,7 @@
                                             id="">Cancel</button>
                                     </div>
                                 </div>
-
+                           
                                 <div class="row con2Row2">
                                     <h5>
                                         <%=data.fullName%>
@@ -326,14 +327,14 @@
 
 
                                 <!-- update-Form starts here -->
-                                <form action="" class="editForm updateForm" id="form_<%= index %>">
+                                <form action="/profileMenu?type=updateAddress&id=<%= data._id %>&_method=PUT" method="post" style="margin-top: 15px;margin-bottom: 15px;" class="editForm updateForm" id="form_<%= index %>">
                                     <p class="updateTxt">Update Address</p>
                                     <br>
                                     <div class="row">
                                         <div class="col-6"
                                             style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
                                             <label class="lbl" for="firstName">Full Name
-                                                <input type="text" class="form-control firstNameInput" name="BrandName"
+                                                <input type="text" class="form-control firstNameInput" name="fullName"
                                                     id="firstName" placeholder="Enter Full Name" required
                                                     value="<%=data.fullName%>">
                                             </label>
@@ -346,13 +347,13 @@
 
                                             <label class="lbl" for="EmailAddress"> City/District/Town
                                                 <input type="text" class="form-control firstNameInput"
-                                                    name="emailAddress" id="EmailAddress"
+                                                    name="cityDistrictTown" id="EmailAddress"
                                                     placeholder="City/District/Town" required
                                                     value="<%=data.cityDistrictTown%>">
                                             </label>
 
                                             <label class="lbl" for="State"> Country
-                                                <select name="state" class="dropbtn firstNameInput" id="State">
+                                                <select name="country" class="dropbtn firstNameInput" id="State">
                                                     <option value="" <%=data.country==='' ? 'selected' :'' %>>Select
                                                         Country</option>
                                                     <option value="India" <%=data.country==='India' ? 'selected' : '' %>
@@ -404,7 +405,7 @@
 
                                         <div class="col-12">
                                             <label class="lbl" for="txtAddress" style="width: 100%;">Address
-                                                <textarea name="" id="txtAddress" cols="30" rows="10"
+                                                <textarea name="address" id="txtAddress" cols="30" rows="10"
                                                     class="addressTxtArea"
                                                     placeholder="Enter your Address"><%=data.address%></textarea>
                                             </label>
@@ -420,7 +421,7 @@
                                     </div>
 
                                     <a style="width: 100%;display: flex; justify-content: center; margin-bottom: 20px;">
-                                        <button class="saveChanges" id="svaebtn">Save Changes</button>
+                                        <input type="submit" class="saveChanges" id="savebtn" value="Save Changes">
                                     </a>
 
                                 </form>
@@ -443,6 +444,19 @@
 
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
             <script>
+
+                function removeAddress(id){
+                    axios.post('/profileMenu?type=deleteAddress', { id:id}) // Sending productID as data
+                    .then(function (response) {
+                        // Handle success response if needed
+                    })
+                    .catch(function (error) {
+                        console.error('Error adding product to cart:', error);
+                        // Handle error if needed
+                    });
+                }
+
+
                 function saveDaliveryAddress(addressID,index){
                     const selectAddress = document.getElementById(`selectAddress${index}`)
                     axios.post('/profileMenu?type=manageAddress', { addressID:addressID,selected:selectAddress.value}) // Sending productID as data
@@ -492,13 +506,39 @@
                     document.getElementById('addAddressDiv').style.display = 'flex'
                 })
 
+
+            <!-- account Settings -->
+                const changeIcon = document.getElementById('changeIcon');
+                const dropDownLi1 = document.getElementById('DropDownLi1');
+                const dropDownLi2 = document.getElementById('DropDownLi2');
+                let isDropDownVisible = true;
+
+                changeIcon.addEventListener('click', function () {
+                    let icon = document.getElementById('icon');
+
+                    if (isDropDownVisible) {
+                        icon.innerHTML = '&#xf107;'; // Change to the new icon
+                        dropDownLi1.style.display = 'block';
+                        dropDownLi2.style.display = 'block';
+
+
+                    } else {
+                        icon.innerHTML = '&#xf105;'; // Change back to the original icon
+                        dropDownLi1.style.display = 'none';
+                        dropDownLi2.style.display = 'none';
+                    }
+
+                    // Toggle the state
+                    isDropDownVisible = !isDropDownVisible;
+                });
+
             </script>
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"
                 integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg=="
                 crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-            <script src="/assets/js/profile.js"></script>
+            <!-- <script src="/assets/js/profile.js"></script> -->
 
 
 

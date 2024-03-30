@@ -4,7 +4,7 @@ const {
     adminLogin, adminLoginPost, productList, productListEdit,
     addProductsPost, adminDashboard, CustomerDetails, categoryPost,
     categoryEdit, updateUser, productSearch, Category, postAddCategory,
-    postEditProduct, logout,CustomerFilter,deleteInventory,filterCategory
+    postEditProduct, logout,CustomerFilter,deleteInventory,filterCategory,orderHistory,OrderTasks
 } = require('../../controller/admin/adminController.js')
 const upload = require('../../controller/admin/multer.js')
 const adminAuth = require('../../middlewares/adminMiddleware.js')
@@ -24,5 +24,5 @@ router.route('/Category/:id').get(adminAuth,Category).put(upload.array('images')
 router.route('/addCategory').get(adminAuth,Category).post(upload.array('images'), postAddCategory)//addcategory page
 router.route('/filterCategory').get(adminAuth,filterCategory)
 router.route('/adminLogout').get(logout)//logout
-
+router.route('/orderHistory').get(orderHistory).patch(OrderTasks)
 module.exports = router  
