@@ -38,6 +38,22 @@ const orderModel = new mongoose.Schema({
         default:'Order Placed',
         require:true
     },
+    request:{
+        type:Boolean,
+        default:false
+    },
+    requestReason:{
+        type:String,
+        default:'empty'
+    },
+    comment:{
+        type:String,
+        default:'empty'
+    },
+    reqDate:{
+        type:Date,
+        default:Date.now
+    }
 
 })
 

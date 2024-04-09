@@ -89,7 +89,7 @@
                     </div>
 
                     <div class="row MessageRow ">
-                        <p>
+                        <p id="ErrorMessage">
                             <%= message %>
                         </p>
                     </div>
@@ -151,7 +151,7 @@
                                         <td class="icon-cell"
                                             style="display:flex; min-height:130px;justify-content:center;align-items:center;">
 
-                                            <a href="/adminLogin/ProductList/editProducts?id=<%= data._id %>"><i
+                                            <a href="/adminLogin/editProducts?id=<%= data._id %>"><i
                                                     class="fa-solid fa-pen edit" style="color: #5e5e5e;"></i></a>
                                             <span class="listed">
                                                 <form class="actionForm" method="post" id="ListedForm"
@@ -202,6 +202,14 @@
         </div>
 
         <script>
+
+            const errorMessageElement = document.getElementById('ErrorMessage');
+
+            function hideErrorMessage() {
+                errorMessageElement.style.display = 'none';
+            }
+
+            setTimeout(hideErrorMessage, 5000);
 
             function AlertBox(value){
                 const myForm = document.getElementById(value);

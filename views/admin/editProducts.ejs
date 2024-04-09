@@ -40,13 +40,13 @@
                                 class="btnvalue">Dashboard</span></button>
                     </a>
                     <a href="/adminLogin/ProductList">
-                        <button class="btns btnProducts btnColor"><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue">Products</span></button>
+                        <button class="btns btnProducts btnColor"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Products</span></button>
                     </a>
                     <a href="Category">
                         <button class="btns btnCategory"><img class="img" src="/assets/images/grid.png" alt=""><span
-                           class="btnvalue"><span>Category</span></button>
-                   </a>
+                                class="btnvalue"><span>Category</span></button>
+                    </a>
                     <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png" alt=""><span
                             class="btnvalue">Order History</span></button>
                     <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
@@ -70,8 +70,8 @@
 
                         <div class="col-8 col2">
                             <a href="/adminLogin/ProductList">
-                            <button class="btnCancel"><span><i class="fa-solid fa-xmark"
-                                        style="color: #ffffff;"></i></span>Cancel</button>
+                                <button class="btnCancel"><span><i class="fa-solid fa-xmark"
+                                            style="color: #ffffff;"></i></span>Cancel</button>
                             </a>
                         </div>
                     </div>
@@ -79,11 +79,12 @@
                     <div class="Container con2">
                         <div class="row MessageRow">
                             <p>
-                               <%= success %>
+                                <%= success %>
                             </p>
                         </div>
                         <div class="row row3">
-                            <form action="editProducts?id=<%= productInfo._id %>&_method=PUT" class="frmRow3" method="post" enctype="multipart/form-data">
+                            <form action="editProducts?id=<%= productInfo._id %>&_method=PUT" class="frmRow3"
+                                method="post" enctype="multipart/form-data">
                                 <div class="row generalRow">
                                     <div class="col-11 col11">
                                         <br>
@@ -93,43 +94,52 @@
                                                 <div class="col-6">
                                                     <label class="lbl" for="">Product Name</label>
                                                     <input type="text" class="form-control inputpass" name="ProductName"
-                                                        id="ProductName" placeholder="Enter Product Name" value="<%= productInfo.ProductName %>">
+                                                        id="ProductName" placeholder="Enter Product Name"
+                                                        value="<%= productInfo.ProductName %>">
                                                 </div>
                                                 <div class="col-6">
                                                     <label class="lbl" for="">Brand Name</label>
                                                     <input type="text" class="form-control inputpass" name="BrandName"
-                                                        id="ProductName" placeholder="Enter Brand Name" value="<%= productInfo.BrandName %>">
+                                                        id="ProductName" placeholder="Enter Brand Name"
+                                                        value="<%= productInfo.BrandName %>">
                                                 </div>
                                             </div>
                                             <div class="col-12 box1-col1">
                                                 <div class="col-4 categoryRow">
                                                     <label class="lbl" for="">Category Name</label>
 
-                                                    <select name="CategoryName"
-                                                        class="dropbtn">
-                                                        <option value="Mens" <%= productInfo.CategoryName === 'Mens' ? 'selected' : '' %> >Mens</option>
-                                                            <option value="Womens" <%= productInfo.CategoryName === 'Womens' ? 'selected' : '' %> >Womens</option>
-                                                            <option value="Kids" <%= productInfo.CategoryName === 'Kids' ? 'selected' : '' %> >Kids</option>
-                                                            <option value="Accessories" <%= productInfo.CategoryName === 'Accessories' ? 'selected' : '' %> >Accessories</option>
+                                                    <select name="CategoryName" class="dropbtn">
+                                                        <option value="Mens" <%=productInfo.CategoryName==='Mens'
+                                                            ? 'selected' : '' %> >Mens</option>
+                                                        <option value="Womens" <%=productInfo.CategoryName==='Womens'
+                                                            ? 'selected' : '' %> >Womens</option>
+                                                        <option value="Kids" <%=productInfo.CategoryName==='Kids'
+                                                            ? 'selected' : '' %> >Kids</option>
+                                                        <option value="Accessories"
+                                                            <%=productInfo.CategoryName==='Accessories' ? 'selected'
+                                                            : '' %> >Accessories</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-4">
                                                     <label class="lbl" for="">Stock Quantity</label>
                                                     <input type="text" class="form-control inputpass"
                                                         name="StockQuantity" id="CategoryName"
-                                                        placeholder="Enter Stock Quantity" value="<%= productInfo.StockQuantity %>">
+                                                        placeholder="Enter Stock Quantity"
+                                                        value="<%= productInfo.StockQuantity %>">
                                                 </div>
 
                                                 <div class="col-4 categoryRow">
                                                     <label class="lbl" for="">Sub-Category Name</label>
 
                                                     <select name="subCategory" class="dropbtn">
-                                                        <% subCategory.forEach((data) => { %> 
-                                                        <option value="<%= data %>" ><%= data %></option>
-                                                        <% }) %>
+                                                        <% subCategory.forEach((data)=> { %>
+                                                            <option value="<%= data %>">
+                                                                <%= data %>
+                                                            </option>
+                                                            <% }) %>
                                                     </select>
                                                 </div>
-                                              
+
                                             </div>
 
                                             <div class="col-12 box1-col1">
@@ -137,17 +147,20 @@
                                                     <label class="lbl" for="">Purchase Rate</label>
                                                     <input type="text" class="form-control inputpass"
                                                         name="PurchaseRate" id="PurchaseRate"
-                                                        placeholder="Enter Purchase Rate" value="<%= productInfo.PurchaseRate %>">
+                                                        placeholder="Enter Purchase Rate"
+                                                        value="<%= productInfo.PurchaseRate %>">
                                                 </div>
                                                 <div class="col-4">
                                                     <label class="lbl" for="">Sales Rate</label>
                                                     <input type="text" class="form-control inputpass" name="SalesRate"
-                                                        id="SalesRate" placeholder="Enter Sales Rate" value="<%= productInfo.SalesRate %>">
+                                                        id="SalesRate" placeholder="Enter Sales Rate"
+                                                        value="<%= productInfo.SalesRate %>">
                                                 </div>
                                                 <div class="col-4">
                                                     <label class="lbl" for="">Total Price</label>
                                                     <input type="text" class="form-control inputpass" name="TotalPrice"
-                                                        id="TotalPrice" placeholder="Total Price" value="<%= productInfo.TotalPrice %>">
+                                                        id="TotalPrice" placeholder="Total Price"
+                                                        value="<%= productInfo.TotalPrice %>">
                                                 </div>
 
                                             </div>
@@ -167,55 +180,70 @@
                                                 <div class="col-4">
                                                     <label class="lbl" for="">VAT Amount (%)</label>
                                                     <input type="text" class="form-control inputpass" name="VATAmount"
-                                                        id="SalesRate" placeholder="Enter VAT Amount"value="<%= productInfo.VATAmount %>">
+                                                        id="SalesRate" placeholder="Enter VAT Amount"
+                                                        value="<%= productInfo.VATAmount %>">
                                                 </div>
                                                 <div class="col-4">
                                                     <label class="lbl" for="">Discount Precentage (%)</label>
                                                     <input type="text" class="form-control inputpass"
                                                         name="DiscountPrecentage" id="TotalPrice"
-                                                        placeholder="Enter Discount Precentage" value="<%= productInfo.DiscountPrecentage %>">
+                                                        placeholder="Enter Discount Precentage"
+                                                        value="<%= productInfo.DiscountPrecentage %>">
                                                 </div>
                                                 <div class="col-4 categoryRow">
                                                     <label class="lbl" for="">Color Name</label>
 
-                                                    <select name="ColorNames"
-                                                        class="dropbtn">
-                                                        <option value="Red"  <%= productInfo.ColorNames === 'Red' ? 'selected' : '' %> >Red</option>
-                                                        <option value="Blue" <%= productInfo.ColorNames === 'Blue' ? 'selected' : '' %> >Blue</option>
-                                                        <option value="Black" <%= productInfo.ColorNames === 'Black' ? 'selected' : '' %> >Black</option>
-                                                        <option value="White" <%= productInfo.ColorNames === 'White' ? 'selected' : '' %> >White</option>
-                                                        <option value="yellow" <%= productInfo.ColorNames === 'yellow' ? 'selected' : '' %> >yellow</option>
-                                                        <option value="green" <%= productInfo.ColorNames === 'green' ? 'selected' : '' %> >green</option>
-                                                        <option value="grey" <%= productInfo.ColorNames === 'grey' ? 'selected' : '' %> >grey</option>                                                       
+                                                    <select name="ColorNames" class="dropbtn">
+                                                        <option value="Red" <%=productInfo.ColorNames==='Red'
+                                                            ? 'selected' : '' %> >Red</option>
+                                                        <option value="Blue" <%=productInfo.ColorNames==='Blue'
+                                                            ? 'selected' : '' %> >Blue</option>
+                                                        <option value="Black" <%=productInfo.ColorNames==='Black'
+                                                            ? 'selected' : '' %> >Black</option>
+                                                        <option value="White" <%=productInfo.ColorNames==='White'
+                                                            ? 'selected' : '' %> >White</option>
+                                                        <option value="yellow" <%=productInfo.ColorNames==='yellow'
+                                                            ? 'selected' : '' %> >yellow</option>
+                                                        <option value="green" <%=productInfo.ColorNames==='green'
+                                                            ? 'selected' : '' %> >green</option>
+                                                        <option value="grey" <%=productInfo.ColorNames==='grey'
+                                                            ? 'selected' : '' %> >grey</option>
                                                     </select>
                                                 </div>
 
                                             </div>
 
 
-                                         <div class="col-12 box1-col1">
+                                            <div class="col-12 box1-col1">
                                                 <div class="col-12 sizeRow">
                                                     <label class="lbl" for="">Select Product Size</label>
                                                     <div class="col-12 checkRow">
-                                                        <% productInfo.ProductSize.forEach((sizeObject) => { %>
-                                                        <label class="container">
-                                                           
-                                                            <input type="checkbox" class="checkBox" name="sizes" value="<%= sizeObject.size %>"
-                                                                checked="checked" <%= sizeObject.size === 'S' ? 'checked' : '' %> >
-                                                          
-                                                            <span class="checkmark"></span>
-                                                          
-                                                            <input type="text" class="form-control inputSmall"
-                                                            name="SizeQuantity" id="TotalPrice"
-                                                            placeholder="S Quantity" value="<%= sizeObject.quantity %>">
-                                                           
-                                                        </label> <% }) %>
-                                                        </div>
+                                                        <% productInfo.ProductSize.forEach((sizeObject)=> { %>
+
+                                                            <label class="container">
+                                                                <%= sizeObject.size==='S' ? 'Small' :
+                                                                    sizeObject.size==='M' ? 'Medium' :
+                                                                    sizeObject.size==='L' ? 'Large' :
+                                                                    sizeObject.size==='XL' ? 'Extra Large' :
+                                                                    sizeObject.size==='XXL' ? 'Double Extra Large'
+                                                                    : 'Unknown Size' %>
+
+                                                                    <input type="checkbox" class="checkBox" name="sizes"
+                                                                        value="<%= sizeObject.size %>" checked="checked"
+                                                                        <%=sizeObject.size==='S' ? 'checked' : '' %> >
+                                                                    <span class="checkmark"></span>
+                                                                    <input type="text" class="form-control inputSmall"
+                                                                        name="SizeQuantity" id="TotalPrice"
+                                                                        placeholder="S Quantity"
+                                                                        value="<%= sizeObject.quantity %>">
+                                                            </label>
+                                                            <% }) %>
+                                                    </div>
                                                 </div>
-                                        </div>
+                                            </div>
 
 
-                                         
+
 
                                         </div>
                                     </div>
@@ -230,33 +258,42 @@
                                             <div class="col-12 imgInput">
 
 
-                                                   
+
                                                 <label for="input-file1" id="drop-area1">
-                                                    <input type="file" accept="image/*" name="images" id="input-file1" hidden>
-                                                   
-                                                    <div id="img-view1" class="border" style="background-image: url('<%= productInfo.files[0].url %>');"></div>
-                                              
-                                                    
-                                                    
+                                                    <input type="file" accept="image/*"  name="images1" id="input-file1"
+                                                        hidden>
+
+                                                    <div id="img-view1" class="border" 
+                                                        style="background-image: url('<%= productInfo.files[0].url %>');">
+                                                    </div>
                                                 </label>
-                                                
+
                                                 <label for="input-file2" id="drop-area2" class="ml-3">
-                                                    <input type="file" accept="image/*" name="images" id="input-file2" hidden>
-                                                    <div id="img-view2" class="border" style="background-image: url('<%= productInfo.files[1].url %>');"> </div>
-                                                      
-                                                    
+                                                    <input type="file" accept="image/*" 
+                                                        name="images2" id="input-file2" hidden>
+                                                    <div id="img-view2" class="border"
+                                                        style="background-image: url('<%= productInfo.files[1].url %>');">
+                                                    </div>
+
+
                                                 </label>
 
                                                 <label for="input-file3" id="drop-area3" class="ml-3">
-                                                    <input type="file" accept="image/*" name="images" id="input-file3" hidden>
-                                                    <div id="img-view3" class="border" name="image" style="background-image: url('<%= productInfo.files[2].url %>');"> </div>
-                                                     
-                                                    
+                                                    <input type="file" accept="image/*"
+                                                        name="images3" id="input-file3" hidden>
+                                                    <div id="img-view3" class="border" name="image"
+                                                        style="background-image: url('<%= productInfo.files[2].url %>');">
+                                                    </div>
+
+
                                                 </label>
 
                                                 <label for="input-file4" id="drop-area4" class="ml-3">
-                                                    <input type="file" accept="image/*" name="images" id="input-file4" hidden>
-                                                    <div id="img-view4" class="border" style="background-image: url('<%= productInfo.files[3].url %>');"> </div>
+                                                    <input type="file" accept="image/*" 
+                                                        name="images4" id="input-file4" hidden>
+                                                    <div id="img-view4" class="border"
+                                                        style="background-image: url('<%= productInfo.files[3].url %>');">
+                                                    </div>
 
                                                 </label>
 
@@ -279,7 +316,13 @@
         </div>
 
 
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            
+        </script>
+
         <script src="/assets/js/addProduct.js"></script>
+
 
 </body>
 

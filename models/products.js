@@ -47,7 +47,7 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    DiscountPrecentage: {
+    MRP: {
         type: String,
         required: true
     },

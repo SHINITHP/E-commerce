@@ -3167,6 +3167,14 @@ ol {
 	width: 100%;
 }
 
+.searchBar{
+	margin-top: 90px;
+}
+.shop{
+	margin-top: 30px;
+}
+
+
 /*--------------------------------- Responsive Media Quaries -----------------------------*/
 
 @media only screen and (min-width: 1600px) and (max-width: 1900px) {

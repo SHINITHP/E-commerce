@@ -56,19 +56,28 @@
     <!-- navbar -->
     <%- include('../../views/user/navbar.ejs') %>
 
-    <!-- Breadcrumb Begin -->
-    <div class="breadcrumb-option">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="breadcrumb__links">
-                        <a href="./index.html"><i class="fa fa-home"></i> Home</a>
-                        <span>Shop</span>
-                    </div>
-                </div>
-            </div>
+
+
+    <div class="row searchBar"
+            style="height: 70px;  display: flex;justify-content: center;padding-top: 10px; display: none;cursor: pointer;">
+
+            <label for="search"
+                style="width: 70vw;height: 50px; background-color: #e7e7e7;display: flex;align-items: center;padding-left: 20px;">
+                <input type="text" id="search" name="searchBar"
+                    style="border: none;outline: none; width: 64vw;background: transparent;"
+                    placeholder="Search For Products , Brands and More...">
+                <button type="button" onclick="search()"
+                    style="background-color: transparent; outline: none;border: none;"><a id="searchLink"
+                        href="" style="width: 6vw;text-align: center;"><i
+                            class="fa-solid fa-magnifying-glass"
+                            style="color: #000000; font-size: 18pt;"></i></a></button>
+            </label>
+
+
+
         </div>
-    </div>
+
+
     <!-- Breadcrumb End -->
 
     <!-- Shop Section Begin -->
@@ -96,7 +105,7 @@
                                                     <% if(subCategory.CategoryName ==="Womens" && subCategory.Inventory==="Listed") { %> 
                                                     <ul>
                                                      
-                                                        <li><a href="filterProducts?subCategory=<%=subCategory.subCategory%>&category=Womens"><%= subCategory.subCategory %></a></li>
+                                                        <li><a href="filterProducts?subCategory=<%=subCategory.subCategory%>&category=Womens&cat=Womens"><%= subCategory.subCategory %></a></li>
                                                        
                                                     </ul>
                                                     <% } %>
@@ -109,16 +118,13 @@
                                             <a data-toggle="collapse" data-target="#collapseTwo">Men</a>
                                         </div>
                                         <div id="collapseTwo" class="<%= category == 'Mens' ? 'collapse show' : 'collapse' %>" data-parent="#accordionExample">
-                                            <div class="card-body">
+                                            <div class="card-body"> <ul>
                                                 <% subCategories.forEach((subCategory) => { %>
                                                     <% if(subCategory.CategoryName ==="Mens" && subCategory.Inventory==="Listed") { %> 
-                                                <ul>
-                                               
-                                                    <li><a href="filterProducts?subCategory=<%=subCategory.subCategory%>&category=Mens"><%= subCategory.subCategory %></a></li>
-                                                 
-                                                </ul>
+                                                    <li><a href="filterProducts?subCategory=<%=subCategory.subCategory%>&category=Mens&cat=Mens"><%= subCategory.subCategory %></a></li>
                                                 <% } %> 
                                                   <% }) %>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -133,7 +139,7 @@
                                                
                                                     <ul>
                                                         
-                                                        <li><a href="filterProducts?subCategory=<%=subCategory.subCategory%>&category=Kids"><%= subCategory.subCategory %></a></li>
+                                                        <li><a href="filterProducts?subCategory=<%=subCategory.subCategory%>&category=Kids&cat=Kids"><%= subCategory.subCategory %></a></li>
                                                        
                                                     </ul> 
                                                     <% } %>
@@ -163,7 +169,7 @@
                                 <h4>Shop by price</h4>
                             </div>
                             <div class="filter-range-wrap">
-                                <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
+                                <!-- <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
                                 data-min="33" data-max="99"></div>
                                 <div class="range-slider">
                                     <div class="price-input">
@@ -171,7 +177,7 @@
                                         <input type="text" id="minamount">
                                         <input type="text" id="maxamount">
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                             <a href="#">Filter</a>
                         </div>
@@ -180,7 +186,7 @@
                                 <h4>Shop by size</h4>
                             </div>
                             <div class="size__list">
-                                <label for="xxs">
+                                <!-- <label for="xxs">
                                     S
                                     <input type="checkbox" id="xxs">
                                     <span class="checkmark"></span>
@@ -204,7 +210,7 @@
                                     XXL
                                     <input type="checkbox" id="m">
                                     <span class="checkmark"></span>
-                                </label>
+                                </label> -->
                                
                             </div>
                         </div>
@@ -299,17 +305,17 @@
                     <div class="col-lg-12 text-center">
                         <div class="pagination__option">
                             <% if(currentPage > 1) { %>
-                                <a href="allProducts?page=<%= currentPage > 1 ? parseInt(currentPage) - 1 : currentPage %>"><i class="fa fa-angle-left"></i></a>
+                                <a href="allProducts?task=showAllPro&page=<%= currentPage > 1 ? parseInt(currentPage) - 1 : currentPage %>"><i class="fa fa-angle-left"></i></a>
                             <% } %>
                         <% for(let i =1; i<= pages; i++) { %>
                             <% if(i == currentPage) { %>
-                                <a class="activePage" href="allProducts?page=<%= i %>"><%= i %></a>
+                                <a class="activePage" href="allProducts?task=showAllPro&page=<%= i %>"><%= i %></a>
                             <% } else {%>
-                                <a class="page" href="allProducts?page=<%= i %>"><%= i %></a>
+                                <a class="page" href="allProducts?task=showAllPro&page=<%= i %>"><%= i %></a>
                             <% } %>
                         <% } %>  
                         <% if(currentPage < pages ) { %>
-                            <a href="allProducts?page=<%=parseInt(currentPage) + 1%>"><i class="fa fa-angle-right"></i></a> 
+                            <a href="allProducts?task=showAllPro&page=<%=parseInt(currentPage) + 1%>"><i class="fa fa-angle-right"></i></a> 
                         <% } %>
                         </div>
                     </div>
@@ -317,17 +323,17 @@
                     <div class="col-lg-12 text-center">
                         <div class="pagination__option">
                             <% if(currentPage > 1) { %>
-                                <a href="filterCategory?page=<%= currentPage > 1 ? parseInt(currentPage) - 1 : currentPage %>&cat=<%=category%>"><i class="fa fa-angle-left"></i></a>
+                                <a href="filterCategory?task=showAllPro&page=<%= currentPage > 1 ? parseInt(currentPage) - 1 : currentPage %>&cat=<%=category%>"><i class="fa fa-angle-left"></i></a>
                             <% } %>
                         <% for(let i =1; i<= pages; i++) { %>
                             <% if(i == currentPage) { %>
-                                <a class="activePage" href="filterCategory?page=<%= i %>&cat=<%=category%>"><%= i %></a>
+                                <a class="activePage" href="filterCategory?task=showAllPro&page=<%= i %>&cat=<%=category%>"><%= i %></a>
                             <% } else {%>
-                                <a class="page" href="filterCategory?page=<%= i %>&cat=<%=category%>"><%= i %></a>
+                                <a class="page" href="filterCategory?task=showAllPro&page=<%= i %>&cat=<%=category%>"><%= i %></a>
                             <% } %>
                         <% } %>  
                         <% if(currentPage < pages ) { %>
-                            <a href="filterCategory?page=<%=parseInt(currentPage) + 1%>&cat=<%=category%>"><i class="fa fa-angle-right"></i></a> 
+                            <a href="filterCategory?task=showAllPro&page=<%=parseInt(currentPage) + 1%>&cat=<%=category%>"><i class="fa fa-angle-right"></i></a> 
                         <% } %>
                         </div>
                     </div>
@@ -427,7 +433,14 @@
     <script src="/assets/js_2/jquery.nicescroll.min.js"></script>
     <script src="/assets/js_2/main.js"></script>
 
-
+    <script>
+        document.getElementById('searchBtn').addEventListener('click', function () {
+            document.querySelector('.searchBar').style.display = 'block'
+            document.querySelector('.searchBar').style.display = 'flex'
+            document.querySelector('.main-banner').style.paddingTop = '10px';
+            document.querySelector('.shop').style.marginTop ='0px'
+        })
+    </script>
 
 
     

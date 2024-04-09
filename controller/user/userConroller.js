@@ -1,16 +1,16 @@
-const reqErrorHandler = require("../middlewares/reqErrorHandler.js")
-const UserModel = require('../models/user/registerSchema.js')
-const addressModel = require('../models/user/addressSchema.js')
-const addtToCartModel = require('../models/user/addToCartSchema.js')
-const orderDetailsModel = require('../models/user/orderSummary.js')
-const orderSchema = require('../models/user/OrderSchema.js')
-const OTPModel = require('../models/user/otpModel.js')
-const productModel = require('../models/admin/productModel.js')
+const reqErrorHandler = require("../../middlewares/reqErrorHandler.js")
+const UserModel = require('../../models/register.js')
+const addressModel = require('../../models/address.js')
+const addtToCartModel = require('../../models/cart.js')
+const orderDetailsModel = require('../../models/orderSummary.js')
+const orderSchema = require('../../models/order.js')
+const OTPModel = require('../../models/otp.js')
+const productModel = require('../../models/products.js')
 const bcrypt = require('bcrypt')
 const otpGenerator = require('otp-generator');
 const jwt = require('jsonwebtoken');
 const { request } = require("express");
-const subCategorySchema = require('../models/admin/category.js')
+const subCategorySchema = require('../../models/category.js')
 const passport = require("passport")
 require('dotenv').config()
 const axios = require('axios')
@@ -63,29 +63,70 @@ const landingPage = async (req, res) => {
     res.render('user/index', { ProductData, userId: '' })
   }
   else if (req.path == '/allProducts') {
-    const page = req.query.page;
-    const perPage = 4;
-    let docCount;
-    const ProductData = await productModel.find({})
-      .countDocuments()
-      .then(documents => {
-        docCount = documents;
 
-        return productModel.find({})
-          .skip((page - 1) * perPage)
-          .limit(perPage)
-      })
-      .then(ProductData => {
-        res.render('user/allProducts', {
-          route: 'allProducts',
-          ProductData,
-          category: '',
-          subCategories,
-          currentPage: page,
-          totalDocuments: docCount,
-          pages: Math.ceil(docCount / perPage)
+    if(req.query.task =='search'){
+
+      console.log('i am hereee bro ',req.query.text)
+      let data =req.query.text;
+
+      const searchText = new RegExp("^"+data,"i")
+      console.log(searchText)
+
+      const page = req.query.page;
+      const perPage = 4;
+      let docCount;
+      const ProductData = await productModel.find({ProductName:{$regex:searchText}})
+        .countDocuments()
+        .then(documents => {
+          docCount = documents;
+  
+          return productModel.find({ProductName:{$regex:searchText}})
+            .skip((page - 1) * perPage)
+            .limit(perPage)
         })
-      })
+        .then(ProductData => {
+          console.log('ProductData',ProductData)
+          res.render('user/allProducts', {
+            route: 'allProducts',
+            ProductData,
+            category: '',
+            subCategories,
+            currentPage: page,
+            totalDocuments: docCount,
+            pages: Math.ceil(docCount / perPage)
+          })
+        })
+
+    }
+    
+    else if(req.query.task=='showAllPro'){
+
+      console.log('else statement')
+      const page = req.query.page;
+      const perPage = 4;
+      let docCount;
+      const ProductData = await productModel.find({})
+        .countDocuments()
+        .then(documents => {
+          docCount = documents;
+  
+          return productModel.find({})
+            .skip((page - 1) * perPage)
+            .limit(perPage)
+        })
+        .then(ProductData => {
+          res.render('user/allProducts', {
+            route: 'allProducts',
+            ProductData,
+            category: '',
+            subCategories,
+            currentPage: page,
+            totalDocuments: docCount,
+            pages: Math.ceil(docCount / perPage)
+          })
+        })
+    }
+    
   }
   else if (req.path == '/filterCategory') {
     const category = req.query.cat
@@ -121,7 +162,7 @@ const registerPage = (req, res) => {
 
 //show enterOTP for registration
 const enterOtp = (req, res) => {
-  res.render('user/enterOtp')
+  res.render('user/enterOtp',{message:''})
 }
 
 // show login page
@@ -158,7 +199,7 @@ const shoppingCart = async (req, res) => {
   const userID = verifyToken(token); // Verify token and get userID
   try {
     const cartItems = await addtToCartModel.find({ userID: userID }).populate('productID');
-    // console.log(cartItems)
+    console.log(cartItems)
     res.render('user/shoppingCart', { cartItems })
   } catch (error) {
     console.error("Error fetching cart products:", error);
@@ -174,11 +215,37 @@ const logout = async (req, res) => {
 }
 
 const filterProducts = async (req, res) => {
-  if (req.query.subCategory) {
-    const subCategories = await subCategorySchema.find({})
-    const ProductData = await productModel.find({ subCategory: req.query.subCategory, CategoryName: req.query.category })
-    res.render('user/allProducts', { ProductData, category: req.query.category, subCategories })
+  const subCategories = await subCategorySchema.find({})
+  if (req.query.subCategory ) {
+    let subCategory = req.query.subCategory
+    let category = req.query.category
+    // console.log('else statement')
+    const page = req.query.page;
+    const perPage = 4;
+    let docCount;
+    const ProductData = await productModel.find({CategoryName:category,subCategory:subCategory})
+      .countDocuments()
+      .then(documents => {
+        docCount = documents;
+
+        return productModel.find({CategoryName:category,subCategory:subCategory})
+          .skip((page - 1) * perPage)
+          .limit(perPage)
+      })
+      .then(ProductData => {
+        console.log('else statement',ProductData)
+        res.render('user/allProducts', {
+          route: 'allProducts',
+          ProductData,
+          category: '',
+          subCategories,
+          currentPage: page,
+          totalDocuments: docCount,
+          pages: Math.ceil(docCount / perPage)
+        })
+      })
   }
+  
 }
 
 
@@ -189,12 +256,13 @@ const filterProducts = async (req, res) => {
 const profile = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
   const userID = await verifyToken(token); // Verify token and get userID
+
   try {
-    const userInfo = await addressModel.find({ userID: userID, selected: true })
-    // Render profile page with userID
-    console.log(userInfo)
-    res.render('user/Profile', { error: '', userInfo })
-    // Handle result here
+    const userInfo = await addressModel.find({ userID: userID }).populate('userID')
+    const data = await UserModel.findById(userID).select('-password');
+    let userData = data ? [data] : [];
+    res.render('user/Profile', { error: '', userInfo, userData })
+
   } catch (error) {
     console.error('Token verification failed:', error);
   }
@@ -234,29 +302,39 @@ const saveUserAddress = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
   const userID = verifyToken(token); // Verify token and get userID
   if (req.query.type === 'addAddress') {
-    const {
-      addressType, address, pincode,
-      state, gender, emailAddress,
-      country, cityDistrictTown, phoneNo,
-      fullName
-    } = req.body
 
-    const UserAddress = {
-      addressType, address, pincode,
-      state, gender, emailAddress,
-      country, cityDistrictTown, phoneNo,
-      fullName, userID
+    try {
+      const {
+        addressType, address, pincode,
+        state, gender, emailAddress,
+        country, cityDistrictTown, phoneNo,
+        fullName
+      } = req.body
+
+      const UserAddress = {
+        addressType, address, pincode,
+        state, gender, emailAddress,
+        country, cityDistrictTown, phoneNo,
+        fullName, userID
+      }
+
+      await addressModel.create(UserAddress);
+      res.redirect('/profileMenu?menu=manageAddress')
+    } catch (error) {
+      console.log(error)
     }
 
-    await addressModel.create(UserAddress);
-    res.redirect('/profileMenu?menu=manageAddress')
   }
   else if (req.query.type === 'manageAddress') {
-    const addressID = req.body.addressID
-    const selected = req.body.selected
-    await addressModel.updateMany({}, { $set: { selected: false } })
-    await addressModel.findOneAndUpdate({ _id: addressID }, { $set: { selected: selected } })
-    res.redirect('/profileMenu?menu=manageAddress')
+    try {
+      const addressID = req.body.addressID
+      const selected = req.body.selected
+      await addressModel.updateMany({}, { $set: { selected: false } })
+      await addressModel.findOneAndUpdate({ _id: addressID }, { $set: { selected: selected } })
+      res.redirect('/profileMenu?menu=manageAddress')
+    } catch (error) {
+      console.log(error)
+    }
   }
   else if (req.query.type === 'deleteAddress') {
     try {
@@ -289,90 +367,168 @@ const saveUserAddress = async (req, res) => {
       console.log(error)
     }
   }
+  else if(req.query.type === 'cancelRequest'){
+    
+    const orderID = req.body.orderID
+    const reqReason = req.body.reqReason
+    const optionalReason=req.body.data
+    console.log('i am herree ',orderID,optionalReason,reqReason)
+
+    // { $set: { quantity: req.body.newQty
+    const value = await orderSchema.findByIdAndUpdate(
+      orderID,
+      { $set: {requestReason:reqReason, request: true, comment: optionalReason ,reqDate:Date.now()} }
+    );
+    console.log(value)
+
+  }
 }
 
 
 const overviewFilter = async (req, res) => {
-  // const ProductSize = req.body.ProductSize
-  // const productId = req.body.productId
-  productModel.findById(productId)
-    .then(sizeExist => {
-      // Convert sizeExist to a plain JavaScript object to avoid circular references
-      const productData = sizeExist.toObject();
-      // Send the converted object in the response
-      res.json({ ProductData: productData });
-    })
-    .catch(error => {
-      // Handle errors
-      res.status(500).json({ error: 'Internal Server Error' });
-    });
+  const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+  const userID = verifyToken(token); // Verify token and get userID
 
+  if (req.query.task === 'addToCart') {
+    try {
+      const productID = req.body.productID;
+      const productData = await productModel.findById(productID)
+      const price = req.body.Price;
+      const size = req.body.size != undefined ? req.body.size : productData.ProductSize[0].size;
+      let quantity = req.body.quantity ;
 
-  const data = productModel.aggregate([
-    {
-      $group: {
-        _id: `${ProductSize}`, // Group by size field
-        count: { $sum: 1 } // Count occurrences of each size
+      console.log(productData, price, userID, size, req.body.proDiscount)
+
+      const data = {
+        userID,
+        productID,
+        quantity,
+        totalPrice: price * quantity - req.body.proDiscount * quantity,
+        size
       }
-    },
-    {
-      $project: {// Exclude _id field from output
-        size: "$_id", // Rename _id to size
-        count: 1 // Include count field
-      }
+      // console.log('Received cart data:', size);
+      await addtToCartModel.create(data)
+      res.json({ message: 'Success' })
+    } catch (error) {
+      console.log('Error While save the shoppingCart Data!', error)
     }
-  ])
+  }
+
+  // const data = productModel.aggregate([
+  //   {
+  //     $group: {
+  //       _id: `${ProductSize}`, // Group by size field
+  //       count: { $sum: 1 } // Count occurrences of each size
+  //     }
+  //   },
+  //   {
+  //     $project: {// Exclude _id field from output
+  //       size: "$_id", // Rename _id to size
+  //       count: 1 // Include count field
+  //     }
+  //   }
+  // ])
 }
 
 
 
 const checkOut = async (req, res) => {
-
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
   const userID = verifyToken(token); // Verify token and get userID
   try {
+    console.log(userID)
     const cartDetails = await orderDetailsModel.find({ userID: userID }).populate('productID')
     const userInfo = await addressModel.find({ userID: userID, selected: true })
     const addresses = await addressModel.find({ userID: userID })
+    console.log('cartDetails',cartDetails)
     res.render('user/checkOut', { cartDetails, userInfo, addresses })
   } catch (error) {
     console.error("Error fetching cart products:", error);
   }
-
 }
 
 
+// const orderDetails = async (req, res) => {
+//   const cartItems = JSON.parse(req.body.cartData);
+
+//   try {
+//     let data = cartItems.map(val => {
+//       const { userID, productID, quantity, size, totalPrice } = val;
+//       if (userID && productID._id && quantity && size && totalPrice) {
+//         return {
+//           userID: userID,
+//           productID: productID._id,
+//           quantity: quantity,
+//           size: size,
+//           price: totalPrice
+//         };
+//       }
+//     }).filter(item => item); // Filter out undefined values
+
+//     console.log('cartItems', data);
+
+//     const itemsToCreate = [];
+
+//     for (const item of data) {
+//       const productExists = await orderDetailsModel.exists({
+//         userID: item.userID,
+//         productID: item.productID,
+//         quantity: item.quantity,
+//         size: item.size,
+//         totalPrice: item.price
+//       });
+
+//       if (!productExists) {
+//         itemsToCreate.push(item);
+//         await orderDetailsModel.insertMany(itemsToCreate);
+//       }
+//     }
+
+
+//     res.redirect('/checkOut');
+//   } catch (error) {
+//     console.error('Error processing cart items:', error);
+//     // Handle error appropriately, perhaps send an error response
+//     res.status(500).send('Error processing cart items');
+//   }
+
+
+// }
 const orderDetails = async (req, res) => {
   const cartItems = JSON.parse(req.body.cartData);
 
-  let data = cartItems.map((val) => {
-    let details;
-    if (val.userID && val.productID._id && val.quantity && val.size && val.price) {
-      return details = {
-        userID: val.userID,
-        productID: val.productID._id,
-        quantity: val.quantity,
-        size: val.size,
-        price: val.price
+  try {
+    for (const item of cartItems) {
+      const { userID, productID, quantity, size, totalPrice } = item;
+
+      if (userID && productID._id && quantity && size && totalPrice) {
+        const existingItem = await orderDetailsModel.findOne({
+          userID: userID,
+          productID: productID._id,
+          quantity: quantity,
+          size: size,
+          totalPrice: totalPrice
+        });
+
+        if (!existingItem) {
+          await orderDetailsModel.create({
+            userID: userID,
+            productID: productID._id,
+            quantity: quantity,
+            size: size,
+            totalPrice: totalPrice
+          });
+        }
       }
     }
-  }).filter(item => item); // Filter out undefined values
 
-  for (const item of data) {
-    const productExists = await orderDetailsModel.exists({
-      userID: item.userID,
-      productID: item.productID,
-      quantity: item.quantity,
-      size: item.size,
-      price: item.price
-    });
-
-    if (!productExists) {
-      await orderDetailsModel.create(item);
-    }
+    res.redirect('/checkOut');
+  } catch (error) {
+    console.error('Error processing cart items:', error);
+    res.status(500).send('Error processing cart items');
   }
-
 }
+
 
 const updateCheckout = async (req, res) => {
   if (req.query.task === 'selectDeleveryAddress') {
@@ -416,17 +572,22 @@ const checkOutTasks = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
   const userID = verifyToken(token); // Verify token and get userID
   if (req.query.task === 'removeProducts') {
-    const orderSummaryId = req.body.id;
-    console.log(orderSummaryId)
-    await orderDetailsModel.deleteMany({ _id: orderSummaryId })
-    res.redirect('/checkOut');
+    try {
+      const orderSummaryId = req.body.id;
+      console.log(orderSummaryId)
+      await orderDetailsModel.deleteMany({ _id: orderSummaryId })
+      res.redirect('/checkOut');
+    } catch (error) {
+      console.log(error)
+    }
+
   }
   else if (req.query.task === 'saveOrderDetails') {
 
     const paymentMethod = req.body.paymentMethod;
     const ProductData = JSON.parse(req.body.ProductData);
     const addressID = req.body.addressID;
-    //  console.log('i am here...',ProductData)
+     console.log('i am here...',ProductData)
 
     try {
       let details;
@@ -436,12 +597,58 @@ const checkOutTasks = async (req, res) => {
           productID: val.productID._id,
           addressID: addressID,
           Quantity: val.quantity,
-          Amount: val.price * val.quantity,
+          Amount: val.totalPrice,
           Size: val.size,
           PaymentMethod: paymentMethod
         }
       })
-      // console.log('details :', ProductData)
+      console.log('details :', orderDetails[0].userID)
+
+      let returnData;
+      const UpdatedData = ProductData.map((val,index) => {
+        return returnData = {
+          ProductName: val.productID.ProductName,
+          BrandName:val.productID.BrandName,
+          CategoryName:val.productID.CategoryName,
+          StockQuantity:val.productID.StockQuantity - val.quantity,
+          subCategory:val.productID.subCategory,
+          PurchaseRate:val.productID.PurchaseRate,
+          SalesRate:val.productID.SalesRate,
+          TotalPrice:val.productID.TotalPrice,
+          ColorNames:val.productID.ColorNames,
+          ProductDescription:val.productID.ProductDescription,
+          VATAmount:val.productID.VATAmount,
+          DiscountPrecentage:val.productID.DiscountPrecentage,
+          ProductSize:[
+            {
+              size : val.productID.ProductSize[0].size,
+              quantity: orderDetails[index].Size === val.productID.ProductSize[0].size ? val.productID.ProductSize[0].quantity - orderDetails[index].Quantity : val.productID.ProductSize[0].quantity
+            },
+            {
+              size : val.productID.ProductSize[1].size,
+              quantity: orderDetails[index].Size === val.productID.ProductSize[1].size ? val.productID.ProductSize[1].quantity - orderDetails[index].Quantity : val.productID.ProductSize[1].quantity
+            },
+            {
+              size : val.productID.ProductSize[2].size,
+              quantity: orderDetails[index].Size === val.productID.ProductSize[2].size ? val.productID.ProductSize[2].quantity - orderDetails[index].Quantity : val.productID.ProductSize[2].quantity
+            },
+            {
+              size : val.productID.ProductSize[3].size,
+              quantity: orderDetails[index].Size === val.productID.ProductSize[3].size ? val.productID.ProductSize[3].quantity - orderDetails[index].Quantity : val.productID.ProductSize[3].quantity
+            },
+
+          ],
+          files:val.productID.files,
+          Inventory:val.productID.Inventory,
+          Added:val.productID.Added,
+          SI:val.productID.SI
+        }
+      })
+
+      console.log('UpdatedData  ',UpdatedData)
+      const id = orderDetails[0].productID;
+      await productModel.findByIdAndUpdate(id, UpdatedData[0], { new: true });
+
       await orderSchema.create(orderDetails)
       res.redirect('/profileMenu?menu=myOrders')
     } catch (error) {
@@ -490,13 +697,13 @@ const removeCartProduct = async (req, res) => {
   try {
     if (req.query.task === 'deleteCartItem') {
       console.log('I am here to delete', req.query.id);
-      
+
       await addtToCartModel.findOneAndDelete({ _id: req.query.id, userID: userID });
       res.redirect('/shoppingcart');
     }
   } catch (error) {
     console.log(error);
-    
+
     res.status(500).send('Internal Server Error');
   }
 }
@@ -532,31 +739,6 @@ const updateProfile = async (req, res) => {
 
 }
 
-// save the products to cart database
-const addToCart = async (req, res) => {
-  try {
-    const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-    const userID = verifyToken(token); // Verify token and get userID
-    const size = req.body.size;
-
-    const productID = req.body.productID;
-    const price = req.body.price;
-    const quantity = req.body.quantity;
-
-    const data = {
-      userID,
-      productID,
-      quantity,
-      price,
-      size
-    }
-    // console.log('Received cart data:', size);
-    await addtToCartModel.create(data)
-    res.json({ message: 'Success' })
-  } catch (error) {
-    console.log('Error While save the shoppingCart Data!')
-  }
-}
 
 
 //send OTP for the registration of user 
@@ -595,7 +777,7 @@ const sentOTP = async (req, res) => {
     //save the otp to the database
     const otpPayload = { emailAddress, otp };
     await OTPModel.create(otpPayload);
-    res.render('user/enterOtp')//render the enterotp page
+    res.render('user/enterOtp',{message:''})//render the enterotp page
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ success: false, error: error.message });
@@ -643,10 +825,7 @@ const createUser = async (req, res) => {
     // console.log( response[0].otp, 'dshsdsdmn :', otp, combinedOTP)
 
     if (combinedOTP !== response[0].otp) {
-      return res.status(400).json({
-        success: false,
-        message: 'The OTP is not valid',
-      })
+      res.render('user/enterOtp',{ message:'Invalid OTP' })
     } else {
       console.log('i am here !!! ')
       // Secure password
@@ -662,11 +841,12 @@ const createUser = async (req, res) => {
       // hash the password
       GlobalUser.password = hashedPassword
       //store the user data to mongodb
+      const createdUser = await UserModel.create(GlobalUser);
 
-      const Token = createToken(GlobalUser.emailAddress)
+      console.log('createdUser._id', createdUser._id)
+      const Token = createToken(createdUser._id)
       res.cookie('jwtUser', Token, { httpOnly: true, maxAge: MaxExpTime * 1000 });
 
-      await UserModel.create(GlobalUser);
       res.redirect('/')
     }
 
@@ -814,15 +994,34 @@ const createPassword = async (req, res) => {
 //get method for product overview
 const productOverview = async (req, res) => {
   try {
+    const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+    const userID = verifyToken(token); // Verify token and get userID
 
     const id = req.query.id
     const ProductData = await productModel.find({ _id: id })
+    const cart = await addtToCartModel.find({ userID: userID, productID: id })
+
+    console.log('cart ', cart)
 
     const productColor = await productModel.find({ ProductName: ProductData[0].ProductName })
     const firstProduct = ProductData[0];
     const CategoryName = firstProduct.CategoryName;
     const relatedItem = await productModel.find({ CategoryName: CategoryName })
-    res.render('user/productOverview', { ProductData, relatedItem, productColor })
+    res.render('user/productOverview', { ProductData, relatedItem, productColor, cart })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const updateCart = async (req, res) => {
+  try {
+    const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+    const userID = verifyToken(token);
+
+    console.log('req.body.newQty ', req.body.totalPrice)
+
+    await addtToCartModel.findByIdAndUpdate(req.body.id, { $set: { quantity: req.body.newQty, totalPrice: req.body.totalPrice } })
+
   } catch (error) {
     console.log(error)
   }
@@ -835,35 +1034,9 @@ const productOverview = async (req, res) => {
 
 //export all the above functions
 module.exports = {
-  registerPage,
-  addToCart,
-  removeCartProduct,
-  updateCheckout,
-  landingPage,
-  loginPage,
-  userLogin,
-  logout,
-  profile,
-  profileMenu,
-  google,
-  shoppingCart,
-  sendEmailOtp,
-  postsendEmailOtp,
-  forgotEnterOtp,
-  postForgotEnterOtp,
-  resetPassword,
-  createPassword,
-  saveUserAddress,
-  filterProducts,
-  enterOtp,
-  sentOTP,
-  createUser,
-  resendOtp,
-  productOverview,
-  saveImage,
-  overviewFilter,
-  checkOut,
-  checkOutTasks,
-  orderDetails,
-  updateProfile
+  registerPage,removeCartProduct,updateCheckout,landingPage,loginPage,userLogin,
+  logout,profile,profileMenu,google,shoppingCart,updateCart,sendEmailOtp,postsendEmailOtp,
+  forgotEnterOtp,postForgotEnterOtp,resetPassword,createPassword,saveUserAddress,filterProducts,
+  enterOtp,sentOTP,createUser,resendOtp,productOverview,saveImage,overviewFilter,checkOut,
+  checkOutTasks,orderDetails,updateProfile
 }

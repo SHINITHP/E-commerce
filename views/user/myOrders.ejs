@@ -207,6 +207,7 @@
 
                                     </div>
                                 </div>
+                                <% let id %>
                                 <% let orderDate=new Date(item.OrderDate); let deliveryDate=new
                                     Date(orderDate.setDate(orderDate.getDate() + 7)); %>
                                     <div class="row con2Row2">
@@ -265,11 +266,23 @@
                             </div>
                         </div>
 
+                        <div class="card card-timeline px-2 border-none orderCancelled" style="display: none; ">
+                            <ul class="bs4-order-tracking" style="display: flex;justify-content: center;">
+                                <li class="step active" id="CancellineOne">
+                                    <div><i class="fas fa-user"></i></div>Order Placed
+                                </li>
+                               
+                                <li class="step active" id="CancellineFour">
+                                    <div><i class="fas fa-birthday-cake"></i></div>order Cancelled
+                                </li>
+                            </ul>
+                            <h5 class="Cancel text-center">Order successfully Cancelled</h5>
+                        </div>
 
 
-                        <div class="card card-timeline px-2 border-none">
+                        <div class="card card-timeline px-2 border-none trackDetails">
                             <ul class="bs4-order-tracking">
-                                <li class="step" id="lineOne">
+                                <li class="step " id="lineOne">
                                     <div><i class="fas fa-user"></i></div>Order Placed
                                 </li>
                                 <li class="step" id="lineTwo">
@@ -282,7 +295,7 @@
                                     <div><i class="fas fa-birthday-cake"></i></div>Delivered
                                 </li>
                             </ul>
-                            <h5 class="text-center"></h5>
+                            <h5 class="text-center content"></h5>
                         </div>
                     </div>
 
@@ -310,7 +323,7 @@
                     <option value="Other ">Other</option>
                 </select>
                 <label for="">Comment(optional)
-                    <input type="text" class="commentInput">
+                    <input type="text" id="reqReason" class="commentInput">
                 </label>
                 <div class="row">
                     <input type="button" class="btn" id="cancelBtn" value="Cancel">
@@ -345,13 +358,14 @@
                     document.querySelector('.conF-1').style.marginTop = '50px';
                 })
 
-
+                let orderID;
                 function TrackOrder(orderId, orderDetails) {
                     const orderList = document.getElementById('orderList')
                     const trackOrder = document.getElementById('trackOrder')
                     orderList.style.display = 'none'
                     trackOrder.style.display = 'block'
-
+                    orderID = orderId;
+                    console.log(orderID)
                     const productData = JSON.parse(orderDetails)
                     const data = productData.filter((val) => {
                         return val._id == orderId ? true : false
@@ -373,7 +387,7 @@
                     let lineTwo = document.getElementById('lineTwo');
                     let lineThree = document.getElementById('lineThree');
                     let lineFour = document.getElementById('lineFour');
-                    let textcenter = document.querySelector('.text-center')
+                    let textcenter = document.querySelector('.content')
                     console.log(data[0].Status)
                     if (data[0].Status === 'Order Placed') {
                         lineOne.classList.toggle('active');
@@ -396,6 +410,9 @@
                         lineThree.classList.toggle('active');
                         lineFour.classList.toggle('active');
                         textcenter.innerHTML = 'Your order has been successfully delivered.'
+                    }else if (data[0].Status === 'Order Cancelled'){
+                        document.querySelector('.trackDetails').style.display='none'
+                        document.querySelector('.orderCancelled').style.display='block'
                     }
 
 
@@ -407,10 +424,31 @@
                     const cancelConfirmation = document.querySelector('.cancel-Confirmation')
                     const submitOrder = document.querySelector('.submit-Order')
 
+                    const reqReason =document.getElementById('canceldropdown').value;
+                    const optionalReason = document.getElementById('reqReason');
+                    const data = optionalReason.value
+
+                    let name = document.getElementById('productName').innerText;
+                    console.log('document.getElementBy',orderID,reqReason,data)
+
                     SuccessDiv.style.height = '300px'
                     cancelConfirmation.style.display = 'none'
                     submitOrder.style.display = 'block'
                     submitOrder.style.display = 'flex'
+
+                    function send(orderID,reqReason,data){
+                        axios.put('/profileMenu?type=cancelRequest', { orderID ,reqReason,data}) // Sending productID as data
+                        .then(function (response) {
+                            // Handle success response if needed
+                        })
+                        .catch(function (error) {
+                            console.error('Error adding product to cart:', error);
+                            // Handle error if needed
+                        });
+                    }
+
+                    send(orderID,reqReason,data)
+
                 }
 
                 document.getElementById('cancelBtn').addEventListener('click', function () {

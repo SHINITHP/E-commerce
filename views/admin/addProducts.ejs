@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="/assets/css/admin/addProducts.css">
 
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -28,11 +29,30 @@
 
 <body>
     <!-- Navbar -->
-    <%- include('../../views/admin/adminNavbar.ejs') %>
-        <!-- Navbar -->
+    <div class="container-fluid conF-1">
+        <div class="row navRow">
+            <div class="col-6 ">
+                <a href="/use/index" class="logo">
+                    <img src="/assets/images/logo.png">
+                </a>
+            </div>
+            <div class="col-4">
+                <a href="" class="messageShow">
+                    <i class="fa-solid fa-bell" style="color: #999999;"></i>
+                </a>
+                <p class="msgCount">2</p>
+            </div>
+            <div class="col-2">
+                <a href="adminLogout" class="logout">
+                    <img src="/assets/images/logout.png" class="logoutImg"><span>Logout</span>
+                </a>
+            </div>
+        </div>
+    
+    </div>
         <br>
 
-    <div class="container-fluid outerDiv" id="blur" style="padding: 0px;">
+    <div class="container-fluid outerDiv"  style="padding: 0px;">
 
     
         <div class="container-fluid conF-2">
@@ -179,10 +199,10 @@
                                                         id="SalesRate" placeholder="Enter VAT Amount" required>
                                                 </div>
                                                 <div class="col-4">
-                                                    <label class="lbl" for="">Discount Precentage (%)</label>
+                                                    <label class="lbl" for="">Maximum Retail Price</label>
                                                     <input type="text" class="form-control inputpass"
-                                                        name="DiscountPrecentage" id="TotalPrice"
-                                                        placeholder="Enter Discount Precentage" required>
+                                                        name="mrp" id="TotalPrice"
+                                                        placeholder="Enter MRP" required>
                                                 </div>
                                                 <div class="col-4 categoryRow">
                                                     <label class="lbl" for="">Color Name</label>
@@ -206,10 +226,10 @@
                                                     <label class="lbl" for="">Select Product Size</label>
                                                     <div class="col-12 checkRow">
                                                         <label class="container">
-                                                            <input type="checkbox" class="checkBox" name="sizes" value="S"
+                                                            <input  type="checkbox" class="checkBox" name="sizes" value="S"
                                                                 checked="checked">
                                                             <span class="checkmark"></span>
-                                                            <input type="text" class="form-control inputSmall"
+                                                            <input style="margin-top: 21px;" type="text" class="form-control inputSmall"
                                                             name="SizeQuantity" id="TotalPrice"
                                                             placeholder="S Quantity">
                                                         </label>
@@ -217,7 +237,7 @@
                                                             <input type="checkbox"  class="checkBox" checked="checked" value="M"
                                                                 name="sizes">
                                                             <span class="checkmark"></span>
-                                                            <input type="text" class="form-control inputSmall"
+                                                            <input style="margin-top: 21px;" type="text" class="form-control inputSmall"
                                                             name="SizeQuantity" id="TotalPrice"
                                                             placeholder="M Quantity">
                                                         </label>
@@ -225,7 +245,7 @@
                                                             <input type="checkbox" class="checkBox" checked="checked" value="L"
                                                                 name="sizes">
                                                             <span class="checkmark"></span>
-                                                            <input type="text" class="form-control inputSmall"
+                                                            <input style="margin-top: 21px;" type="text" class="form-control inputSmall"
                                                             name="SizeQuantity" id="TotalPrice"
                                                             placeholder="L Quantity">
                                                         </label>
@@ -233,7 +253,7 @@
                                                             <input type="checkbox" class="checkBox" checked="checked" value="XL"
                                                                 name="sizes">
                                                             <span class="checkmark"></span>
-                                                            <input type="text" class="form-control inputSmall"
+                                                            <input style="margin-top: 21px;" type="text" class="form-control inputSmall"
                                                             name="SizeQuantity" id="TotalPrice"
                                                             placeholder="XL Quantity">
                                                         </label>
@@ -241,7 +261,7 @@
                                                             <input type="checkbox" class="checkBox" checked="checked"
                                                                 value="XXL" name="sizes">
                                                             <span class="checkmark"></span>
-                                                            <input type="text" class="form-control inputSmall"
+                                                            <input style="margin-top: 21px;" type="text" class="form-control inputSmall"
                                                             name="SizeQuantity" id="TotalPrice"
                                                             placeholder="XXL Quantity">
                                                         </label>
@@ -326,7 +346,7 @@
     </div>
 
         
-    <div  id="popup">
+    <!-- <div  id="popup">
         <p style="width: 60%; text-align: end; padding-top: 20px;">Crop Your Image Here</p>
 
         <div class="row imageRow">
@@ -346,7 +366,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
           <!-- Latest compiled and minified JavaScript -->
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script> -->

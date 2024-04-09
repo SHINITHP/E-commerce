@@ -115,8 +115,9 @@
 
                 <div class="col-12 orderSummary">
                     <h1>Order Summary</h1>
+                    <% let count = 0%>
                     <% cartDetails.forEach((item,index)=> { %>
-                        <% i=index %>
+                        <% count = (index +1) %> 
                             <div class="col-12 orderedItems" style="border: 1px solid rgb(189, 189, 189);;">
                                 <div class="container" style="padding: 0; display: flex;">
                                     <div class="col-2 imageCol">
@@ -170,16 +171,18 @@
                     <div class="row priceDetailsRow">
                         PRICE DETAILS
                     </div>
+                    <% let sum = cartDetails.reduce((accumulator, currentValue) => accumulator + currentValue.productID.SalesRate * currentValue.quantity, 0); %>
+
                     <div class="row priceDetails">
                         <div class="col-8 priceDetails-Left">
-                            <p>Price(<%= i + 1%> items)</p>
+                            <p>Price( <%= count %> items)</p>
                             <p>Discount</p>
                             <p>---------------------------</p>
                             <p>Total Price</p>
                         </div>
                         <div class="col-4 priceDetails-Left"
                             style="display: flex;flex-direction: column;justify-content: center;align-items: center;padding-left: 0;">
-                            <p>₹ <span id="cartTotal"></span></p>
+                            <p>₹ <span id="cartTotal"><%= sum %></span></p>
                             <p>-₹<span id="discountAmt"></span></p>
                             <p style="padding-right: 27px;">-----------</p>
                             <p>₹<span id="toTalAmount"></span></p>
@@ -451,30 +454,32 @@
                         <div class="row priceDetailsRow">
                             PRICE DETAILS
                         </div>
+                       
+    
                         <div class="row priceDetails">
                             <div class="col-8 priceDetails-Left">
-                                <p>Price(<%= i + 1%> items)</p>
+                                <p>Price( <%= count %> items)</p>
                                 <p>Discount</p>
                                 <p>---------------------------</p>
                                 <p>Total Price</p>
                             </div>
                             <div class="col-4 priceDetails-Left"
                                 style="display: flex;flex-direction: column;justify-content: center;align-items: center;padding-left: 0;">
-                                <p>₹12,345</p>
-                                <p>-₹12,345</p>
+                                <p>₹ <span id="cartTotal1"><%= sum %></span></p>
+                                <p>-₹<span id="discountAmt1"></span></p>
                                 <p style="padding-right: 27px;">-----------</p>
-                                <p>₹12,345</p>
+                                <p>₹<span id="toTalAmount1"></span></p>
                             </div>
                         </div>
-
+    
                         <div class="row selectPayment">
                             <p>----------------------------------------</p>
                             <h5>Payment Method</h5>
                             <label for="Selectpayment">
-                                <input type="radio" id="Selectpayment" class="paymentRdobtn"  value="">
+                                <input type="radio" id="Selectpayment" class="paymentRadioBtn" value="Cash On Delivery">
                                 <span style="padding-left: 10px;">Cash On Delivery</span>
                             </label>
-
+    
                             <label style=" display: flex;align-items: center;justify-content: center;"><a
                                     class="primary-btn PlaceOrder" onclick="successMessage()">Place Order</a></label>
                         </div>
@@ -495,7 +500,7 @@
                 </ul>
             </div>
 
-            <p style="margin-top: 10px;">Hey Shinith.P</p>
+            <!-- <p style="margin-top: 10px;">Hey Shinith.P</p> -->
             <h2>Your Order Is Confirmed</h2>
             <h6>Shall we go ahead and make this order official!</h6>
             <h6>Just confirm your order please.</h6>
@@ -506,7 +511,7 @@
         </div>
         <div class="row SuccessRow" style="display: none;">
             <i class="fa-regular fa-circle-check" style="color: #10aa0e;font-size: 40pt;padding-bottom: 10px;"></i>
-            <p>Hey Shinith.P</p>
+            <!-- <p>Hey Shinith.P</p> -->
             <h2>Your Order Is Confirmed</h2>
             <h6>We'll send you a shipping confirmation email</h6>
             <h6>as soon as your order ships.</h6>
@@ -523,196 +528,7 @@
 
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script>
-            const Selectpayment = document.getElementById('Selectpayment');
-
-            if(Selectpayment.checked){
-                Selectpayment.value='Cash On Delivery'
-            }
-            
-            function CancelOrder() {
-                let blur = document.getElementById('blur');
-                blur.classList.remove('active');
-
-                let popup = document.getElementById('SuccessDiv');
-                popup.classList.remove('active');
-            }
-
-            function ConfirmOrder(ProductData,userAddress) {
-                let fetchAddress= JSON.parse(userAddress)
-                const addressID = fetchAddress.map((val) => val._id) 
-                const paymentMethod = document.getElementById('Selectpayment').value
-               axios.post('/checkOut?task=saveOrderDetails', {ProductData : ProductData,paymentMethod : paymentMethod,addressID:addressID}) // Sending productID as data
-               .then(function (response) {
-                   // Handle success response if needed
-               })
-               .catch(function (error) {
-                   console.error('Error adding product to cart:', error);
-                   // Handle error if needed
-               });
-
-                const confirmation = document.querySelector('.confirmation')
-                const SuccessRow = document.querySelector('.SuccessRow')
-
-                confirmation.style.display = 'none'
-                SuccessRow.style.display = 'block'
-                SuccessRow.style.display = 'flex'
-
-                
-            }
-
-            
-        
-            function successMessage() {
-               
-
-                if (Selectpayment.checked) {
-                    console.log('i am here....')
-                    let blur = document.getElementById('blur');
-                    blur.classList.toggle('active');
-
-                    let popup = document.getElementById('SuccessDiv');
-                    popup.classList.toggle('active');
-                }
-                else{
-                    
-                    const confirmation = confirm('Please Select Your Payment Method');
-                    if (!confirmation) {
-                        document.querySelector('.selectPayment h5').style.color='red'
-                        event.preventDefault(); // Prevent form submission
-                    }
-                }
-
-
-            }
-
-            const cartTotal = document.getElementById('cartTotal')
-            const totalAmount = document.querySelectorAll('.TotalAmount');
-            const discount = document.querySelectorAll('.discount');
-            const toTalAmount = document.getElementById('toTalAmount')
-            let sum = 0;
-
-
-            for (let i = 0; i < discount.length; i++) {
-                sum = sum + parseFloat(discount[i].innerText)
-                document.getElementById('discountAmt').innerHTML = sum
-            }
-            sum = 0;
-            for (let i = 0; i < totalAmount.length; i++) {
-                console.log('i am heree....')
-                sum = sum + parseFloat(totalAmount[i].innerText)
-                console.log(sum)
-                cartTotal.innerHTML = sum - parseFloat(document.getElementById('discountAmt').innerText)
-            }
-
-            toTalAmount.innerHTML = parseFloat(cartTotal.innerHTML) - parseFloat(document.getElementById('discountAmt').innerText)
-
-            function quantityIncrement(index, price, type) {
-                const showQty = document.getElementById(`showQty${index}`)
-                const totalInput = document.getElementById(`totalPrice${index}`)
-                const discountAmt = document.getElementById(`discount${index}`)
-                let ExactDiscAmt;
-                if (type === 'increment') {
-                    let totalPrice = parseFloat(totalInput.value)
-                    let quantity = parseFloat(showQty.value)
-                    ExactDiscAmt = parseFloat(discountAmt.innerText) / parseFloat(showQty.value)
-                    showQty.value = quantity + 1
-                    let addQty = parseFloat(showQty.value)
-                    console.log(addQty, price)
-                    totalInput.innerHTML = addQty * price
-                    cartTotal.innerHTML = parseFloat(cartTotal.innerText) + parseFloat(price)
-                    discountAmt.innerHTML = parseFloat(discountAmt.innerText) + parseFloat(ExactDiscAmt)
-                    document.getElementById('discountAmt').innerHTML = parseFloat(document.getElementById('discountAmt').innerText) + parseFloat(ExactDiscAmt)
-                    toTalAmount.innerHTML = parseFloat(cartTotal.innerHTML) - parseFloat(document.getElementById('discountAmt').innerText)
-                }
-                else if (type === 'decrement') {
-                    let totalPrice = parseFloat(totalInput.value)
-                    let quantity = parseFloat(showQty.value)
-                    ExactDiscAmt = parseFloat(discountAmt.innerText) / parseFloat(showQty.value)
-                    showQty.value = quantity - 1
-                    let addQty = parseFloat(showQty.value)
-                    console.log(addQty, price)
-                    totalInput.innerHTML = addQty * price
-                    cartTotal.innerHTML = parseFloat(cartTotal.innerText) - parseFloat(price)
-                    discountAmt.innerHTML = parseFloat(discountAmt.innerText) - parseFloat(ExactDiscAmt)
-                    document.getElementById('discountAmt').innerHTML = parseFloat(document.getElementById('discountAmt').innerText) - parseFloat(ExactDiscAmt)
-                    toTalAmount.innerHTML = parseFloat(cartTotal.innerHTML) - parseFloat(document.getElementById('discountAmt').innerText)
-
-                }
-            }
-
-
-            function selectDeliveryAddress(addressID) {
-                axios.put('/checkOut?task=selectDeleveryAddress', { addressID: addressID }) // Sending productID as data
-                    .then(function (response) {
-                        // Handle success response if needed
-                    })
-                    .catch(function (error) {
-                        console.error('Error adding product to cart:', error);
-                        // Handle error if needed
-                    });
-            }
-
-
-
-
-            function removeProducts(id) {
-                axios.post('/checkOut?task=removeProducts', { id: id }) // Sending productID as data
-                    .then(function (response) {
-                        // Handle success response if needed
-                    })
-                    .catch(function (error) {
-                        console.error('Error adding product to cart:', error);
-                        // Handle error if needed
-                    });
-            }
-
-
-            const conF2 = document.getElementById('OrderBox')
-            const conF1 = document.getElementById('addressBox')
-            document.getElementById('changeBtn').addEventListener('click', function () {
-                console.log('i am heree....')
-                conF2.style.display = 'none'
-                conF1.style.display = 'block'
-            })
-
-
-            function updateAddress(index,id) {
-                const updateBtn = document.querySelector(`.update[data-index="${index}"]`);
-                const removeBtn = document.querySelector(`.remove[data-index="${index}"]`);
-                const cancelBtn = document.querySelector(`.cancelBtn[data-index="${index}"]`);
-                console.log(cancelBtn);
-                const form = document.getElementById(`form_${index}`);
-                form.style.display = 'block'; // Show the corresponding form
-                updateBtn.style.display = 'none'
-                removeBtn.style.display = 'none'
-                cancelBtn.style.display = 'block'
-            }
-            function cancelUpdate(index) {
-                const updateBtn = document.querySelector(`.update[data-index="${index}"]`);
-                const removeBtn = document.querySelector(`.remove[data-index="${index}"]`);
-                const cancelBtn = document.querySelector(`.cancelBtn[data-index="${index}"]`);
-                console.log(cancelBtn);
-                const form = document.getElementById(`form_${index}`);
-                form.style.display = 'none'; // Show the corresponding form
-                updateBtn.style.display = 'block'
-                removeBtn.style.display = 'block'
-                cancelBtn.style.display = 'none'
-            }
-
-            document.getElementById('addAddressDiv').addEventListener('click', function () {
-                document.getElementById('addAddressDiv').style.display = 'none'
-                document.getElementById('addAddress').style.display = 'block'
-                document.getElementById('addAddressCancel').style.display = 'block'
-            })
-
-            document.getElementById('addAddressCancel').addEventListener('click', function () {
-                document.getElementById('addAddress').style.display = 'none'
-                document.getElementById('addAddressDiv').style.display = 'block'
-                document.getElementById('addAddressDiv').style.display = 'flex'
-            })
-
-        </script>
+        <script src="/assets/js/checkout.js"></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
         <!-- <script src="/assets/js/profile.js">  </script> -->

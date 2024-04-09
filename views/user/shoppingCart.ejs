@@ -115,7 +115,9 @@
                 </div>
                 <div class="col-1 colms"></div>
             </div>
+            <% let count , cartCount%>
             <% cartItems.forEach((item,index)=> { %>
+                <% count = index + 1  , cartCount = index%>
                 <% var itemId=item._id; %>
                     <div class="row row-2">
                         <div class="col-4 colms2 col_5">
@@ -144,24 +146,25 @@
                         </div>
 
                         <div class="col-2 colms2">
-                            <p style="font-size: 14pt; padding-right: 15px;"><i class="fa-solid fa-indian-rupee-sign"
+                            <p style="font-size: 14pt; padding-right: 15px;" class="salesRate"><i class="fa-solid fa-indian-rupee-sign"
                                     style=" font-size:13pt; padding-right: 5px;"></i>
                                 <%= item.productID.SalesRate %>
-                            </p> -₹<span class="discount" id="discount<%=index%>"style="text-decoration: line-through;color:rgb(63, 63, 63);">
-                                <%=(item.productID.SalesRate*item.productID.DiscountPrecentage / 100) * item.quantity %>
+                            </p> ₹<span class="discount" id="discount<%=index%>"style="text-decoration: line-through;color:rgb(63, 63, 63);">
+                                <%=item.productID.MRP%>
                             </span>
                         </div>
                         <div class="col-2 colms2">
                             <div class="quantity">
                                 <div class="proQty">
-                                    <input type="button"
-                                        onclick="quantityIncrement('<%=index%>','<%= item.productID.SalesRate %>','decrement')"
-                                        id="decrement<%=index%>" class="inc-dec" value="-">
+                                    <a href=""><input type="button"
+                                        onclick="quantityIncDec('<%=index%>','<%=item._id%>','<%= item.productID.SalesRate %>','decrement')"
+                                        id="decrement<%=index%>" class="inc-dec dec" value="-"></a>
                                     <input type="text" class="Qty" id="showQty<%=index%>" readonly
                                         value="<%=item.quantity%>">
-                                    <input type="button" id="increment<%=index%>"
-                                        onclick="quantityIncrement('<%=index%>','<%= item.productID.SalesRate %>','increment')"
-                                        class="inc-dec" value="+">
+                                        <a href=""><input type="button" id="increment<%=index%>"
+                                            onclick="quantityIncDec('<%=index%>','<%=item._id%>','<%= item.productID.SalesRate %>','increment')"
+                                            class="inc-dec" value="+"></a>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -169,7 +172,7 @@
                             <!-- <p class="totalAmount" id="totalPrice" style="font-size: 13pt; font-family: Poppins;"> -->
                             <i class="fa-solid fa-indian-rupee-sign" style=" font-size:13pt;padding-right: 3px;"></i>
                             <input type="text" id="totalPrice<%=index%>" class="TotalAmount" readonly
-                                value=" <%= item.productID.SalesRate * item.quantity %>">
+                                value="<%= item.totalPrice %>">
                             <!-- </p> -->
                         </div>
                         <div class="col-1 colms2">
@@ -191,7 +194,7 @@
                         <div class="row row-3">
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="cart__btn">
-                                    <a href="allProducts?page=1" style="border: 1px solid #aeaeae;">Continue
+                                    <a href="allProducts?task=showAllPro&page=1" style="border: 1px solid #aeaeae;">Continue
                                         Shopping</a>
                                 </div>
                             </div>
@@ -211,21 +214,31 @@
                                 <div class="cart__total__procced">
                                     <h6>Cart total</h6>
                                     <ul>
+                                        <li>Items(<%= count %>) <span
+                                            style="display: flex; align-items: center;justify-content: center;"><i
+                                                class="fa-solid fa-indian-rupee-sign" style=" font-size:13pt;"></i>
+                                            <input type="text" id="ExactPrice" class="cartAmount" readonly
+                                                value="">
+                                        </span></li>
                                         <li>Discount <span
                                                 style="display: flex; align-items: center;justify-content: center;">-<i
                                                     class="fa-solid fa-indian-rupee-sign" style=" font-size:13pt;"></i>
-                                                <input type="text" id="discountAmt" class="cartAmount" readonly
+                                                <input type="text" id="discountAmt" class="cartAmount" readonly style="text-decoration: line-through;"
                                                     value="">
                                             </span></li>
-                                        <li>Total <span
+                                        <li>Total Amount<span
                                                 style="display: flex; align-items: center;justify-content: center;"><i
                                                     class="fa-solid fa-indian-rupee-sign" style=" font-size:13pt;"></i>
                                                 <input type="text" id="cartTotal" class="cartAmount" readonly value="">
                                             </span></li>
 
                                     </ul>
-                                    <a href="/checkOut" onclick="saveOrder('<%= JSON.stringify(cartItems) %>')"
+                                    <% if(cartCount >= 0 ){ %> 
+                                    <a style="cursor: pointer;"  href="/checkOut" onclick="saveOrder('<%= JSON.stringify(cartItems) %>')"
                                         class="primary-btn checkoutBtn">Proceed to checkout</a>
+                                    <% } else{ %> 
+                                        <a style="cursor: pointer;" class="primary-btn checkoutBtn" >Proceed to checkout</a>
+                                    <% } %>
                                 </div>
                             </div>
                         </div>
@@ -239,101 +252,7 @@
 
 
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-            <script>
-
-              
-                const cartTotal = document.getElementById('cartTotal')
-                const totalAmount = document.querySelectorAll('.TotalAmount');
-                const discount = document.querySelectorAll('.discount');
-    
-                let sum = 0;
-                
-                
-                for (let i = 0; i < discount.length; i++) {
-                    sum = sum + parseFloat(discount[i].innerText)
-                    console.log(discount[i].innerText)
-                    document.getElementById('discountAmt').value = sum
-                }
-                sum = 0;
-                for (let i = 0; i < totalAmount.length; i++) {
-                    console.log('i am heree....')
-                    sum = sum + parseFloat(totalAmount[i].value)
-                    console.log(sum)
-                    cartTotal.value = sum-parseFloat(document.getElementById('discountAmt').value)
-                }
-
-                const availability = document.querySelectorAll('.availability')
-
-                for(let i=0; i<availability.length;i++){
-
-                    if (availability[i].innerText === 'In Stock') {
-                        availability[i].style.color = 'green'
-                    } else {
-                        availability[i].style.color = 'red'
-                    }
-
-                }
-                
-
-    
-                function quantityIncrement(index, price, type) {
-                    const showQty = document.getElementById(`showQty${index}`)
-                    const totalInput = document.getElementById(`totalPrice${index}`)
-                    const discountAmt = document.getElementById(`discount${index}`)
-                    let ExactDiscAmt;
-                    if (type === 'increment') {
-                        let totalPrice = parseFloat(totalInput.value)
-                        let quantity = parseFloat(showQty.value)
-                        ExactDiscAmt = parseFloat(discountAmt.innerText)/parseFloat(showQty.value)
-                        showQty.value = quantity + 1
-                        let addQty = parseFloat(showQty.value)
-                        console.log(addQty, price)
-                        totalInput.value = addQty * price
-                        cartTotal.value = parseFloat(cartTotal.value) + parseFloat(price)
-                        discountAmt.innerHTML = parseFloat(discountAmt.innerText) + parseFloat(ExactDiscAmt)
-                        document.getElementById('discountAmt').value = parseFloat(document.getElementById('discountAmt').value) + parseFloat(ExactDiscAmt)
-                    }
-                    else if (type === 'decrement') {
-                        let totalPrice = parseFloat(totalInput.value)
-                        let quantity = parseFloat(showQty.value)
-                        ExactDiscAmt = parseFloat(discountAmt.innerText)/parseFloat(showQty.value)
-                        showQty.value = quantity - 1
-                        let addQty = parseFloat(showQty.value)
-                        console.log(addQty, price)
-                        totalInput.value = addQty * price
-                        cartTotal.value = parseFloat(cartTotal.value) - parseFloat(price)
-                        discountAmt.innerHTML = parseFloat(discountAmt.innerText) - parseFloat(ExactDiscAmt)
-                        document.getElementById('discountAmt').value = parseFloat(document.getElementById('discountAmt').value) - parseFloat(ExactDiscAmt)
-                    }
-                }
-
-
-
-
-
-                function saveOrder(data) {
-                    console.log('I am here...');
-                    axios.post('/shoppingcart', { cartData: data }) // Sending productID as data
-                        .then(function (response) {
-                            console.log('Product added to cart successfully', response);
-                            // Handle success response if needed
-                        })
-                        .catch(function (error) {
-                            console.error('Error adding product to cart:', error);
-                            // Handle error if needed
-                        });
-                }
-
-
-
-           
-
-
-
-
-
-            </script>
-
+            <script src="/assets/js/cart.js"></script>
 
 
 

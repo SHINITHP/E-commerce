@@ -112,7 +112,8 @@
 
                     <ul>
                         <a id="changeIcon">
-                            <li><i class="fa-regular fa-user menuIcon" style="color: black;"></i><span class="spanText">Account
+                            <li><i class="fa-regular fa-user menuIcon" style="color: black;"></i><span
+                                    class="spanText">Account
                                     Settings</span>
                                 <span>
                                     <i id="icon" class="fa rightAngle">&#xf107;</i>
@@ -121,13 +122,13 @@
                         </a>
 
 
-                        <a href="/Profile" id="DropDownLi1" >
-                            <li style="padding-left: 68px; background-color: #afafaf; height: 50px;">Profile Information <span><i
-                                        style="font-size:24px;color:#494949;padding-left:63px;"
+                        <a href="/Profile" id="DropDownLi1">
+                            <li style="padding-left: 68px; background-color: #afafaf; height: 50px;">Profile Information
+                                <span><i style="font-size:24px;color:#494949;padding-left:63px;"
                                         class="fa rightAngle">&#xf105;</i></span></li>
                         </a>
 
-                        <a href="profileMenu?menu=manageAddress" id="DropDownLi2" >
+                        <a href="profileMenu?menu=manageAddress" id="DropDownLi2">
                             <li style="padding-left: 68px; height: 50px;">Manage Address <span><i
                                         style="font-size:24px;color:#494949;padding-left:79px;"
                                         class="fa rightAngle">&#xf105;</i></span></li>
@@ -139,13 +140,14 @@
                             <li><i class="fa-solid fa-cart-shopping cartIcon menuIcon" style="color: black;"></i><span
                                     class="spanText">My
                                     Orders</span>
-                                <span >
+                                <span>
                                     <i style="font-size:24px;color:#494949;" class="fa rightAngle">&#xf105;</i>
                                 </span>
                             </li>
                         </a>
                         <a href="profileMenu?menu=wishlist">
-                            <li><i class="fa fa-heart menuIcon" style="color: black;"></i><span class="spanText">Wishlist</span>
+                            <li><i class="fa fa-heart menuIcon" style="color: black;"></i><span
+                                    class="spanText">Wishlist</span>
                                 <span>
                                     <i style="font-size:24px;color:#494949;" class="fa rightAngle">&#xf105;</i>
                                 </span>
@@ -163,96 +165,192 @@
                             <li><img src="/assets/images/logout.png" class="logoutImg"><span class="spanText"
                                     style="padding-left: 30px; font-size: 13pt;">Logout</span>
                                 <span>
-                                    <i style="font-size:24px;padding-left: 10px; color:#494949;" class="fa rightAngle">&#xf105;</i>
+                                    <i style="font-size:24px;padding-left: 10px; color:#494949;"
+                                        class="fa rightAngle">&#xf105;</i>
                                 </span>
                             </li>
                         </a>
                     </ul>
                 </div>
                 <div class="col-md-9 col-sm-12 col9">
-                    <div class="row" style="height: 80px;display: flex;align-items: center;justify-content: space-between;padding-left: 40px;padding-right: 40px;">
+                    <div class="row"
+                        style="height: 80px;display: flex;align-items: center;justify-content: space-between;padding-left: 40px;padding-right: 40px;">
                         <h3>Profile Information</h3>
                         <button class="btnEdit" id="edit">Edit</button>
                         <button class="btnEdit" id="cancelEdit" style="display: none;">Cancel</button>
                     </div>
-                    <div class="container"> 
+                    <div class="container">
                         <form action="/Profile?_method=PATCH" method="post">
-                        <div class="row">
-                            <% userInfo.forEach((data) => { %> 
-                           
-                            <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
-                                <label class="lbl" for="firstName">Full Name
-                                    <input type="text" class="form-control firstNameInput" name="fullName"
-                                        id="fullName" placeholder="Enter Full Name" required value="<%=data.fullName%>" readonly>
-                                </label>
+                            <div class="row">
 
-                                <label class="lbl" for="EmailAddress"> Email Address
-                                    <input type="email" class="form-control firstNameInput" name="emailAddress"
-                                        id="EmailAddress" placeholder="Enter Email Address" required value="<%=data.emailAddress%>" readonly>
-                                </label>
-                                <label class="lbl" for="EmailAddress"> City/District/Town
-                                    <input type="text" class="form-control firstNameInput" name="cityDistrictTown"
-                                        id="cityDistrictTown" placeholder="City/District/Town" required value="<%=data.cityDistrictTown%>" readonly>
-                                </label>
-                            
-                                <label class="lbl" for="State"> State
-                                    <select name="state" class="dropbtn firstNameInput" style="outline: none;"  id="State"  >
-                                        <option value="" <%= data.state === '' ? 'selected' :'' %>>Select State</option>
-                                        <option value="Kerala" <%= data.state === 'Kerala' ? 'selected' : '' %> >Kerala</option>
-                                        <option value="Karnadaka" <%= data.state === 'Karnadaka' ? 'selected' : '' %> >Karnadaka</option>
-                                        <option value="TamilNadu" <%= data.state === 'TamilNadu' ? 'selected' : '' %> >TamilNadu</option>
-                                    </select>
-                                </label>
-                            </div>
-                            <div class="col-6" style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
-                                <label class="lbl" for="MobileNo"> Mobile Number
-                                    <input type="text" class="form-control firstNameInput" name="mobileNo" id="MobileNo"
-                                        placeholder="Enter Mobile Number" required value="<%=data.phoneNo%>" readonly>
-                                </label>
-                                <label class="lbl" for="gender"> Gender
-                                    <div class="firstNameInput" style="padding-top: 10px; font-size: 12pt;">
-                                        <input type="radio" id="gender" name="gender" value="Male" <%= data.gender === 'Male' ? 'checked' : '' %> > Male
-                                        <input type="radio" name="gender" value="Female"  <%= data.gender === 'Female' ? 'checked' : '' %>> Female
+                                <% let selectedFound=false; userInfo.forEach((data)=> {
+                                    if(data.selected === true) {
+                                    %>
+                                    <div class="col-6"
+                                        style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                        <label class="lbl" for="firstName">Full Name
+                                            <input type="text" class="form-control firstNameInput" name="fullName"
+                                                id="fullName" placeholder="Enter Full Name" required
+                                                value="<%=data.fullName%>" readonly>
+                                        </label>
+
+                                        <label class="lbl" for="EmailAddress"> Email Address
+                                            <input type="email" class="form-control firstNameInput" name="emailAddress"
+                                                id="EmailAddress" placeholder="Enter Email Address" required
+                                                value="<%=data.emailAddress%>" readonly>
+                                        </label>
+                                        <label class="lbl" for="EmailAddress"> City/District/Town
+                                            <input type="text" class="form-control firstNameInput"
+                                                name="cityDistrictTown" id="cityDistrictTown"
+                                                placeholder="City/District/Town" required
+                                                value="<%=data.cityDistrictTown%>" readonly>
+                                        </label>
+
+                                        <label class="lbl" for="State"> State
+                                            <select name="state" class="dropbtn firstNameInput" style="outline: none;"
+                                                id="State">
+                                                <option value="" <%=data.state==='' ? 'selected' :'' %>>Select State
+                                                </option>
+                                                <option value="Kerala" <%=data.state==='Kerala' ? 'selected' : '' %>
+                                                    >Kerala</option>
+                                                <option value="Karnadaka" <%=data.state==='Karnadaka' ? 'selected' : ''
+                                                    %> >Karnadaka</option>
+                                                <option value="TamilNadu" <%=data.state==='TamilNadu' ? 'selected' : ''
+                                                    %> >TamilNadu</option>
+                                            </select>
+                                        </label>
                                     </div>
-                                </label>
-                                <label class="lbl" for="State"> Country
-                                    <select name="country" class="dropbtn firstNameInput"  style="outline: none;"   id="State"  >
-                                        <option value="" <%= data.country === '' ? 'selected' :'' %>>Select Country</option>
-                                        <option value="India" <%= data.country === 'India' ? 'selected' : '' %>  >India</option>
-                                        <option value="Australia" <%= data.country === 'Australia' ? 'selected' : '' %>>Australia</option>
-                                        <option value="New Zealand" <%= data.country === 'New Zealand' ? 'selected' : '' %>>New Zealand</option>
-                                    </select>
-                                </label>
-                                <label class="lbl" for="PinCode"> Pin-Code
-                                    <input type="text" class="form-control firstNameInput" name="pinCode"
-                                        id="PinCode" placeholder="Enter Pin-Code" required value="<%=data.pincode%>" readonly>
-                                </label>
+                                    <div class="col-6"
+                                        style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                        <label class="lbl" for="MobileNo"> Mobile Number
+                                            <input type="text" class="form-control firstNameInput" name="mobileNo"
+                                                id="MobileNo" placeholder="Enter Mobile Number" required
+                                                value="<%=data.phoneNo%>" readonly>
+                                        </label>
+                                        <label class="lbl" for="gender"> Gender
+                                            <div class="firstNameInput" style="padding-top: 10px; font-size: 12pt;">
+                                                <input type="radio" id="gender" name="gender" value="Male"
+                                                    <%=data.gender==='Male' ? 'checked' : '' %> > Male
+                                                <input type="radio" name="gender" value="Female"
+                                                    <%=data.gender==='Female' ? 'checked' : '' %>> Female
+                                            </div>
+                                        </label>
+                                        <label class="lbl" for="State"> Country
+                                            <select name="country" class="dropbtn firstNameInput" style="outline: none;"
+                                                id="State">
+                                                <option value="" <%=data.country==='' ? 'selected' :'' %>>Select Country
+                                                </option>
+                                                <option value="India" <%=data.country==='India' ? 'selected' : '' %>
+                                                    >India</option>
+                                                <option value="Australia" <%=data.country==='Australia' ? 'selected'
+                                                    : '' %>>Australia</option>
+                                                <option value="New Zealand" <%=data.country==='New Zealand' ? 'selected'
+                                                    : '' %>>New Zealand</option>
+                                            </select>
+                                        </label>
+                                        <label class="lbl" for="PinCode"> Pin-Code
+                                            <input type="text" class="form-control firstNameInput" name="pinCode"
+                                                id="PinCode" placeholder="Enter Pin-Code" required
+                                                value="<%=data.pincode%>" readonly>
+                                        </label>
+                                    </div>
+                                    <% selectedFound=true; } }); if (!selectedFound) { userData.forEach((data)=> {
+                                        %>
+                                        <div class="col-6"
+                                            style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                            <label class="lbl" for="firstName">Full Name
+                                                <input type="text" class="form-control firstNameInput" name="fullName"
+                                                    id="fullName" placeholder="Enter Full Name" required
+                                                    value="<%=data.userName%>" readonly>
+                                            </label>
+
+                                            <label class="lbl" for="EmailAddress"> Email Address
+                                                <input type="email" class="form-control firstNameInput"
+                                                    name="emailAddress" id="EmailAddress"
+                                                    placeholder="Enter Email Address" required
+                                                    value="<%=data.emailAddress%>" readonly>
+                                            </label>
+                                            <label class="lbl" for="EmailAddress"> City/District/Town
+                                                <input type="text" class="form-control firstNameInput"
+                                                    name="cityDistrictTown" id="cityDistrictTown"
+                                                    placeholder="City/District/Town" required value="" readonly>
+                                            </label>
+
+                                            <label class="lbl" for="State"> State
+                                                <select name="state" class="dropbtn firstNameInput"
+                                                    style="outline: none;" id="State">
+                                                    <option value="">Select State</option>
+                                                    <option value="Kerala">Kerala</option>
+                                                    <option value="Karnadaka">Karnadaka</option>
+                                                    <option value="TamilNadu">TamilNadu</option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                        <div class="col-6"
+                                            style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                            <label class="lbl" for="MobileNo"> Mobile Number
+                                                <input type="text" class="form-control firstNameInput" name="mobileNo"
+                                                    id="MobileNo" placeholder="Enter Mobile Number" required
+                                                    value="<%=data.phoneNo%>" readonly>
+                                            </label>
+                                            <label class="lbl" for="gender"> Gender
+                                                <div class="firstNameInput" style="padding-top: 10px; font-size: 12pt;">
+                                                    <input type="radio" id="gender" name="gender" value="Male"> Male
+                                                    <input type="radio" name="gender" value="Female"> Female
+                                                </div>
+                                            </label>
+                                            <label class="lbl" for="State"> Country
+                                                <select name="country" class="dropbtn firstNameInput"
+                                                    style="outline: none;" id="State">
+                                                    <option value="">Select Country</option>
+                                                    <option value="India">India</option>
+                                                    <option value="Australia">Australia</option>
+                                                    <option value="New Zealand">New Zealand</option>
+                                                </select>
+                                            </label>
+                                            <label class="lbl" for="PinCode"> Pin-Code
+                                                <input type="text" class="form-control firstNameInput" name="pinCode"
+                                                    id="PinCode" placeholder="Enter Pin-Code" required value=""
+                                                    readonly>
+                                            </label>
+                                        </div>
+                                        <% }); } %>
+
+
+
+
+
+
+
+
                             </div>
-                        
-                            <% }) %>
-                          
-                        </div>
-                         <a  style="width: 100%;display: flex; justify-content: center;">
-                            <input type="submit" class="saveChanges" id="savebtn">
-                         </a>
+                            <a style="width: 100%;display: flex; justify-content: center;">
+                                <input type="submit" class="saveChanges" id="savebtn">
+                            </a>
                         </form>
                     </div>
 
 
                     <div class="row" style="margin-top: 20px;">
-                        <h5 style="width: 100%; display: flex; justify-content: center;font-family: Poppins; font-size: 17pt;font-weight: bold;">FAQs</h5>
-                        <div class="container"  style="padding-left: 100px;padding-right: 100px; min-height: 250px; display: flex;flex-direction: column; justify-content: space-around;">
-                            
-                        <p>What happens when I update my email address (or mobile number)?</p> 
-                        <p>Your login email id (or mobile number) changes, likewise. You'll receive all your account related 
-                            communication on your updated email address (or mobile number).</p> 
-                           
-                        <p>What happens to my existing Flipkart account when I update my email address (or mobile number)?</p> 
-                        <p>Updating your email address (or mobile number) doesn't invalidate your account. Your account 
-                            remains fully functional. You'll continue seeing your Order history, saved information 
-                            and personal details.</p>
+                        <h5
+                            style="width: 100%; display: flex; justify-content: center;font-family: Poppins; font-size: 17pt;font-weight: bold;">
+                            FAQs</h5>
+                        <div class="container"
+                            style="padding-left: 100px;padding-right: 100px; min-height: 250px; display: flex;flex-direction: column; justify-content: space-around;">
+
+                            <p>What happens when I update my email address (or mobile number)?</p>
+                            <p>Your login email id (or mobile number) changes, likewise. You'll receive all your account
+                                related
+                                communication on your updated email address (or mobile number).</p>
+
+                            <p>What happens to my existing Flipkart account when I update my email address (or mobile
+                                number)?</p>
+                            <p>Updating your email address (or mobile number) doesn't invalidate your account. Your
+                                account
+                                remains fully functional. You'll continue seeing your Order history, saved information
+                                and personal details.</p>
                         </div>
-                     
+
                     </div>
 
                 </div>
@@ -277,11 +375,11 @@
 
                     <button type="button" id="cropBtn" class="crop"><span><i class="fa-solid fa-crop"
                                 style="color: #ffffff;"></i></span>Crop</button>
-                        <!-- <form action="/Profile" method="post">
+                    <!-- <form action="/Profile" method="post">
                              <button type="submit" id="" class="crop"><span><i class="fa-solid fa-crop"
                                     style="color: #ffffff;"></i></span>Save</button>
                         </form>    -->
-                   
+
 
                 </div>
             </div>

@@ -1,44 +1,22 @@
 const express = require('express')
 const router = express.Router()
 const {
-    landingPage,
-    loginPage,
-    userLogin,
-    profile,
-    shoppingCart,
-    sendEmailOtp,
-    postsendEmailOtp,
-    forgotEnterOtp,
-    postForgotEnterOtp,
-    resetPassword,
-    createPassword,
-    registerPage,
-    logout,
-    createUser,
-    enterOtp,
-    google,
-    sentOTP,
-    profileMenu,
-    resendOtp,
-    productOverview,
-    filterProducts,
-    saveUserAddress,
-    saveImage,
-    addToCart,
-    overviewFilter,
-    checkOut,
-    orderDetails,
-    checkOutTasks,updateProfile,updateCheckout,removeCartProduct
-} = require("../../controller/userConroller.js");
+    registerPage, removeCartProduct, updateCheckout, landingPage, loginPage, userLogin,
+    logout, profile, profileMenu, google, shoppingCart, updateCart, sendEmailOtp, postsendEmailOtp,
+    forgotEnterOtp, postForgotEnterOtp, resetPassword, createPassword, saveUserAddress, filterProducts,
+    enterOtp, sentOTP, createUser, resendOtp, productOverview, saveImage, overviewFilter, checkOut,
+    checkOutTasks, orderDetails, updateProfile
+} = require("../../controller/user/userConroller.js");
+
 const { userAuth } = require('../../middlewares/authMiddleware.js')
 const passport = require('passport')
-require('../../controller/googleOuath.js')
+require('../../controller/user/googleOuath.js')
 const jwt = require('jsonwebtoken');
 
 
-router.route('/').get(landingPage).post(addToCart)//landinglage 
+router.route('/').get(landingPage)//landinglage 
 router.route('/register').get(registerPage).post(sentOTP)//user registration 
-router.route('/enterOtp').get(enterOtp).post(createUser)//enterOtp
+router.route('/enterOtp').get(userAuth,enterOtp).post(createUser)//enterOtp
 router.route('/login').get(loginPage).post(userLogin)//loginpage
 router.route('/google').get(passport.authenticate('google', { scope: ['profile', 'email'] }))
 router.route('/google/redirect').get(passport.authenticate('google'), (req, res) => {
@@ -50,8 +28,8 @@ router.route('/google/redirect').get(passport.authenticate('google'), (req, res)
     res.cookie('jwtUser', token);
     res.redirect('/')
 })
-router.route('/shoppingcart').get(userAuth,shoppingCart).post(orderDetails).delete(removeCartProduct)//shoppingcart 
-router.route('/sendEmailOtp').get(sendEmailOtp).post(postsendEmailOtp)//enter email page to send otp for forgotpassword
+router.route('/shoppingcart').get(userAuth, shoppingCart).post(orderDetails).patch(updateCart).delete(removeCartProduct)//shoppingcart 
+router.route('/sendEmailOtp').get(userAuth,sendEmailOtp).post(postsendEmailOtp)//enter email page to send otp for forgotpassword
 router.route('/forgotEnterOtp').get(forgotEnterOtp).post(postForgotEnterOtp)// Enter otp for forgotpassword
 router.route('/resetPassword').get(resetPassword).patch(createPassword)// resetpassword page
 router.route('/resendOtp').post(resendOtp)//resend otp 
@@ -59,11 +37,9 @@ router.route('/productOverview').get(productOverview).post(overviewFilter)//prod
 router.route('/allProducts').get(landingPage)//allProducts
 router.route('/filterProducts').get(filterProducts)
 router.route('/filterCategory').get(landingPage)//listCategory
-router.route('/Profile').get(userAuth,profile).patch(updateProfile)
-router.route('/checkOut').get(userAuth,checkOut).post(checkOutTasks)
-router.route('/checkOut').put(updateCheckout)
+router.route('/Profile').get(userAuth, profile).patch(updateProfile)
+router.route('/checkOut').get(userAuth, checkOut).post(checkOutTasks).put(updateCheckout)
 router.route('/logout').get(logout)//logout
-router.route('/profileMenu').get(profileMenu).post(saveUserAddress)
-router.route('/profileMenu').put(saveUserAddress)
+router.route('/profileMenu').get(userAuth,profileMenu).post(saveUserAddress).put(saveUserAddress)
 
 module.exports = router

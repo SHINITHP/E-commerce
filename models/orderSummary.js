@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const shoppingCartModel = new mongoose.Schema({
+const orderSummaryModel = new mongoose.Schema({
     userID:{
         type:mongoose.Schema.ObjectId, ref:"userRegister",
         required:true
@@ -8,13 +8,12 @@ const shoppingCartModel = new mongoose.Schema({
     productID:{
         type:mongoose.Schema.ObjectId,ref:"ProductDetails",
         required:true
-        // unique: true // Ensure productID is unique
     },
     quantity:{
         type:Number,
         required:true
     },
-    price:{
+    totalPrice:{
         type:Number,
         required:true
     },
@@ -24,4 +23,4 @@ const shoppingCartModel = new mongoose.Schema({
 })
 
 
-module.exports = mongoose.model("shoppingCart", shoppingCartModel);
+module.exports = mongoose.model("orderSummary", orderSummaryModel);

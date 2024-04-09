@@ -45,10 +45,10 @@
                                 class="btnvalue">Products</span></button>
                     </a>
                     <a href="Category">
-                         <button class="btns btnCategory btnColor"><img class="img" src="/assets/images/grid.png" alt=""><span
-                            class="btnvalue"><span>Category</span></button>
+                        <button class="btns btnCategory btnColor"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue"><span>Category</span></button>
                     </a>
-                   
+
                     <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png" alt=""><span
                             class="btnvalue">Order History</span></button>
                     <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
@@ -72,11 +72,11 @@
                         </div>
                         <div class="col-5 cols">
                             <div class="col-12 col1">
-                                <form action="/adminLogin/ProductList/search" method="post">
+                                <form>
                                     <input type="text" class="searchInput" name="search" required="true"
-                                        id="exampleFormControlInput1" placeholder="Search ">
-                                    <span> <button class="btnSearch" type="submit"><a><i
-                                                    class="fa-solid fa-magnifying-glass searchBtn"
+                                        id="searchInput" placeholder="Search ">
+                                    <span> <button onclick="searchCategory()" class="btnSearch" type="button"><a id="searchLink"
+                                                ><i class="fa-solid fa-magnifying-glass searchBtn"
                                                     style="color: #8b8e99;"></i></a> </button></span>
                                 </form>
                             </div>
@@ -84,45 +84,45 @@
                         <div class="col-4 cols">
                             <a href="/Export"><button class="btnExport"><span><i class="fa-solid fa-download"
                                             style="color: #ffffff;"></i></span>Export Info</button></a>
-                            <span> <a href="addCategory"><button class="btnAddProducts"><span><i
-                                                class="fa-regular fa-" style="color: #ffffff;"></i></span>Add
-                                                Category</button></span></a>
+                            <span> <a href="addCategory"><button class="btnAddProducts"><span><i class="fa-regular fa-"
+                                                style="color: #ffffff;"></i></span>Add
+                                        Category</button></span></a>
                         </div>
                     </div>
                     <div class="row row-Filter">
 
                         <div class="col-2 box">
                             <a href="/adminLogin/FilterCategory?Category=All" class="a-tag-box">
-                                <img src="/assets/images/explore-image-01.jpg" class="image" alt=""> 
+                                <img src="/assets/images/explore-image-01.jpg" class="image" alt="">
                                 <span class="text">Category</span>
                             </a>
                         </div>
-                        
-                            <div class="col-2 box">
-                                <a href="/adminLogin/FilterCategory?Category=Mens" class="a-tag-box">
-                                    <img src="/assets/images/MenCat.jpg" class="image" alt=""> 
-                                    <span class="text">Men's</span>
-                                </a>
-                            </div>
-                        
-                       
+
                         <div class="col-2 box">
-                            <a href="/adminLogin/FilterCategory?Category=Womens" class="a-tag-box">
-                                <img src="/assets/images/womenCat.jpg" class="image" alt=""> 
+                            <a href="/adminLogin/FilterCategory?Category=Mens&task=subCat" class="a-tag-box">
+                                <img src="/assets/images/MenCat.jpg" class="image" alt="">
+                                <span class="text">Men's</span>
+                            </a>
+                        </div>
+
+
+                        <div class="col-2 box">
+                            <a href="/adminLogin/FilterCategory?Category=Womens&task=subCat" class="a-tag-box">
+                                <img src="/assets/images/womenCat.jpg" class="image" alt="">
                                 <span class="text">Women's</span>
                             </a>
                         </div>
                         <div class="col-2 box">
-                            <a href="/adminLogin/FilterCategory?Category=Kids" class="a-tag-box">
-                                <img src="/assets/images/kid-03.jpg" class="image" alt=""> 
+                            <a href="/adminLogin/FilterCategory?Category=Kids&task=subCat" class="a-tag-box">
+                                <img src="/assets/images/kid-03.jpg" class="image" alt="">
                                 <span class="text">Kid's</span>
                             </a>
                         </div>
-                        
+
                     </div>
 
                     <div class="row row3">
-                      
+
                         <table class="table table1">
                             <thead class="thead tableHead">
                                 <tr>
@@ -132,65 +132,74 @@
                                     <th scope="col">Inventory</th>
                                     <th scope="col">Added</th>
                                     <th scope="col">Action</th>
-                                   
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <% categoryData.forEach((data,index)=> { %>
                                     <tr class="tableRow">
-                                        <th scope="row" style="width: 30px;"><%= index +1 %></th>
+                                        <th scope="row" style="width: 30px;">
+                                            <%= index +1 %>
+                                        </th>
                                         <td style="text-align: left;padding-left: 30px;">
-                                            <img src="<%=data.image[0].url%>"
-                                                style="border: 1px solid rgb(80, 80, 80);" class="imageBox" alt="">
+                                            <img src="<%=data.image[0].url%>" style="border: 1px solid rgb(80, 80, 80);"
+                                                class="imageBox" alt="">
                                             <span style="padding-left: 20px;">
-                                                 <%=data.subCategory%>
+                                                <%=data.subCategory%>
                                             </span>
                                         </td>
-                                        <td> 
-                                          <%=data._id%>
+                                        <td>
+                                            <%=data._id%>
                                         </td>
                                         <td>
                                             <%=data.Inventory%>
                                         </td>
                                         <td>
                                             <%=data.added.toLocaleDateString()%>
-                                            
-                                        </td>
-                                        <td class="icon-cell"  >
-                                            <a href="Category/<%=data._id%>"><i
-                                                    class="fa-solid fa-pen edit" style="color: #5e5e5e;"></i></a>
-                                            <span class="listed" >
-                                                <form class="actionForm" method="post" action="Category?ID=<%=data._id%>&_method=PATCH">
-                                                <% if(data.Inventory==="Listed") {%>
-                                                    <button class="iconbtns">
-                                                        <a id="activeIcon" onclick="AlertBox('activeIcon')">
-                                                            <i class="fa-solid fa-eye" style="color: #5e5e5e;"></i>
-                                                        </a>
-                                                    </button>
 
-                                                    <% } else if(data.Inventory==="Unlisted") {%>
+                                        </td>
+                                        <td class="icon-cell">
+                                            <a href="Category/<%=data._id%>"><i class="fa-solid fa-pen edit"
+                                                    style="color: #5e5e5e;"></i></a>
+                                            <span class="listed">
+                                                <form class="actionForm" method="post"
+                                                    action="Category?ID=<%=data._id%>&_method=PATCH">
+                                                    <% if(data.Inventory==="Listed" ) {%>
                                                         <button class="iconbtns">
-                                                            <a id="blockedIcon" onclick="AlertBox('blockedIcon')">
-                                                                <i class="fa-solid fa-eye-slash"
-                                                                    style="color: #5e5e5e;"></i>
+                                                            <a id="activeIcon" onclick="AlertBox('activeIcon')">
+                                                                <i class="fa-solid fa-eye" style="color: #5e5e5e;"></i>
                                                             </a>
                                                         </button>
 
-                                                     <% } %>     
-                                            </form>
-                                            </span>
-                                            <span class="delete"><a href="">
-                                                <form action="deleteInventory?delete=Category&id=<%= data._id %>&_method=DELETE">
-                                                <i id="dltBtn" onclick="AlertBox('dltBtn')" class="fa-solid fa-trash " style="color: #5e5e5e;"></i></a>
+                                                        <% } else if(data.Inventory==="Unlisted" ) {%>
+                                                            <button class="iconbtns">
+                                                                <a id="blockedIcon" onclick="AlertBox('blockedIcon')">
+                                                                    <i class="fa-solid fa-eye-slash"
+                                                                        style="color: #5e5e5e;"></i>
+                                                                </a>
+                                                            </button>
+
+                                                            <% } %>
                                                 </form>
                                             </span>
-                                            
-                                         
+                                            <span class="delete"><a href="">
+                                                    <form
+                                                        action="deleteInventory?delete=Category&id=<%= data._id %>&_method=DELETE"
+                                                        method="post">
+                                                        <button
+                                                            style="border: none;outline: none; background-color: transparent;"
+                                                            type="submit"><i id="dltBtn" onclick="AlertBox('dltBtn')"
+                                                                class="fa-solid fa-trash " style="color: #5e5e5e;"></i>
+                                                </a></button>
+                                                </form>
+                                            </span>
+
+
                                         </td>
 
                                     </tr>
                                     <% }) %>
-                                    
+
                             </tbody>
 
                         </table>
@@ -206,29 +215,37 @@
                 </div>
 
                 <script>
-                    
-                function AlertBox(value){
-                    const myForm = document.getElementById(value);
-    
-                    if(value == 'activeIcon'){
-                        const confirmation = confirm('Are you sure to Block the user?');
-                        if (!confirmation) {
-                            event.preventDefault(); // Prevent form submission
-                        }
-                    }else if(value == 'blockedIcon'){
-                        const confirmation = confirm('Are you sure to Unblock the user?');
-                        if (!confirmation) {
-                            event.preventDefault(); // Prevent form submission
-                        }
-                       
-                    }else if(value == 'dltBtn'){
-                        const confirmation = confirm('Are you sure to Delete the product?');
-                        if (!confirmation) {
-                            event.preventDefault(); // Prevent form submission
-                        }
+
+                    function searchCategory() {
+                        const searchInput = document.getElementById('searchInput').value
+                        let searchLink = document.getElementById("searchLink");
+                        console.log(searchInput)
+                        searchLink.href = "FilterCategory?Category=search&text=" + searchInput;
                     }
-    
-                }
+
+                    function AlertBox(value) {
+                        const myForm = document.getElementById(value);
+
+                        if (value == 'activeIcon') {
+                            const confirmation = confirm('Are you sure to Block the user?');
+                            if (!confirmation) {
+                                event.preventDefault(); // Prevent form submission
+                            }
+                        } else if (value == 'blockedIcon') {
+                            const confirmation = confirm('Are you sure to Unblock the user?');
+                            if (!confirmation) {
+                                event.preventDefault(); // Prevent form submission
+                            }
+
+                        } else if (value == 'dltBtn') {
+                            const confirmation = confirm('Are you sure to Delete the product?');
+                            if (!confirmation) {
+                                console.log('dfsjdjgfds  ')
+                                event.preventDefault(); // Prevent form submission
+                            }
+                        }
+
+                    }
                 </script>
 
 
