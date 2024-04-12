@@ -162,7 +162,7 @@ const registerPage = (req, res) => {
 
 //show enterOTP for registration
 const enterOtp = (req, res) => {
-  res.render('user/enterOtp',{message:''})
+  res.render('user/enterOtp',{message:'',timer:'2:00'})
 }
 
 // show login page
@@ -397,14 +397,15 @@ const overviewFilter = async (req, res) => {
       const size = req.body.size != undefined ? req.body.size : productData.ProductSize[0].size;
       let quantity = req.body.quantity ;
 
-      console.log(productData, price, userID, size, req.body.proDiscount)
+      console.log('productData',productData)
 
       const data = {
         userID,
         productID,
         quantity,
         totalPrice: price * quantity - req.body.proDiscount * quantity,
-        size
+        size,
+        totalDiscount: productData.MRP * quantity
       }
       // console.log('Received cart data:', size);
       await addtToCartModel.create(data)
@@ -496,7 +497,8 @@ const checkOut = async (req, res) => {
 // }
 const orderDetails = async (req, res) => {
   const cartItems = JSON.parse(req.body.cartData);
-
+  console.log('cartItems',cartItems)
+  console.log('cartItems.totalDiscount',cartItems.totalDiscount)
   try {
     for (const item of cartItems) {
       const { userID, productID, quantity, size, totalPrice } = item;
@@ -507,7 +509,7 @@ const orderDetails = async (req, res) => {
           productID: productID._id,
           quantity: quantity,
           size: size,
-          totalPrice: totalPrice
+          totalPrice: totalPrice,
         });
 
         if (!existingItem) {
@@ -516,7 +518,8 @@ const orderDetails = async (req, res) => {
             productID: productID._id,
             quantity: quantity,
             size: size,
-            totalPrice: totalPrice
+            totalPrice: totalPrice,
+            totalDiscount: item.totalDiscount
           });
         }
       }
@@ -777,7 +780,7 @@ const sentOTP = async (req, res) => {
     //save the otp to the database
     const otpPayload = { emailAddress, otp };
     await OTPModel.create(otpPayload);
-    res.render('user/enterOtp',{message:''})//render the enterotp page
+    res.render('user/enterOtp',{message:'',timer:'2:00'})//render the enterotp page
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ success: false, error: error.message });
@@ -789,6 +792,7 @@ const sentOTP = async (req, res) => {
 const resendOtp = async (req, res) => {
   try {
     const emailAddress = GlobalUser.emailAddress
+    console.log(GlobalUser.emailAddress)
     //generate OTP 
     otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
@@ -804,6 +808,7 @@ const resendOtp = async (req, res) => {
     }
     const otpPayload = { emailAddress, otp };
     const otpBody = await OTPModel.create(otpPayload);
+    res.render('user/enterOtp',{message:'',timer:'2:00'})
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ success: false, error: error.message });
@@ -813,11 +818,12 @@ const resendOtp = async (req, res) => {
 
 //save the user data to mongodb when the user enter the correct otp.
 const createUser = async (req, res) => {
+  let timer = req.body.Timer;
+  console.log(req.body.otp)
   try {
     const emailAddress = GlobalUser.emailAddress
     const password = GlobalUser.password
-
-
+   
     const { otp1, otp2, otp3, otp4, otp5, otp6 } = req.body
     const combinedOTP = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
     // Find the most recent OTP for the email
@@ -825,8 +831,10 @@ const createUser = async (req, res) => {
     // console.log( response[0].otp, 'dshsdsdmn :', otp, combinedOTP)
 
     if (combinedOTP !== response[0].otp) {
-      res.render('user/enterOtp',{ message:'Invalid OTP' })
-    } else {
+      console.log(timer)
+      console.log(' i am heree at otp')
+      // res.render('user/enterOtp',{ message:'Invalid OTP' , timer:'2:00'})
+    } else{ 
       console.log('i am here !!! ')
       // Secure password
       let hashedPassword;
@@ -851,8 +859,8 @@ const createUser = async (req, res) => {
     }
 
   } catch (error) {
-    console.log(error.message);
-    return res.status(500).json({ success: false, error: error.message });
+    // console.log(error.message);
+    res.render('user/enterOtp',{ message:'OTP Time Out' , timer : timer})
   }
 }
 //..................................................................................................................................................
@@ -1018,9 +1026,11 @@ const updateCart = async (req, res) => {
     const token = req.cookies.jwtUser; // Assuming token is stored in cookies
     const userID = verifyToken(token);
 
-    console.log('req.body.newQty ', req.body.totalPrice)
 
-    await addtToCartModel.findByIdAndUpdate(req.body.id, { $set: { quantity: req.body.newQty, totalPrice: req.body.totalPrice } })
+    const data = await addtToCartModel.findById(req.body.id).populate('productID')
+    console.log('data',data)
+    console.log('data[0].productID.SalesRate * req.body.newQty',data.productID.SalesRate * req.body.newQty);
+    await addtToCartModel.findByIdAndUpdate(req.body.id, { $set: { quantity: req.body.newQty, totalPrice: data.productID.SalesRate * req.body.newQty,totalDiscount:data.productID.MRP * req.body.newQty} })
 
   } catch (error) {
     console.log(error)

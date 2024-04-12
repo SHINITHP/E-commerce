@@ -156,13 +156,13 @@
                         <div class="col-2 colms2">
                             <div class="quantity">
                                 <div class="proQty">
-                                    <a href=""><input type="button"
-                                        onclick="quantityIncDec('<%=index%>','<%=item._id%>','<%= item.productID.SalesRate %>','decrement')"
+                                    <a ><input type="button"
+                                        onclick="quantityIncDec('<%=index%>','<%=item._id%>','<%= JSON.stringify(cartItems) %>','decrement')"
                                         id="decrement<%=index%>" class="inc-dec dec" value="-"></a>
                                     <input type="text" class="Qty" id="showQty<%=index%>" readonly
                                         value="<%=item.quantity%>">
-                                        <a href=""><input type="button" id="increment<%=index%>"
-                                            onclick="quantityIncDec('<%=index%>','<%=item._id%>','<%= item.productID.SalesRate %>','increment')"
+                                        <a><input type="button" id="increment<%=index%>"
+                                            onclick="quantityIncDec('<%=index%>','<%=item._id%>','<%= JSON.stringify(cartItems) %>','increment')"
                                             class="inc-dec" value="+"></a>
                                     
                                 </div>
@@ -172,7 +172,7 @@
                             <!-- <p class="totalAmount" id="totalPrice" style="font-size: 13pt; font-family: Poppins;"> -->
                             <i class="fa-solid fa-indian-rupee-sign" style=" font-size:13pt;padding-right: 3px;"></i>
                             <input type="text" id="totalPrice<%=index%>" class="TotalAmount" readonly
-                                value="<%= item.totalPrice %>">
+                                value="<%= item.productID.SalesRate * item.quantity %>">
                             <!-- </p> -->
                         </div>
                         <div class="col-1 colms2">
@@ -217,19 +217,22 @@
                                         <li>Items(<%= count %>) <span
                                             style="display: flex; align-items: center;justify-content: center;"><i
                                                 class="fa-solid fa-indian-rupee-sign" style=" font-size:13pt;"></i>
+                                               <% let totalPrice = cartItems.reduce((acc, curr) => acc + (curr.productID.MRP * curr.quantity), 0); %>
                                             <input type="text" id="ExactPrice" class="cartAmount" readonly
-                                                value="">
+                                                value="<%= totalPrice %>">
                                         </span></li>
+                                        <% let totalDiscount = cartItems.reduce((acc, curr) => acc + (curr.totalDiscount - (curr.productID.SalesRate * curr.quantity)), 0); %>
                                         <li>Discount <span
                                                 style="display: flex; align-items: center;justify-content: center;">-<i
                                                     class="fa-solid fa-indian-rupee-sign" style=" font-size:13pt;"></i>
                                                 <input type="text" id="discountAmt" class="cartAmount" readonly style="text-decoration: line-through;"
-                                                    value="">
+                                                    value="<%=totalDiscount%>">
                                             </span></li>
+                                            <% let cartTotal = cartItems.reduce((acc,curr) => acc + (curr.totalPrice),0); %>
                                         <li>Total Amount<span
                                                 style="display: flex; align-items: center;justify-content: center;"><i
                                                     class="fa-solid fa-indian-rupee-sign" style=" font-size:13pt;"></i>
-                                                <input type="text" id="cartTotal" class="cartAmount" readonly value="">
+                                                <input type="text" id="cartTotal" class="cartAmount" readonly value="<%= cartTotal %>">
                                             </span></li>
 
                                     </ul>

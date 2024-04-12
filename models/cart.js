@@ -15,6 +15,9 @@ const shoppingCartModel = new mongoose.Schema({
         type:Number,
         required:true
     },
+    totalDiscount:{
+        type:String
+    },
     size:{
         type:String
     },

@@ -17,6 +17,10 @@ const orderSummaryModel = new mongoose.Schema({
         type:Number,
         required:true
     },
+    totalDiscount:{
+        type:String,
+        required:true
+    },
     size:{
         type:String
     }

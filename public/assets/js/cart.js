@@ -32,38 +32,44 @@ let totalDiscount =0,totalMrp=0;
 for(let i=0;i<salesRate.length;i++){
     totalDiscount += parseFloat(discount[i].innerText) - parseFloat(salesRate[i].innerText) 
     console.log('totalDiscount',totalDiscount)
-    document.getElementById('discountAmt').value = totalDiscount
+    // document.getElementById('discountAmt').value = totalDiscount
     totalMrp += parseFloat(discount[i].innerText)
-    document.getElementById('ExactPrice').value =totalMrp
-    cartTotal.value = parseFloat(document.getElementById('ExactPrice').value)-totalDiscount
+    // cartTotal.value = parseFloat(document.getElementById('ExactPrice').value)-totalDiscount
 }
 
 
 
-function quantityIncDec(index,id, price, type) {
+
+function quantityIncDec(index,id, Products, type) {
     const showQty = document.getElementById(`showQty${index}`)
     const totalInput = document.getElementById(`totalPrice${index}`)
     const discountAmt = document.getElementById(`discount${index}`)
+    let product = JSON.parse(Products)
+    console.log('product ',product)
+    let productDetails = product.filter((val) => val._id === id)
+
+    
+    let price = productDetails[0].productID.SalesRate;
+    // let proDiscount = productDetails[0].productID.MRP  - productDetails[0].productID.SalesRate 
+    // let MRP = productDetails[0].productID.MRP
+    
+    // console.log('productDetails ',proDiscount)
     let ExactDiscAmt;
     if (type === 'increment') {
         let quantity = parseFloat(showQty.value)
         showQty.value = quantity + 1
-        let mrp = parseFloat(discountAmt.innerText)/parseFloat(showQty.value)
-        discountAmt.innerHTML =  12133
+        // let mrp = parseFloat(discountAmt.innerText)/parseFloat(showQty.value)
         let addQty = parseFloat(showQty.value)
-        totalInput.value = price*addQty
+        // document.getElementById('discountAmt').value = proDiscount *addQty
         
-        console.log('mrp * addQty',mrp )
-        // let totalPrice = parseFloat(totalInput.value)
-        // ExactDiscAmt = parseFloat(discountAmt.innerText) / parseFloat(showQty.value)
-        // discountAmt.innerHTML = parseFloat(discountAmt.innerText) + parseFloat(ExactDiscAmt)
-        // totalInput.value = addQty * price - parseFloat(discountAmt.innerText)
-        // document.getElementById('discountAmt').value = parseFloat(document.getElementById('discountAmt').value) + parseFloat(ExactDiscAmt)
-
-        axios.patch('/shoppingcart', { newQty:addQty ,id,totalPrice:totalInput.value}) // Sending productID as data
+        // console.log('mrp * addQty',mrp )
+      
+        // document.getElementById('ExactPrice').value =parseFloat(document.getElementById('ExactPrice').value) + mrp
+        axios.patch('/shoppingcart', { newQty:addQty ,id}) // Sending productID as data
         .then(function (response) {
             console.log('Product added to cart successfully', response);
             // Handle success response if needed
+            
         })
         .catch(function (error) {
             console.error('Error adding product to cart:', error);
@@ -77,17 +83,9 @@ function quantityIncDec(index,id, price, type) {
         let quantity = parseFloat(showQty.value)
         showQty.value = quantity - 1
         let addQty = parseFloat(showQty.value)
-        totalInput.value = price*addQty
-        // let totalPrice = parseFloat(totalInput.value)
-        // let quantity = parseFloat(showQty.value)
-        // ExactDiscAmt = parseFloat(discountAmt.innerText) / parseFloat(showQty.value)
-        // showQty.value = quantity - 1
-        // let addQty = parseFloat(showQty.value)
-        // discountAmt.innerHTML = parseFloat(discountAmt.innerText) - parseFloat(ExactDiscAmt)
-        // totalInput.value = addQty * price - parseFloat(discountAmt.innerText)
-        // document.getElementById('discountAmt').value = parseFloat(document.getElementById('discountAmt').value) + parseFloat(ExactDiscAmt)
+        // totalInput.value = price*addQty
 
-        axios.patch('/shoppingcart', { newQty:addQty ,id,totalPrice:totalInput.value}) // Sending productID as data
+        axios.patch('/shoppingcart', { newQty:addQty ,id}) // Sending productID as data
         .then(function (response) {
             console.log('Product added to cart successfully', response);
             // Handle success response if needed
