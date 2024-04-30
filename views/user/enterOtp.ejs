@@ -60,7 +60,7 @@
                 </div>
                 <div class="col-12 col2">
                     
-                    <p id="timer" class="timer "><span id="countdown"><%=timer%></span></p>
+                    <p id="timer" class="timer "><span id="countdown">2:00</span></p>
                     <div class="position-relative otpContainer">
                         <div class="card p-2 text-center">
                             <h6>Please enter the one time password <br> to verify your account</h6>
@@ -121,31 +121,7 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
        
-        const Timer = document.getElementById('countdown').innerText;
-                
-
-        document.getElementById('btnValidate').addEventListener('click', function () {
-            let opt1 = document.getElementById('first').value;
-            let opt2 = document.getElementById('second').value;
-            let opt3 = document.getElementById('third').value;
-            let opt4 = document.getElementById('fourth').value;
-            let opt5 = document.getElementById('fifth').value;
-            let opt6 = document.getElementById('sixth').value;
-            
-            let otp = opt1 + opt2 + opt3 + opt4 + opt5 + opt6;
-            
-            console.log(otp, 'combined otp')
-            axios.post('/enterOtp', { Timer, otp }) // Sending productID as data
-                .then(function (response) {
-                    console.log(response)
-                    // Handle success response if needed
-                })
-                .catch(function (error) {
-                    console.error('Error adding product to cart:', error);
-                    // Handle error if needed
-                });
-
-        })
+       
 
         var timer;
         var minutes = 2;

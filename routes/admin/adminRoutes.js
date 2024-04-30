@@ -4,7 +4,9 @@ const {
     adminLogin, adminLoginPost, productList, productListEdit,
     addProductsPost, adminDashboard, CustomerDetails, categoryPost,
     categoryEdit, updateUser, productSearch, Category, postAddCategory,
-    postEditProduct, logout,CustomerFilter,deleteInventory,filterCategory,orderHistory,OrderTasks,messageBox,updateRequest
+    postEditProduct, logout,CustomerFilter,deleteInventory,filterCategory,
+    orderHistory,OrderTasks,messageBox,updateRequest,coupon,couponTasks,salesReport,
+    offers,salesFilter,offerTasks,editOffer,DeleteOffer,deletCoupon
 } = require('../../controller/admin/adminController.js')
 const upload = require('../../controller/admin/multer.js')
 const adminAuth = require('../../middlewares/adminMiddleware.js')
@@ -24,6 +26,9 @@ router.route('/Category/:id').get(adminAuth,Category).put(upload.array('images')
 router.route('/addCategory').get(adminAuth,Category).post(upload.array('images'), postAddCategory)//addcategory page
 router.route('/filterCategory').get(adminAuth,filterCategory)
 router.route('/adminLogout').get(logout)//logout
-router.route('/orderHistory').get(orderHistory).patch(OrderTasks)
-router.route('/messageBox').get(messageBox).patch(updateRequest)
+router.route('/orderHistory').get(adminAuth,orderHistory).patch(OrderTasks)
+router.route('/messageBox').get(adminAuth,messageBox).patch(updateRequest)
+router.route('/coupon').get(adminAuth,coupon).post(couponTasks).patch(couponTasks).delete(deletCoupon)
+router.route('/salesReport').get(adminAuth,salesReport).post(salesFilter)
+router.route('/offers').get(adminAuth,offers).post(offerTasks).patch(editOffer).delete(DeleteOffer)
 module.exports = router  

@@ -53,6 +53,17 @@ const orderModel = new mongoose.Schema({
     reqDate:{
         type:Date,
         default:Date.now
+    },
+    rejected:{
+        type:Boolean,
+        default:false
+    },
+    return:{
+        type:Boolean,
+        default:false
+    },
+    couponDiscount:{
+        type:Number
     }
 
 })

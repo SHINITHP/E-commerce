@@ -1,3 +1,17 @@
+function validateImageFile() {
+    var input = document.getElementById("input-file3");
+    var file = input.files[0];
+    
+    if (file) {
+        var fileType = file.type.split("/")[0]; // Get the file type (e.g., "image" for image files)
+        if (fileType !== "image") {
+            alert("Please select a valid image file.");
+            input.value = ""; // Clear the file input
+        }
+    }
+}
+
+
 function handleImageInput(inputId, previewId) {
     const input = document.getElementById(inputId);
     const preview = document.getElementById(previewId);

@@ -115,7 +115,7 @@
 
                 <div class="col-12 orderSummary">
                     <h1>Order Summary</h1>
-                    <% let count = 0%>
+                    <% let count = 0 , discount %>
                     <% cartDetails.forEach((item,index)=> { %>
                         <% count = (index +1) %> 
                             <div class="col-12 orderedItems" style="border: 1px solid rgb(189, 189, 189);;">
@@ -126,14 +126,18 @@
                                             alt="">
 
                                         <div class="proQty">
-                                            <input type="button" class="inc-dec"
-                                                onclick="quantityIncrement('<%=index%>','<%=item.productID.SalesRate%>','decrement')"
+                                            <a href="" style="display: flex;align-items: center;justify-content: center;">
+                                            <input type="button" class="inc-dec dec"
+                                                onclick="quantityIncDec('<%=index%>','<%=item._id%>','<%= JSON.stringify(cartDetails) %>','decrement')"
                                                 value="-">
-                                            <input type="text" id="showQty<%=index%>" class="Qty" readonly
+                                            </a>
+                                             <input type="text" id="showQty<%=index%>" class="Qty" readonly
                                                 value="<%=item.quantity%>">
-                                            <input type="button" class="inc-dec"
-                                                onclick="quantityIncrement('<%=index%>','<%=item.productID.SalesRate%>','increment')"
+                                            <a href="" style="display: flex;align-items: center;justify-content: center;">
+                                               <input type="button"  id="increment<%=index%>" class="inc-dec"
+                                                onclick="quantityIncDec('<%=index%>','<%=item._id%>','<%= JSON.stringify(cartDetails) %>','increment')"
                                                 value="+">
+                                            </a>
                                         </div>
                                     </div>
 
@@ -152,7 +156,7 @@
                                                 style="padding-right: 15px;" class="TotalAmount">
                                                 <%=item.productID.SalesRate * item.quantity%>
                                             </span> ₹<span id="discount<%=index%>" class="discount" style="text-decoration: line-through;">
-                                                <%=item.productID.MRP%>
+                                                <%=item.productID.MRP * item.quantity %>
                                             </span>
                                         </h5>
                                         <a href="/checkOut"><input type="button"
@@ -161,8 +165,20 @@
                                     </div>
                                 </div>
                             </div>
+                            <% discount = item.discount %>
                             <% }) %>
                 </div>
+
+                <br>
+
+                <div class="discount__content" style="display: flex;align-items: center;justify-content: end;">
+                    <h6>Discount codes</h6>
+                    <label>
+                        <input type="text" id="couponCode" placeholder="Enter your coupon code">
+                        <button type="submit" onclick="applyCouuponCode()" class="site-btn">Apply</button>
+                    </label>
+                </div>
+
 
             </div>
             <div class="col-4">
@@ -171,7 +187,7 @@
                         PRICE DETAILS
                     </div>
                     <% let totalPrice = cartDetails.reduce((acc, curr) => acc + (curr.productID.MRP * curr.quantity), 0); %>
-                    <% let totalDiscount = cartDetails.reduce((acc, curr) => acc + (curr.totalDiscount - (curr.productID.SalesRate * curr.quantity)), 0); %>
+                    <% let totalDiscount = cartDetails.reduce((acc, curr) => acc + (curr.totalMRP - (curr.productID.SalesRate * curr.quantity)), 0); %>
                     <% let checkOutTotal = cartDetails.reduce((acc,curr) => acc + (curr.totalPrice),0); %>
                     <div class="row priceDetails">
                         <div class="col-8 priceDetails-Left">
@@ -183,9 +199,12 @@
                         <div class="col-4 priceDetails-Left"
                             style="display: flex;flex-direction: column;justify-content: center;align-items: center;padding-left: 0;">
                             <p>₹ <span id="cartTotal"><%= totalPrice %></span></p>
-                            <p>-₹<span id="discountAmt"><%=totalDiscount%></span></p>
+                            <p>-₹<span id="discountAmt">
+                               
+                                <%=totalDiscount%>
+                            </span></p>
                             <p style="padding-right: 27px;">-----------</p>
-                            <p>₹<span id="toTalAmount"><%=checkOutTotal%></span></p>
+                            <p>₹<span id="toTalAmount"></span></p>
                         </div>
                     </div>
 
@@ -193,14 +212,25 @@
                         <p>----------------------------------------</p>
                         <h5>Payment Method</h5>
                         <label for="Selectpayment">
-                            <input type="radio" id="Selectpayment" class="paymentRadioBtn" value="Cash On Delivery">
+                            <input type="radio" id="Selectpayment"  name="payment"  class="paymentRadioBtn" value="Cash On Delivery">
                             <span style="padding-left: 10px;">Cash On Delivery</span>
                         </label>
+                        <label for="onlinePayment" style="margin: 0;padding-top: 0;">
+                            <input type="radio" id="onlinePayment" name="payment" style="transform: scale(1.3);" class="paymentRadioBtn" value="Cash On Delivery">
+                            <span style="padding-left: 10px;">Online Payment</span>
+                        </label>
+                        <label for="wallet" style="margin: 0;padding-top:7px;">
+                            <input type="radio" id="wallet" name="payment" style="transform: scale(1.3);" class="paymentRadioBtn" value="Wallet">
+                            <span style="padding-left: 10px;">Wallet</span>
+                        </label>
                         <% if(userInfo.length > 0 ) { %>  
-                        <label style=" display: flex;align-items: center;justify-content: center;"><a
-                                class="primary-btn PlaceOrder" onclick="successMessage()">Place Order</a></label>
+                        <label style=" display: flex;align-items: center;justify-content: center;" id="COD"><a
+                            class="primary-btn PlaceOrder" onclick="successMessage()">Place Order</a></label>
+                        <label style=" display: flex;align-items: center;justify-content: center;display: none; margin-bottom: 10px;" id="onlinePaymentBTN"><a
+                            class="primary-btn PlaceOrder" onclick="RazorPayment('<%= JSON.stringify(cartDetails) %>','<%= JSON.stringify(userInfo) %>')" >Place Order</a></label>        
+                                
                         <% } else{ %>
-                            <label style=" display: flex;align-items: center;justify-content: center;"><a
+                            <label style=" display: flex;align-items: center;justify-content: center;margin-bottom: 10px;"><a
                                 class="primary-btn PlaceOrder" onclick="messageBox()" >Place Order</a></label> 
                         <% } %>
                     </div>
@@ -458,8 +488,6 @@
                         <div class="row priceDetailsRow">
                             PRICE DETAILS
                         </div>
-                       
-    
                         <div class="row priceDetails">
                             <div class="col-8 priceDetails-Left">
                                 <p>Price( <%= count %> items)</p>
@@ -467,13 +495,15 @@
                                 <p>---------------------------</p>
                                 <p>Total Price</p>
                             </div>
-                           
                             <div class="col-4 priceDetails-Left"
                                 style="display: flex;flex-direction: column;justify-content: center;align-items: center;padding-left: 0;">
                                 <p>₹ <span id="cartTotal"><%= totalPrice %></span></p>
-                                <p>-₹<span id="discountAmt"><%=totalDiscount%></span></p>
+                                <p>-₹<span id="discountAmt">
+                                   
+                                    <%=totalDiscount%>
+                                </span></p>
                                 <p style="padding-right: 27px;">-----------</p>
-                                <p>₹<span id="toTalAmount"><%=checkOutTotal%></span></p>
+                                <p>₹<span id="toTalAmount"></span></p>
                             </div>
                         </div>
     
@@ -481,16 +511,26 @@
                             <p>----------------------------------------</p>
                             <h5>Payment Method</h5>
                             <label for="Selectpayment">
-                                <input type="radio" id="Selectpayment" class="paymentRadioBtn" value="Cash On Delivery">
+                                <input type="radio" id="Selectpayment"  name="payment"  class="paymentRadioBtn" value="Cash On Delivery">
                                 <span style="padding-left: 10px;">Cash On Delivery</span>
                             </label>
-    
+                            <label for="onlinePayment" style="margin: 0;padding-top: 0;">
+                                <input type="radio" id="onlinePayment" name="payment" style="transform: scale(1.3);" class="paymentRadioBtn" value="Cash On Delivery">
+                                <span style="padding-left: 10px;">Online Payment</span>
+                            </label>
+                            <label for="wallet" style="margin: 0;padding-top:7px;">
+                                <input type="radio" id="wallet" name="payment" style="transform: scale(1.3);" class="paymentRadioBtn" value="Wallet">
+                                <span style="padding-left: 10px;">Wallet</span>
+                            </label>
                             <% if(userInfo.length > 0 ) { %>  
-                                <label style=" display: flex;align-items: center;justify-content: center;"><a
-                                        class="primary-btn PlaceOrder" onclick="successMessage()">Place Order</a></label>
+                            <label style=" display: flex;align-items: center;justify-content: center;" id="COD"><a
+                                class="primary-btn PlaceOrder" onclick="successMessage()">Place Order</a></label>
+                            <label style=" display: flex;align-items: center;justify-content: center;display: none; margin-bottom: 10px;" id="onlinePaymentBTN"><a
+                                class="primary-btn PlaceOrder" onclick="RazorPayment('<%= JSON.stringify(cartDetails) %>','<%= JSON.stringify(userInfo) %>')" >Place Order</a></label>        
+                                    
                             <% } else{ %>
-                                <label style=" display: flex;align-items: center;justify-content: center;"><a
-                                    class="primary-btn PlaceOrder" onclick="messageBox()">Place Order</a></label> 
+                                <label style=" display: flex;align-items: center;justify-content: center;margin-bottom: 10px;"><a
+                                    class="primary-btn PlaceOrder" onclick="messageBox()" >Place Order</a></label> 
                             <% } %>
                         </div>
                     </div>
@@ -528,6 +568,12 @@
             <a href="/profileMenu?menu=myOrders" class="primary-btn PlaceOrder">Check Status</a>
             <!-- /profileMenu?menu=myOrders -->
         </div>
+
+        <div class="row failedRow" style="display: flex;flex-direction: column;align-items: center;justify-content: center; display: none;">
+            <h2 style="width: 70%;font-size: 15pt;text-align: center;">Your Wallet have not enough Money to buy this Order</h2>
+            <br>
+            <a class="primary-btn btn" id="btnOkey" href="" >Okey</a>
+        </div>
     </div>
     <!-- change Address end here.... -->
 
@@ -537,6 +583,7 @@
         <!-- Footer end  here... -->
 
 
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="/assets/js/checkout.js"></script>
 

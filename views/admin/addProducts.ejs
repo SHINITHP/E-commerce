@@ -32,7 +32,7 @@
     <div class="container-fluid conF-1">
         <div class="row navRow">
             <div class="col-6 ">
-                <a href="/use/index" class="logo">
+                <a href="/" class="logo">
                     <img src="/assets/images/logo.png">
                 </a>
             </div>
@@ -54,41 +54,54 @@
 
     <div class="container-fluid outerDiv"  style="padding: 0px;">
 
-    
         <div class="container-fluid conF-2">
             <div class="row1">
 
                 <div class="con-1 ">
                     <div class="box-1">
-                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png" class="adminIcon" alt=""> <span
-                                class="adminName">Admin</span></a>
-                    </div>
-                    <a href="/adminLogin/adminDashboard">
-                        <button class="btns btnDashboard"><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue">Dashboard</span></button>
-                    </a>
-                    <a href="/adminLogin/ProductList">
-                        <button class="btns btnProducts"><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue">Products</span></button>
-                    </a>
-                    <a href="/adminLogin/Category">
-                        <button class="btns btnCategory btnColor"><img class="img" src="/assets/images/grid.png" alt=""><span
-                           class="btnvalue"><span>Category</span></button>
-                   </a>
-                    <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png" alt=""><span
-                            class="btnvalue">Order History</span></button>
-                    <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
-                            class="btnvalue">Coupon</span></button>
-                    <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png" alt=""><span
-                            class="btnvalue">Sales Report</span></button>
-                    <a href="/adminLogin/CustomerDetails">
-                        <button class="btns btnUser"><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue">User Report</span> </button>
-                    </a>
-                    <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png" alt=""><span
-                            class="btnvalue">Banner</span></button>
-                    <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png" alt=""><span
-                            class="btnvalue">Wallet</span></button>
+                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png"
+                                        class="adminIcon" alt=""> <span
+                                        class="adminName">Admin</span></a>
+                </div>
+                <a href="adminDashboard">
+                        <button class="btns btnDashboard "><img class="img"
+                                        src="/assets/images/grid.png" alt=""><span
+                                        class="btnvalue">Dashboard</span></button>
+                </a>
+                <a href="ProductList">
+                        <button class="btns btnProducts btnColor"><img class="img"
+                                        src="/assets/images/grid.png" alt=""><span
+                                        class="btnvalue">Products</span></button>
+                </a>
+                <a href="Category">
+                <button class="btns btnCategory"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue"><span>Category</span></button>
+                </a>
+                <a href="orderHistory">
+                <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Order History</span></button>
+                </a>
+              <a href="coupon">
+                  <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Coupon</span></button>
+              </a>
+              <a href="salesReport">
+                <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Sales Report</span></button>
+              </a>
+                
+                <a href="CustomerDetails">
+                        <button class="btns btnUser"><img class="img"
+                                        src="/assets/images/grid.png" alt=""><span
+                                        class="btnvalue">User Report</span> </button>
+                </a>
+                <a href="offers">
+                        <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Offers</span></button>
+                </a>
+              
+                <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Wallet</span></button>
                 </div>
                 <div class="con-2">
                     <div class="row row2">
@@ -285,7 +298,7 @@
 
 
                                                 <label for="input-file1" id="drop-area1">
-                                                    <input type="file" name="images"  accept="image/*" onclick="cropImage('input-file1','img-view1','returnImg1')" id="input-file1"
+                                                    <input type="file" name="images"  accept="image/*" onclick="cropImage('input-file1','img-view1','returnImg1')" onchange="validateImageFile()" id="input-file1"
                                                         hidden>
                                                         <!-- <input type="text" name="images" id="returnImg1" hidden> -->
                                                     <div id="img-view1">
@@ -295,7 +308,7 @@
                                                 </label>
 
                                                 <label for="input-file2" id="drop-area2" class="ml-3">
-                                                    <input type="file" name="images"  accept="image/*" onclick="cropImage('input-file2','img-view2','returnImg2')" id="input-file2"
+                                                    <input type="file" name="images"  accept="image/*" onclick="cropImage('input-file2','img-view2','returnImg2')" onchange="validateImageFile()" id="input-file2"
                                                         hidden>
                                                         <!-- <input type="text" name="images"  id="returnImg2" hidden> -->
                                                     <div id="img-view2">
@@ -305,7 +318,7 @@
                                                 </label>
 
                                                 <label for="input-file3" id="drop-area3" class="ml-3">
-                                                    <input type="file" name="images"   accept="image/*" onclick="cropImage('input-file3','img-view3','returnImg3')" id="input-file3"
+                                                    <input type="file" name="images"   accept="image/*"  onclick="cropImage('input-file3','img-view3','returnImg3')" onchange="validateImageFile()" id="input-file3"
                                                         hidden>
                                                         <!-- <input type="text"  name="images" id="returnImg3" hidden> -->
                                                     <div id="img-view3">
@@ -315,7 +328,7 @@
                                                 </label>
 
                                                 <label for="input-file4" id="drop-area4" class="ml-3">
-                                                    <input type="file" name="images"  accept="image/*" onclick="cropImage('input-file4','img-view4','returnImg4')" id="input-file4"
+                                                    <input type="file" name="images"  accept="image/*" onclick="cropImage('input-file4','img-view4','returnImg4') " onchange="validateImageFile()"  id="input-file4"
                                                         hidden>
                                                         <!-- <input type="text" name="images"  id="returnImg4" hidden> -->
                                                     <div id="img-view4">

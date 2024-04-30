@@ -1526,8 +1526,7 @@ ol {
 
 .sidebar__sizes .size__list label input,
 .sidebar__color .size__list label input {
-	position: absolute;
-	visibility: hidden;
+
 }
 
 .sidebar__sizes .size__list label input:checked~.checkmark,

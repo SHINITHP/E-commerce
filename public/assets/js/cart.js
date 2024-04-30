@@ -16,6 +16,7 @@ for (let i = 0; i < availability.length; i++) {
 }
 
 
+
 const Qty = document.querySelectorAll('.Qty')
 const dec = document.querySelectorAll('.dec') 
 for(let i =0;i<Qty.length;i++){
@@ -41,6 +42,7 @@ for(let i=0;i<salesRate.length;i++){
 
 
 function quantityIncDec(index,id, Products, type) {
+    console.log('quantityIncDec')
     const showQty = document.getElementById(`showQty${index}`)
     const totalInput = document.getElementById(`totalPrice${index}`)
     const discountAmt = document.getElementById(`discount${index}`)
@@ -56,20 +58,23 @@ function quantityIncDec(index,id, Products, type) {
     // console.log('productDetails ',proDiscount)
     let ExactDiscAmt;
     if (type === 'increment') {
+        console.log('increment')
         let quantity = parseFloat(showQty.value)
-        showQty.value = quantity + 1
-        // let mrp = parseFloat(discountAmt.innerText)/parseFloat(showQty.value)
-        let addQty = parseFloat(showQty.value)
-        // document.getElementById('discountAmt').value = proDiscount *addQty
-        
-        // console.log('mrp * addQty',mrp )
-      
-        // document.getElementById('ExactPrice').value =parseFloat(document.getElementById('ExactPrice').value) + mrp
-        axios.patch('/shoppingcart', { newQty:addQty ,id}) // Sending productID as data
+        // showQty.value = 
+        let addQty = quantity + 1
+
+        axios.patch('/shoppingcart', { newQty:addQty ,id,type}) // Sending productID as data
         .then(function (response) {
             console.log('Product added to cart successfully', response);
             // Handle success response if needed
             
+            if(response.data ==='finished'){
+                // location.href = '/shoppingcart'
+                document.getElementById(`increment${index}`).disabled = true;
+                document.getElementById(`error${index}`).innerText='Stock Unavailable!'
+            }else{
+                location.href = '/shoppingcart'
+            }
         })
         .catch(function (error) {
             console.error('Error adding product to cart:', error);
@@ -77,6 +82,7 @@ function quantityIncDec(index,id, Products, type) {
         });
     }
     else if (type === 'decrement') {
+        console.log('decrement')
         if(showQty.value ==2){
             document.getElementById(`decrement${index}`).disabled = true;
         }
@@ -85,10 +91,11 @@ function quantityIncDec(index,id, Products, type) {
         let addQty = parseFloat(showQty.value)
         // totalInput.value = price*addQty
 
-        axios.patch('/shoppingcart', { newQty:addQty ,id}) // Sending productID as data
+        axios.patch('/shoppingcart', { newQty:addQty ,id,type}) // Sending productID as data
         .then(function (response) {
             console.log('Product added to cart successfully', response);
             // Handle success response if needed
+            window.location.href = '/checkOut';
         })
         .catch(function (error) {
             console.error('Error adding product to cart:', error);
@@ -102,16 +109,33 @@ function quantityIncDec(index,id, Products, type) {
 
 
 function saveOrder(data) {
-    console.log('I am here...');
-    axios.post('/shoppingcart', { cartData: data }) // Sending productID as data
+    let discountAmt = document.getElementById('discountAmt').value
+    let total = document.getElementById('cartTotal').value;
+    let availability = document.querySelectorAll('.availability')
+    let flag = 0;
+    availability.forEach(element => {
+        if(element.innerText === 'Out Of Stock'){
+            flag=1
+        }else{
+            flag = 0 
+        }
+    });
+    console.log(flag)
+    if(flag == 0){
+        axios.post('/shoppingcart', { cartData: data ,discountAmt,total}) // Sending productID as data
         .then(function (response) {
             console.log('Product added to cart successfully', response);
             // Handle success response if needed
+            console.log('I am here...');
+                location.href ='/checkOut'  
+
         })
         .catch(function (error) {
             console.error('Error adding product to cart:', error);
             // Handle error if needed
         });
+    }
+    
 }
 
 

@@ -17,12 +17,20 @@ const orderSummaryModel = new mongoose.Schema({
         type:Number,
         required:true
     },
-    totalDiscount:{
+    totalMRP:{
         type:String,
         required:true
     },
     size:{
         type:String
+    },
+    discount:{
+        type:Number,
+        default:0
+    },
+    coupon:{
+        type:Boolean,
+        default:false
     }
 })
 

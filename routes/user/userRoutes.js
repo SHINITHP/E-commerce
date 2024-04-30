@@ -5,19 +5,20 @@ const {
     logout, profile, profileMenu, google, shoppingCart, updateCart, sendEmailOtp, postsendEmailOtp,
     forgotEnterOtp, postForgotEnterOtp, resetPassword, createPassword, saveUserAddress, filterProducts,
     enterOtp, sentOTP, createUser, resendOtp, productOverview, saveImage, overviewFilter, checkOut,
-    checkOutTasks, orderDetails, updateProfile
+    checkOutTasks, orderDetails, updateProfile,onlinPayment,verifyPayment,priceFilter,DeleteData
 } = require("../../controller/user/userConroller.js");
 
 const { userAuth } = require('../../middlewares/authMiddleware.js')
 const passport = require('passport')
 require('../../controller/user/googleOuath.js')
 const jwt = require('jsonwebtoken');
+const { loginAuth } = require('../../middlewares/loginMiddleware.js')
 
 
 router.route('/').get(landingPage)//landinglage 
 router.route('/register').get(registerPage).post(sentOTP)//user registration 
 router.route('/enterOtp').get(userAuth,enterOtp).post(createUser)//enterOtp
-router.route('/login').get(loginPage).post(userLogin)//loginpage
+router.route('/login').get(loginAuth,loginPage).post(userLogin)//loginpage
 router.route('/google').get(passport.authenticate('google', { scope: ['profile', 'email'] }))
 router.route('/google/redirect').get(passport.authenticate('google'), (req, res) => {
     const token = jwt.sign(
@@ -34,12 +35,13 @@ router.route('/forgotEnterOtp').get(forgotEnterOtp).post(postForgotEnterOtp)// E
 router.route('/resetPassword').get(resetPassword).patch(createPassword)// resetpassword page
 router.route('/resendOtp').post(resendOtp)//resend otp 
 router.route('/productOverview').get(productOverview).post(overviewFilter)//productOverview 
-router.route('/allProducts').get(landingPage)//allProducts
+router.route('/allProducts').get(landingPage).post(priceFilter)//allProducts
 router.route('/filterProducts').get(filterProducts)
 router.route('/filterCategory').get(landingPage)//listCategory
 router.route('/Profile').get(userAuth, profile).patch(updateProfile)
 router.route('/checkOut').get(userAuth, checkOut).post(checkOutTasks).put(updateCheckout)
 router.route('/logout').get(logout)//logout
-router.route('/profileMenu').get(userAuth,profileMenu).post(saveUserAddress).put(saveUserAddress)
-
+router.route('/profileMenu').get(userAuth,profileMenu).post(saveUserAddress).put(saveUserAddress).delete(DeleteData)
+router.route('/create-payment').post(onlinPayment)
+router.route('/verify-Payment').post(verifyPayment)
 module.exports = router

@@ -2,6 +2,38 @@ const changeIcon = document.getElementById('changeIcon');
 const dropDownLi1 = document.getElementById('DropDownLi1');
 const dropDownLi2 = document.getElementById('DropDownLi2');
 let isDropDownVisible = false;
+let url = '/Profile?_method=PATCH'
+
+document.getElementById('savebtn').addEventListener('click',function(event){
+    var inputs = document.querySelectorAll('.firstNameInput');
+    var isValid = true;
+
+    for (var i = 0; i < inputs.length; i++) {
+        var input = inputs[i];
+        if (input.value.trim() === '' || /\s/.test(input.value)) {
+            isValid = false;
+            break; // Exit the loop if any field is invalid
+        }
+    }
+
+    if (!isValid) {
+        const confirmation = confirm('Please fill in all fields without whitespace.');
+        if (!confirmation) {
+            document.getElementById('updateForm').method = 'GET';
+            document.getElementById('updateForm').action='/Profile' // Prevent form submission if user cancels the confirmation
+        }
+    }else{
+        document.getElementById('updateForm').method = 'Post';
+        document.getElementById('updateForm').action = url
+    }
+})
+
+// function Validation(){
+   
+// }
+
+
+
 
 changeIcon.addEventListener('click', function () {
     let icon = document.getElementById('icon');

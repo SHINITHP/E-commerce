@@ -133,10 +133,22 @@
                                 <div class="product__details__price">
                                     <i class="fa-solid fa-indian-rupee-sign"
                                         style="color: #ab1717; font-size:20pt;"></i>
-                                    <%= item.SalesRate%> <span style="padding-bottom: 20px;"><i
+                                        <% if(item.offer > 0 ) { %> 
+
+                                            <%= item.SalesRate - item.SalesRate * item.offer / 100 %> <span style="padding-bottom: 20px;"><i
                                                 class="fa-solid fa-indian-rupee-sign" style=" font-size:12pt;"></i>
-                                            <%=item.MRP %>
+                                            <%=item.MRP %>   
+                                        </span><b style="color: black; padding-left: 10px;font-size: 15pt; "><%=item.offer%>%OFF</b>
+                                            
+                                        <% } else { %> 
+                                            
+                                            <%= item.SalesRate %> <span style="padding-bottom: 20px;"><i
+                                                class="fa-solid fa-indian-rupee-sign" style=" font-size:12pt;"></i>
+                                            <%=item.MRP %>   
                                         </span>
+                                            
+                                        <% } %>
+                                    
                                 </div>
 
                                 <p>
@@ -161,7 +173,7 @@
                                     <% } %>
                                     
                                             <ul>
-                                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                                <li><a href="" onclick="wishlist('<%= item._id %>')"><span class="icon_heart_alt"></span></a></li>
                                                 <!-- <li><a href="#"><span class="icon_adjust-horiz"></span></a></li> -->
                                             </ul>
                                 </div>
@@ -173,7 +185,7 @@
 
 
                                             <div class="stock__checkbox">
-                                                <% if(item.StockQuantity> 0) {%>
+                                                <% if(item.ProductSize[0].quantity > 0) {%>
                                                     <label for="stockin" id="stockIn" style="color: green;">In Stock
                                                     </label>
                                                     <% } else { %>
@@ -461,6 +473,18 @@
                             console.error('Error adding product to cart:', error);
                             // Handle error if needed
                         });
+                }
+
+
+                function wishlist(productID){
+                    axios.post('/productOverview?task=wishlist', { productID }) // Sending productID as data
+                    .then(function (response) {
+
+                    })
+                    .catch(function (error) {
+                        console.error('Error adding product to cart:', error);
+                        // Handle error if needed
+                    });
                 }
 
 

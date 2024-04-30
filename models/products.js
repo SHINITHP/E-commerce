@@ -75,6 +75,10 @@ const productSchema = new mongoose.Schema({
         type:String,
         required:true,
         default:"Listed"
+    },
+    offer:{
+        type:Number,
+        default:0
     }
 
 })

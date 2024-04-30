@@ -38,7 +38,7 @@
 
     <div class="container-fluid mt-5" style="margin: 0;padding-left: 10;padding-right: 10;">
         <% requestedData.forEach((val) => { %> 
-        <div class="row" style="min-height: 120px;display: flex;flex-direction: column;margin: 0;padding: 0;background-color: #f2f2f2;border-radius: 4px;">
+        <div class="row" style="min-height: 120px;display: flex;flex-direction: column;margin: 0;padding: 0;background-color: #f2f2f2;border-radius: 4px;margin-top: 6px;">
            
             <div class="row">
                 <div class="col-5" style="height: 120px;">
@@ -54,18 +54,36 @@
                 <div class="col-3" style="height: 120px;display: flex;flex-direction: column;align-items: center;justify-content: center;">
                     <p style="font-size: 13pt;padding-left: 20px;padding-top: 10px;font-weight: 600;">From <%= val.userID.emailAddress %></p>
                     <p><%= val.requestReason %></p>
+                    <p><% if(val.return){ %>
+                        Request Type : Return Order
+                    <% } else if(val.request) { %>
+                        Request Type : Cancel Order
+                    <% } %>    
+                    </p>
                 </div>
                 <div class="col-2" style="height: 120px;display: flex;align-items: center;justify-content: center;">
                     <p><%= val.reqDate.toLocaleDateString() %></p>
                 </div>
                 <div class="col-2" style="display: flex;align-items: center;justify-content: center;">
-                    <a href=""  style="width: 60px;height: 60px;border-radius: 50%;background-color: rgb(221, 221, 221); margin-left: 10px;display: flex;align-items: center;justify-content: center;">
+                    <% if(val.request === true && val.rejected === false){ %> 
+                    <a href="" onclick="updateReqest('<%=val._id%>','reject')" style="width: 60px;height: 60px;border-radius: 50%;background-color: rgb(221, 221, 221); margin-left: 10px;display: flex;align-items: center;justify-content: center;">
                         <i class="fa-solid fa-xmark" style="color: #000000;font-size: 21pt;"></i>
                     </a>
-                    <a  onclick="updateReqest('<%=val._id%>')" style="width: 60px;height: 60px;border-radius: 50%; margin-left: 10px;background-color: rgb(221, 221, 221);display: flex;align-items: center;justify-content: center;">
+                    <a href="" onclick="updateReqest('<%=val._id%>','accept')" style="width: 60px;height: 60px;border-radius: 50%; margin-left: 10px;background-color: rgb(221, 221, 221);display: flex;align-items: center;justify-content: center;cursor: pointer;">
                         <i class="fa-solid fa-check" style="color: #000000;font-size: 21pt;"></i>
                     </a>
-                    
+                    <% } else if(val.request === false && val.rejected === true) { %> 
+                        <p style="font-weight: bolder;font-size: 15pt;">Rejected</p>
+                    <% } else if(val.rejected === false && val.request === false && val.return === false){ %> 
+                        <p style="font-weight: bolder;font-size: 15pt;"><%= val.Status %></p>
+                    <% } else if(val.return === true) { %>  
+                        <a href="" onclick="updateReqest('<%=val._id%>','returnRejected')" style="width: 60px;height: 60px;border-radius: 50%;background-color: rgb(221, 221, 221); margin-left: 10px;display: flex;align-items: center;justify-content: center;">
+                            <i class="fa-solid fa-xmark" style="color: #000000;font-size: 21pt;"></i>
+                        </a>
+                        <a href="" onclick="updateReqest('<%=val._id%>','returnAccepted')" style="width: 60px;height: 60px;border-radius: 50%; margin-left: 10px;background-color: rgb(221, 221, 221);display: flex;align-items: center;justify-content: center;cursor: pointer;">
+                            <i class="fa-solid fa-check" style="color: #000000;font-size: 21pt;"></i>
+                        </a>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -74,11 +92,12 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        function updateReqest(id){
+        function updateReqest(id,status){
             console.log(id)
-            axios.patch('/adminLogin/messageBox?_method=PUT', {id}) // Sending productID as data
+            axios.patch('/adminLogin/messageBox?_method=PATCH', {id,status}) // Sending productID as data
             .then(function (response) {
-                // Handle success response if needed
+                console.log('response',response)
+                location.href('/messageBox')
             })
             .catch(function (error) {
                 console.error('Error adding product to cart:', error);

@@ -15,7 +15,7 @@ const shoppingCartModel = new mongoose.Schema({
         type:Number,
         required:true
     },
-    totalDiscount:{
+    totalMRP:{
         type:String
     },
     size:{
@@ -24,7 +24,7 @@ const shoppingCartModel = new mongoose.Schema({
     color:{
         type:String,
         require:true
-    }
+    },
 })
 
 

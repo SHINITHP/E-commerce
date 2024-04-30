@@ -32,35 +32,49 @@
 
                 <div class="con-1 ">
                     <div class="box-1">
-                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png" class="adminIcon" alt=""> <span
-                                class="adminName">Admin</span></a>
-                    </div>
-                    <a href="/adminLogin/adminDashboard">
-                        <button class="btns btnDashboard"><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue">Dashboard</span></button>
-                    </a>
-                    <a href="/adminLogin/ProductList">
-                        <button class="btns btnProducts btnColor"><img class="img" src="/assets/images/grid.png"
-                                alt=""><span class="btnvalue">Products</span></button>
-                    </a>
-                    <a href="Category">
-                        <button class="btns btnCategory"><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue"><span>Category</span></button>
-                    </a>
-                    <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png" alt=""><span
-                            class="btnvalue">Order History</span></button>
-                    <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
-                            class="btnvalue">Coupon</span></button>
-                    <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png" alt=""><span
-                            class="btnvalue">Sales Report</span></button>
-                    <a href="/adminLogin/CustomerDetails">
-                        <button class="btns btnUser"><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue">User Report</span> </button>
-                    </a>
-                    <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png" alt=""><span
-                            class="btnvalue">Banner</span></button>
-                    <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png" alt=""><span
-                            class="btnvalue">Wallet</span></button>
+                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png"
+                                        class="adminIcon" alt=""> <span
+                                        class="adminName">Admin</span></a>
+                </div>
+                <a href="adminDashboard">
+                        <button class="btns btnDashboard "><img class="img"
+                                        src="/assets/images/grid.png" alt=""><span
+                                        class="btnvalue">Dashboard</span></button>
+                </a>
+                <a href="ProductList">
+                        <button class="btns btnProducts btnColor"><img class="img"
+                                        src="/assets/images/grid.png" alt=""><span
+                                        class="btnvalue">Products</span></button>
+                </a>
+                <a href="Category">
+                <button class="btns btnCategory "><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue"><span>Category</span></button>
+                </a>
+                <a href="orderHistory">
+                <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Order History</span></button>
+                </a>
+              <a href="coupon">
+                  <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Coupon</span></button>
+              </a>
+              <a href="salesReport">
+                <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Sales Report</span></button>
+              </a>
+                
+                <a href="CustomerDetails">
+                        <button class="btns btnUser"><img class="img"
+                                        src="/assets/images/grid.png" alt=""><span
+                                        class="btnvalue">User Report</span> </button>
+                </a>
+                <a href="offers">
+                        <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Offers</span></button>
+                </a>
+              
+                <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Wallet</span></button>
                 </div>
                 <div class="con-2">
                     <div class="row row2">
@@ -184,11 +198,11 @@
                                                         value="<%= productInfo.VATAmount %>">
                                                 </div>
                                                 <div class="col-4">
-                                                    <label class="lbl" for="">Discount Precentage (%)</label>
+                                                    <label class="lbl" for="">MRP</label>
                                                     <input type="text" class="form-control inputpass"
                                                         name="DiscountPrecentage" id="TotalPrice"
                                                         placeholder="Enter Discount Precentage"
-                                                        value="<%= productInfo.DiscountPrecentage %>">
+                                                        value="<%= productInfo.MRP %>">
                                                 </div>
                                                 <div class="col-4 categoryRow">
                                                     <label class="lbl" for="">Color Name</label>
@@ -260,7 +274,7 @@
 
 
                                                 <label for="input-file1" id="drop-area1">
-                                                    <input type="file" accept="image/*"  name="images1" id="input-file1"
+                                                    <input type="file" accept="image/*"  name="images1" id="input-file1" onchange="validateImageFile()"
                                                         hidden>
 
                                                     <div id="img-view1" class="border" 
@@ -269,7 +283,7 @@
                                                 </label>
 
                                                 <label for="input-file2" id="drop-area2" class="ml-3">
-                                                    <input type="file" accept="image/*" 
+                                                    <input type="file" accept="image/*"  onchange="validateImageFile()"
                                                         name="images2" id="input-file2" hidden>
                                                     <div id="img-view2" class="border"
                                                         style="background-image: url('<%= productInfo.files[1].url %>');">
@@ -279,7 +293,7 @@
                                                 </label>
 
                                                 <label for="input-file3" id="drop-area3" class="ml-3">
-                                                    <input type="file" accept="image/*"
+                                                    <input type="file" accept="image/*" onchange="validateImageFile()"
                                                         name="images3" id="input-file3" hidden>
                                                     <div id="img-view3" class="border" name="image"
                                                         style="background-image: url('<%= productInfo.files[2].url %>');">
@@ -289,7 +303,7 @@
                                                 </label>
 
                                                 <label for="input-file4" id="drop-area4" class="ml-3">
-                                                    <input type="file" accept="image/*" 
+                                                    <input type="file" accept="image/*"  onchange="validateImageFile()"
                                                         name="images4" id="input-file4" hidden>
                                                     <div id="img-view4" class="border"
                                                         style="background-image: url('<%= productInfo.files[3].url %>');">

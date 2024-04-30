@@ -70,7 +70,8 @@
 
                     </div>
                     <div class="col-2 col2">
-                        <a ><i class="fa-solid fa-magnifying-glass searchIcon" id="searchBtn" style="color: #404040;"></i></a>
+                        <a><i class="fa-solid fa-magnifying-glass searchIcon" id="searchBtn"
+                                style="color: #404040;"></i></a>
                         <a href="/shoppingcart">
                             <i class="fa-solid fa-cart-shopping cartIcon" style="color: #404040;"></i>
                         </a>
@@ -83,13 +84,17 @@
         </header>
         <!-- ***** Header Area End ***** -->
 
-        
-<div class="row searchBar" style="height: 70px;  display: flex;justify-content: center;padding-top: 90px; display: none;cursor: pointer;">
-    <label for="" style="width: 70vw;height: 50px; background-color: #e7e7e7;display: flex;align-items: center;padding-left: 20px;">
-        <input type="text" style="border: none;outline: none; width: 64vw;background: transparent;" placeholder="Search For Products , Brands and More...">
-        <a href="" style="width: 6vw;text-align: center;"><i class="fa-solid fa-magnifying-glass" style="color: #000000; font-size: 18pt;"></i></a>
-    </label>
-</div>
+
+        <div class="row searchBar"
+            style="height: 70px;  display: flex;justify-content: center;padding-top: 90px; display: none;cursor: pointer;">
+            <label for=""
+                style="width: 70vw;height: 50px; background-color: #e7e7e7;display: flex;align-items: center;padding-left: 20px;">
+                <input type="text" style="border: none;outline: none; width: 64vw;background: transparent;"
+                    placeholder="Search For Products , Brands and More...">
+                <a href="" style="width: 6vw;text-align: center;"><i class="fa-solid fa-magnifying-glass"
+                        style="color: #000000; font-size: 18pt;"></i></a>
+            </label>
+        </div>
 
 
         <div class="container-fluid outerDiv" id="blur" style="padding: 0px;">
@@ -165,6 +170,14 @@
                                     </span>
                                 </li>
                             </a>
+                            <a href="profileMenu?menu=Wallet">
+                                <li><i class="fa-solid fa-wallet menuIcon" style="color: #000000;"></i><span
+                                        class="spanText">Wallet</span>
+                                    <span>
+                                        <i style="font-size:24px;color:#494949;" class="fa rightAngle">&#xf105;</i>
+                                    </span>
+                                </li>
+                            </a>
                             <a href="/logout">
                                 <li><img src="/assets/images/logout.png" class="logoutImg"><span class="spanText"
                                         style="padding-left: 30px; font-size: 13pt;">Logout</span>
@@ -208,27 +221,27 @@
                                     </div>
                                 </div>
                                 <% let id %>
-                                <% let orderDate=new Date(item.OrderDate); let deliveryDate=new
-                                    Date(orderDate.setDate(orderDate.getDate() + 7)); %>
-                                    <div class="row con2Row2">
-                                        <div class="col-4 rowcol4-1">
-                                            <h5>Delivery Date</h5>
-                                            <p>
-                                                <%= deliveryDate.toLocaleDateString() %>
-                                            </p>
+                                    <% let orderDate=new Date(item.OrderDate); let deliveryDate=new
+                                        Date(orderDate.setDate(orderDate.getDate() + 7)); %>
+                                        <div class="row con2Row2">
+                                            <div class="col-4 rowcol4-1">
+                                                <h5>Delivery Date</h5>
+                                                <p>
+                                                    <%= deliveryDate.toLocaleDateString() %>
+                                                </p>
+                                            </div>
+                                            <div class="col-4 rowcol4-2">
+                                                <h5>Total Amount</h5>
+                                                <p>₹<%=item.Amount%>
+                                                </p>
+                                            </div>
+                                            <div class="col-4 rowcol4-3">
+                                                <h5>Status</h5>
+                                                <p>
+                                                    <%=item.Status%>
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div class="col-4 rowcol4-2">
-                                            <h5>Total Amount</h5>
-                                            <p>₹<%=item.Amount%>
-                                            </p>
-                                        </div>
-                                        <div class="col-4 rowcol4-3">
-                                            <h5>Status</h5>
-                                            <p>
-                                                <%=item.Status%>
-                                            </p>
-                                        </div>
-                                    </div>
                             </div>
                             <% }) %>
                     </div>
@@ -253,8 +266,15 @@
                                 </h6>
                             </div>
                             <div class="col-6 rightRow">
-                                <h4>Product Details <span><input type="button" onclick="cancelOrder()"
-                                            class="btn btncancelOrder" value="Cancel Order"></span></h4>
+                                <h4>Product Details <span>
+                                    
+                                    <input type="button" id="cancelOrderbtn" style="display: none;"
+                                            onclick="cancelOrder()" class="btn btncancelOrder" value="Cancel Order">
+                                   
+
+                                        <input type="button" style="display: none;" class="btn btncancelOrder"
+                                            id="btnReturnOrder"  value="Return Order">
+                                    </span></h4>
                                 <a href="" style="display:flex;align-items: center;">
                                     <img src="" alt="" style="height: 80px;width: 80px; " id="productImg">
                                     <p style="padding-left: 20px;" id="productName"></p>
@@ -271,7 +291,7 @@
                                 <li class="step active" id="CancellineOne">
                                     <div><i class="fas fa-user"></i></div>Order Placed
                                 </li>
-                               
+
                                 <li class="step active" id="CancellineFour">
                                     <div><i class="fas fa-birthday-cake"></i></div>order Cancelled
                                 </li>
@@ -295,7 +315,7 @@
                                     <div><i class="fas fa-birthday-cake"></i></div>Delivered
                                 </li>
                             </ul>
-                            <h5 class="text-center content"></h5>
+                            <h5 class="text-center content">The confirmation for your return order has been processed.</h5>
                         </div>
                     </div>
 
@@ -309,7 +329,7 @@
 
 
         <div id="SuccessDiv">
-            <div class="container cancel-Confirmation">
+            <div class="container cancel-Confirmation" >
                 <img src="/assets/images/CancelOrder.png"
                     style="height: 80px;width: 130px; margin-bottom: 10px;padding-right: 29px;" alt="">
                 <h6>Are you Sure?</h6>
@@ -334,9 +354,33 @@
 
             <div class="container submit-Order" style="display: none;">
                 <i class="fa-regular fa-circle-check" style="color: #10aa0e;font-size: 40pt;padding-bottom: 10px;"></i>
-                <p style="width: 400px;text-align: center; margin-top: 10px;">Your order cancellation request is being
+                <p id="content" style="width: 400px;text-align: center; margin-top: 10px;">Your order cancellation request is being
                     processed. Expect confirmation shortly</p>
                 <a href=""><input type="button" class="btn" id="checkstatusBtn" value="Check Status"></a>
+            </div>
+
+            <div class="container returnOrder" style="display: none;">
+                <img src="/assets/images/return.png"
+                style="height: 80px;width: 120px; margin-bottom: 10px;padding-right: 29px;" alt="">
+
+                <h6>Are you Sure?</h6>
+                <p style="width: 300px;text-align: center; margin-top: 10px;">Are you sure you want to proceed with
+                    return the order!</p>
+                <select name="returnReason" id="returndropdown" class="dropbtn">
+                    <option value="Order Placed By Mistake">Reason For Return</option>
+                    <option value="Order Placed By Mistake">Order Placed By Mistake</option>
+                    <option value="The product has sustained damage.">The product has sustained damage.</option>
+                    <option value="Buy another Product">Buy another Product</option>
+                    <option value="Other ">Other</option>
+                </select>
+               
+                <label for="">Comment(optional)
+                    <input type="text" id="requestReason" class="commentInput">
+                </label>
+                <div class="row">
+                    <input type="button" class="btn" id="returnCancelBtn" value="Cancel">
+                    <input type="button" class="btn" id="returnSubmitBtn" onclick="returnOrder()"  value="Submit">
+                </div>
             </div>
         </div>
 
@@ -350,15 +394,71 @@
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
             <script>
 
+                function returnOrder(){
 
-                document.getElementById('searchBtn').addEventListener('click', function(){
-                    document.querySelector('.searchBar').style.display='block'
-                    document.querySelector('.searchBar').style.display='flex'
+                    const submitOrder = document.querySelector('.submit-Order')
+                    SuccessDiv.style.height = '300px'
+                    document.querySelector('.returnOrder').style.display='none'
+                    submitOrder.style.display = 'block'
+                    submitOrder.style.display = 'flex'
+                    console.log('return ',orderID)
+                    let content = 'Your return request is being processed. Expect confirmation shortly';
+                    document.getElementById('content').innerHTML = content
+                    const reason = document.getElementById('returndropdown').value
+                    const optionalreason = document.getElementById('requestReason').value
+                    
+                    console.log(optionalreason)
+                    axios.put('/profileMenu?type=returnOrder', {orderID,reason,optionalreason}) // Sending productID as data
+                    .then(function (response) {
+                        // Handle success response if needed
+                       
+                    })
+                    .catch(function (error) {
+                        console.error('Error adding product to cart:', error);
+                        // Handle error if needed
+                    });
+                }
+
+                document.getElementById('btnReturnOrder').addEventListener('click',function(){
+                    
+                    let blur = document.getElementById('blur');
+                    blur.classList.toggle('active');
+
+                    let popup = document.getElementById('SuccessDiv');
+                    popup.classList.toggle('active');
+
+                    let body = document.querySelector('body');
+
+                    // Add a class to the body to stop scrolling
+                    body.classList.add('stop-scrolling');
+
+                    document.querySelector('.cancel-Confirmation').style.display='none'
+                    document.querySelector('.returnOrder').style.display='block'
+                    document.querySelector('.returnOrder').style.display='flex'
+                })
+                document.getElementById('returnCancelBtn').addEventListener('click',function(){
+                    let blur = document.getElementById('blur');
+                    blur.classList.remove('active');
+
+                    let popup = document.getElementById('SuccessDiv');
+                    popup.classList.remove('active');
+
+                    let body = document.querySelector('body');
+
+                    // Add a class to the body to stop scrolling
+                    body.classList.remove('stop-scrolling');
+                })
+
+
+                document.getElementById('searchBtn').addEventListener('click', function () {
+                    document.querySelector('.searchBar').style.display = 'block'
+                    document.querySelector('.searchBar').style.display = 'flex'
                     document.querySelector('.outerDiv').style.paddingTop = '10px';
                     document.querySelector('.conF-1').style.marginTop = '50px';
                 })
 
                 let orderID;
+                
                 function TrackOrder(orderId, orderDetails) {
                     const orderList = document.getElementById('orderList')
                     const trackOrder = document.getElementById('trackOrder')
@@ -371,8 +471,20 @@
                         return val._id == orderId ? true : false
                     })
 
-                    console.log('orderDetails', data)
+                    console.log('orderDetails', data[0].Status)
 
+                    if(data[0].Status === 'Order Returned' || data[0].Status === 'Order Cancelled'){
+                        document.getElementById('cancelOrderbtn').style.display='none'
+                        document.getElementById('btnReturnOrder').style.display = 'none'
+                    }else if(data[0].Status === 'Delivered'){
+                        document.getElementById('cancelOrderbtn').style.display='none'
+                        document.getElementById('btnReturnOrder').style.display = 'block'
+                    }else{
+                        document.getElementById('btnReturnOrder').style.display = 'none'
+                        document.getElementById('cancelOrderbtn').style.display='block'
+                    }
+                  
+                    
 
                     document.getElementById('name').innerHTML = data[0].addressID.fullName
                     document.getElementById('address').innerHTML = `${data[0].addressID.address} , ${data[0].addressID.state} , ${data[0].addressID.cityDistrictTown}-${data[0].addressID.pincode}`
@@ -410,13 +522,46 @@
                         lineThree.classList.toggle('active');
                         lineFour.classList.toggle('active');
                         textcenter.innerHTML = 'Your order has been successfully delivered.'
-                    }else if (data[0].Status === 'Order Cancelled'){
-                        document.querySelector('.trackDetails').style.display='none'
-                        document.querySelector('.orderCancelled').style.display='block'
+
+                        document.getElementById('cancelOrderbtn').style.display = 'none'
+                        document.getElementById('btnReturnOrder').style.display = 'block'
+                        console.log('iam in the ')
+                        saveLastShownDate(); 
+
+                    } else if (data[0].Status === 'Order Cancelled') {
+                        document.querySelector('.trackDetails').style.display = 'none'
+                        document.querySelector('.orderCancelled').style.display = 'block'
                     }
 
 
                 }
+                
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    const returnOrderButton = document.getElementById('btnReturnOrder');
+                    const lastShownDate = localStorage.getItem('lastShownDate');
+                    console.log('i am in the difference')
+                    if (lastShownDate) {
+                        const sevenDaysInMillis = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+                        const currentTime = new Date().getTime();
+                        const difference = currentTime - parseInt(lastShownDate, 10);
+                        console.log('i am in the difference')
+                        if (difference >= sevenDaysInMillis) {
+                            console.log('i am in the difference')
+                            // More than 7 days have passed since the button was last shown, remove the button
+                            returnOrderButton.remove();
+                        }
+                    }
+                });
+
+                // Function to save the current date when the button is shown
+                function saveLastShownDate() {
+                    const currentTime = new Date().getTime();
+                    localStorage.setItem('lastShownDate', currentTime);
+                }
+
+
+
 
 
                 function submitRequest() {
@@ -424,30 +569,30 @@
                     const cancelConfirmation = document.querySelector('.cancel-Confirmation')
                     const submitOrder = document.querySelector('.submit-Order')
 
-                    const reqReason =document.getElementById('canceldropdown').value;
+                    const reqReason = document.getElementById('canceldropdown').value;
                     const optionalReason = document.getElementById('reqReason');
                     const data = optionalReason.value
 
                     let name = document.getElementById('productName').innerText;
-                    console.log('document.getElementBy',orderID,reqReason,data)
+                    console.log('document.getElementBy', orderID, reqReason, data)
 
                     SuccessDiv.style.height = '300px'
                     cancelConfirmation.style.display = 'none'
                     submitOrder.style.display = 'block'
                     submitOrder.style.display = 'flex'
 
-                    function send(orderID,reqReason,data){
-                        axios.put('/profileMenu?type=cancelRequest', { orderID ,reqReason,data}) // Sending productID as data
-                        .then(function (response) {
-                            // Handle success response if needed
-                        })
-                        .catch(function (error) {
-                            console.error('Error adding product to cart:', error);
-                            // Handle error if needed
-                        });
+                    function send(orderID, reqReason, data) {
+                        axios.put('/profileMenu?type=cancelRequest', { orderID, reqReason, data }) // Sending productID as data
+                            .then(function (response) {
+                                // Handle success response if needed
+                            })
+                            .catch(function (error) {
+                                console.error('Error adding product to cart:', error);
+                                // Handle error if needed
+                            });
                     }
 
-                    send(orderID,reqReason,data)
+                    send(orderID, reqReason, data)
 
                 }
 

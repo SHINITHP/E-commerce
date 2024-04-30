@@ -6,10 +6,18 @@ const cloudinary = require('../admin/cloudinary.js')
 const fs = require('fs')
 const productModel = require('../../models/products.js')
 const subCategorySchema = require('../../models/category.js')
+const walletSchema = require('../../models/wallet.js')
+const couponSchema = require('../../models/coupon.js')
+const offerSchema = require('../../models/offer.js')
 const jwt = require('jsonwebtoken');
+const path = require('path')
+const mongoose = require('mongoose');
 const { insertMany } = require('../../models/address.js')
 require('dotenv').config()
-
+const crypto = require('crypto')
+var pdf = require("pdf-creator-node");
+const { triggerAsyncId } = require('async_hooks')
+// Read HTML Template
 //Create jwt Token 
 const MaxExpTime = 3 * 24 * 60 * 60 // expire in 3days
 const createToken = (id) => {
@@ -17,6 +25,7 @@ const createToken = (id) => {
         expiresIn: MaxExpTime
     })
 }
+
 
 //..................................................................................................................................................
 
@@ -30,6 +39,125 @@ const adminLogin = (req, res) => {
 //adminDashboard get method
 const adminDashboard = (req, res) => {
     res.render('admin/adminDashboard')
+}
+
+const offers = async (req, res) => {
+    if(req.query.filter === 'All'){
+        const offers = await offerSchema.find({}).populate('productID');
+        // console.log(offers)
+        res.render('admin/offers', { offers })
+    }else if(req.query.filter === 'Listed'){
+        const offers = await offerSchema.find({status:'Listed'}).populate('productID');
+        // console.log(offers)
+        res.render('admin/offers', { offers })
+    }
+    else if(req.query.filter === 'Unlisted'){
+        console.log('Unlisted')
+        const offers = await offerSchema.find({status:'Unlisted'}).populate('productID');
+        // console.log(offers)
+        res.render('admin/offers', { offers })
+    }
+    // else if(req.query.filter === 'customDate'){
+    //     const startDate = req.query.startDate
+    //     const endDate = req.query.endDate
+    //     console.log('Unlisted')
+    //     const offers = await offerSchema.find({ OrderDate: {
+    //         $gte: new Date(startDate), // Start of the specified date range
+    //         $lte: new Date(endDate) // End of the specified date range
+    //     }}).populate('productID');
+    //     // console.log(offers)
+    //     res.render('admin/offers', { offers })
+    // }
+    else{
+        console.log('normal')
+        const offers = await offerSchema.find({}).populate('productID');
+        // console.log(offers)
+        res.render('admin/offers', { offers })
+    }
+    
+}
+
+const DeleteOffer = async (req, res) => {
+    try {
+            const productID = req.body.productID.split(',');
+            const { id } = req.body
+            console.log('Deleting offer with ID:', id, 'and productID:', productID);
+            productID.forEach(async(val) => {
+                await productModel.findByIdAndUpdate(val,{$set:{offer: 0}})
+            })
+            await offerSchema.findByIdAndDelete(id)
+
+            res.json({message:'success'})
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const offerTasks = async (req, res) => {
+    try {
+        if (req.query.task === 'selectProduct') {
+            const products = await productModel.find({ CategoryName: req.body.Category })
+            res.json({ products })
+        } else if (req.query.task === 'createOffer') {
+            const title = req.body.title
+            const percentage = req.body.percentage
+            const Category = req.body.Category
+            const selectedValues = req.body.selectedValues.map(id => new mongoose.Types.ObjectId(id));
+
+
+            // console.log(selectedValues,': selectedValues')
+            const data = {
+                productID: selectedValues,
+                categoryID: Category,
+                title,
+                percentage
+            }
+
+            await offerSchema.create(data)
+
+            selectedValues.forEach(async (val) => {
+                await productModel.findByIdAndUpdate(val, {
+                    $set: {
+                        offer: percentage
+                    }
+                })
+            })
+
+
+            res.json({ message: 'success' })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+const editOffer = async (req, res) => {
+    try {
+
+        if (req.query.task === 'changeStatus') {
+            if (req.body.currStatus === 'Listed') {
+                console.log(req.body.currStatus, req.body.id)
+                const data = await offerSchema.findByIdAndUpdate(req.body.id, { $set: { status: 'Unlisted' } })
+                let productIDs = data.productID;
+                productIDs.forEach(async (val) => {
+                    await productModel.findByIdAndUpdate(val, { $set: { offer: 0 } })
+                })
+                console.log(productIDs, ': productIDs')
+                res.json({ message: 'success' })
+            } else if (req.body.currStatus === 'Unlisted') {
+                console.log(req.body.currStatus, req.body.id)
+                const data = await offerSchema.findByIdAndUpdate(req.body.id, { $set: { status: 'Listed' } })
+                let productIDs = data.productID;
+                productIDs.forEach(async (val) => {
+                    await productModel.findByIdAndUpdate(val, { $set: { offer: data.percentage } })
+                })
+                res.json({ message: 'success' })
+            }
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 
@@ -124,17 +252,17 @@ const filterCategory = async (req, res) => {
         }
         else if (req.query.Category == 'search') {
             try {
-                  console.log('i am hereee bro ', req.query.text)
-            let data = req.query.text;
-            const searchText = new RegExp("^" + data, "i")
-            console.log(searchText)
-            const categoryData = await subCategorySchema.find({ subCategory: { $regex: searchText } })
-            // console.log(categoryData)
-            res.render('admin/Category', { categoryData })
+                console.log('i am hereee bro ', req.query.text)
+                let data = req.query.text;
+                const searchText = new RegExp("^" + data, "i")
+                console.log(searchText)
+                const categoryData = await subCategorySchema.find({ subCategory: { $regex: searchText } })
+                // console.log(categoryData)
+                res.render('admin/Category', { categoryData })
             } catch (error) {
                 console.log(error)
             }
-          
+
         }
     } catch (error) {
         console.log(error)
@@ -290,7 +418,7 @@ const addProductsPost = async (req, res) => {
             const Products = {
                 ProductName, BrandName, CategoryName, StockQuantity, subCategory,
                 PurchaseRate, SalesRate, TotalPrice, ColorNames, ProductDescription,
-                VATAmount, MRP : mrp, ProductSize, files: urls
+                VATAmount, MRP: mrp, ProductSize, files: urls
             }
             //  console.log(Products);
             try {
@@ -754,6 +882,11 @@ const categoryEdit = async (req, res) => {
             CategoryName,
             subCategory
         } = req.body
+
+        const isExist = await subCategorySchema.findOne({
+            CategoryName,
+            subCategory
+        })
         //assigning reqested data to the category variable
         const category = {
             CategoryName,
@@ -762,20 +895,29 @@ const categoryEdit = async (req, res) => {
         }
         //save the updated data to the database
         try {
-            console.log(category);
-            await subCategorySchema.findOneAndUpdate({ _id: req.params.id }, { $set: category }).then((result) => {
-                console.log('result :', result);
-            }).catch(error => {
-                console.log(error);
-            });
-            res.redirect('/adminLogin/Category')
+           
+            if (!isExist) {
+                console.log(category);
+                await subCategorySchema.findOneAndUpdate({ _id: req.params.id }, { $set: category }).then((result) => {
+                    console.log('result :', result);
+                }).catch(error => {
+                    console.log(error);
+                });
+                const categoryData = await subCategorySchema.findById(req.params.id)
+                res.render('admin/editCategory', { success: 'Category Edit Successfully' , categoryData})
+            } else {
+                const categoryData = await subCategorySchema.findById(req.params.id)
+                console.log(categoryData)
+                res.render('admin/editCategory', { categoryData, success: 'Category Already Exist' })
+            }
+
         } catch (saveError) {
             console.error('Error saving product to database:', saveError)
             res.status(500).json({ error: 'Failed to save product to database' })
         }
     } catch (error) {
         console.log('Admin controller error:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+
     }
 }
 //..................................................................................................................................................
@@ -857,18 +999,336 @@ const deleteInventory = async (req, res) => {
     }
 }
 
-
-const messageBox = async(req,res)=>{
-    const requestedData = await orderModel.find({request:true}).populate('userID').populate('productID')
-    res.render('admin/messageBox',{requestedData})
+const coupon = async (req, res) => {
+    const coupons = await couponSchema.find({})
+    res.render('admin/Coupon', { coupons })
 }
-const updateRequest = async(req,res) => {
+
+function generateSimpleUniqueId() {
+    const uniqueId = crypto.randomBytes(16).toString('base64'); // Generate a random unique ID
+    return uniqueId;
+}
+
+
+
+
+const couponTasks = async (req, res) => {
+    try {
+        if (req.query.task == 'generateCode') {
+            const uniqueId = generateSimpleUniqueId(); // Generate a new unique ID
+            console.log('Generated unique ID:', uniqueId);
+            res.json({ message: uniqueId }); // Sending JSON object with the generated unique ID
+        } else if (req.query.task == 'addCoupon') {
+
+            try {
+                const data = {
+                    couponCode: req.body.code,
+                    Expire: req.body.expireOn,
+                    discountAmount: req.body.discountAmt,
+                    startDate: req.body.start,
+                    minimumPurchase: req.body.min,
+                    maxAmount: req.body.max,
+                    title: req.body.title
+                }
+
+                await couponSchema.create(data)
+            } catch (error) {
+                console.log(error)
+            }
+
+        }else if(req.query.task == 'changeStatus'){
+            try {
+                if(req.body.currStatus ==='Listed'){
+                    await couponSchema.findByIdAndUpdate(req.body.id,{$set:{status:'Unlisted'}})
+                }else if(req.body.currStatus ==='Unlisted'){
+                    await couponSchema.findByIdAndUpdate(req.body.id,{$set:{status:'Listed'}})
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' }); // Handle error response
+    }
+};
+
+const deletCoupon = async (req,res) => {
+    try {
+        const id = req.body.id;
+        await couponSchema.findByIdAndDelete(id)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const messageBox = async (req, res) => {
+    const requestedData = await orderModel.find({
+        $or: [
+            { request: true },
+            { Status: 'Order Cancelled' },
+            { Status: 'Order Returned' },
+            { rejected: true },
+            { return: true }
+        ]
+    }).populate('userID').populate('productID');
+    res.render('admin/messageBox', { requestedData })
+}
+
+const salesReport = async (req, res) => {
+    if (req.query.filter === 'All') {
+        const salesReport = await orderModel.find({ Status: 'Delivered' })
+            .populate('productID')
+            .populate('addressID')
+        console.log(salesReport)
+        res.render('admin/salesReport', { salesReport })
+    } else if (req.query.filter === 'Daily') {
+        // Get the current date
+        const currentDate = new Date();
+
+        // Extract the date part from currentDate
+        const currentDateOnly = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+
+        const salesReport = await orderModel.find({
+            Status: 'Delivered', OrderDate: {
+                $gte: currentDateOnly, // Greater than or equal to the current date
+                $lt: new Date(currentDateOnly.getTime() + 86400000) // Less than the next day
+            }
+        }).sort({ OrderDate: 1 })
+            .populate('productID')
+            .populate('addressID')
+        console.log(salesReport)
+        res.render('admin/salesReport', { salesReport })
+    } else if (req.query.filter === 'Monthly') {
+        const currentMonth = new Date().getMonth() + 1; // Adding 1 because months are zero-indexed
+        const currentYear = new Date().getFullYear();
+
+        const salesReport = await orderModel.find({
+            Status: 'Delivered',
+            OrderDate: {
+                $gte: new Date(currentYear, currentMonth - 1, 1), // Start of the current month
+                $lt: new Date(currentYear, currentMonth, 0) // End of the current month
+            }
+        }).sort({ OrderDate: 1 })
+            .populate('productID')
+            .populate('addressID')
+        console.log(salesReport)
+        res.render('admin/salesReport', { salesReport })
+    } else if (req.query.filter === 'Yearly') {
+        // Get the current year
+        const currentYear = new Date().getFullYear();
+
+        const salesReport = await orderModel.find({
+            Status: 'Delivered',
+            OrderDate: {
+                $gte: new Date(currentYear, 0, 1), // Start of the current year (January 1st)
+                $lt: new Date(currentYear + 1, 0, 1) // Start of the next year (January 1st of the next year)
+            }
+        }).sort({ OrderDate: 1 })
+
+            .populate('productID')
+            .populate('addressID')
+        console.log(salesReport)
+        res.render('admin/salesReport', { salesReport })
+    } else if (req.query.filter === 'customDate') {
+        const startDate = req.query.startDate
+        const endDate = req.query.endDate
+
+        const salesReport = await orderModel.find({
+            Status: 'Delivered',
+            OrderDate: {
+                $gte: new Date(startDate), // Start of the specified date range
+                $lte: new Date(endDate) // End of the specified date range
+            }
+        }).sort({ OrderDate: 1 })
+            .populate('productID')
+            .populate('addressID')
+
+        res.render('admin/salesReport', { salesReport })
+    } else {
+        const salesReport = await orderModel.find({ Status: 'Delivered' })
+            .populate('productID')
+            .populate('addressID')
+        console.log(salesReport)
+        res.render('admin/salesReport', { salesReport })
+    }
+
+}
+
+const salesFilter = async (req, res) => {
+
+}
+
+const updateRequest = async (req, res) => {
     console.log('i ahem heree..')
-     await orderModel.findByIdAndUpdate(
-        req.body.id,
-        { $set: {Status:'Order Cancelled',request:false} }
-      );
-      res.redirect('admin/messageBox')
+    if (req.body.status === 'accept') {
+        const data = await orderModel.findByIdAndUpdate(
+            req.body.id,
+            { $set: { Status: 'Order Cancelled', request: false, rejected: false } }
+        );
+
+
+
+        const product = await productModel.findById(data.productID._id)
+        const productArray = [product];
+        let returnData;
+        let updatedProduct = productArray.map((val, index) => {
+            return returnData = {
+                ProductName: val.ProductName,
+                BrandName: val.BrandName,
+                CategoryName: val.CategoryName,
+                StockQuantity: val.StockQuantity + val.quantity,
+                subCategory: val.subCategory,
+                PurchaseRate: val.PurchaseRate,
+                SalesRate: val.SalesRate,
+                TotalPrice: val.TotalPrice,
+                ColorNames: val.ColorNames,
+                ProductDescription: val.ProductDescription,
+                VATAmount: val.VATAmount,
+                MRP: val.MRP,
+                ProductSize: [
+                    {
+                        size: val.ProductSize[0].size,
+                        quantity: data.Size === val.ProductSize[0].size ? val.ProductSize[0].quantity + data.Quantity : val.ProductSize[0].quantity
+                    },
+                    {
+                        size: val.ProductSize[1].size,
+                        quantity: data.Size === val.ProductSize[1].size ? val.ProductSize[1].quantity + data.Quantity : val.ProductSize[1].quantity
+                    },
+                    {
+                        size: val.ProductSize[2].size,
+                        quantity: data.Size === val.ProductSize[2].size ? val.ProductSize[2].quantity + data.Quantity : val.ProductSize[2].quantity
+                    },
+                    {
+                        size: val.ProductSize[3].size,
+                        quantity: data.Size === val.ProductSize[3].size ? val.ProductSize[3].quantity + data.Quantity : val.ProductSize[3].quantity
+                    },
+
+                ],
+                files: val.files,
+                Inventory: val.Inventory,
+                Added: val.Added,
+                SI: val.SI
+
+            }
+        })
+
+        // console.log('product',product)
+        // console.log('updatedProduct',updatedProduct)
+
+        const checkWallet = await walletSchema.findOne({ userID: data.userID }).sort({ added: -1 });
+
+        const balance = checkWallet ? checkWallet.balance + data.Amount : data.Amount;
+
+        const walletData = {
+            userID: data.userID,
+            productID: data.productID,
+            orderID: req.body.id,
+            balance: balance,
+            transaction: 'Credit'
+        }
+
+
+        await productModel.findByIdAndUpdate(data.productID._id, updatedProduct[0], { new: true });
+
+        // console.log('checkWallet',checkWallet)
+
+        console.log('walletData', walletData)
+        await walletSchema.create(walletData)
+
+
+        res.redirect('admin/messageBox')
+
+    } else if (req.body.status === 'reject') {
+        await orderModel.findByIdAndUpdate(
+            req.body.id,
+            { $set: { rejected: true, request: false } }
+        );
+        res.redirect('admin/messageBox')
+    } else if (req.body.status === 'returnAccepted') {
+        const data = await orderModel.findByIdAndUpdate(
+            req.body.id,
+            { $set: { return: false, Status: 'Order Returned' } }
+        );
+
+
+
+        const product = await productModel.findById(data.productID._id)
+        const productArray = [product];
+        let returnData;
+        let updatedProduct = productArray.map((val, index) => {
+            return returnData = {
+                ProductName: val.ProductName,
+                BrandName: val.BrandName,
+                CategoryName: val.CategoryName,
+                StockQuantity: val.StockQuantity - val.quantity,
+                subCategory: val.subCategory,
+                PurchaseRate: val.PurchaseRate,
+                SalesRate: val.SalesRate,
+                TotalPrice: val.TotalPrice,
+                ColorNames: val.ColorNames,
+                ProductDescription: val.ProductDescription,
+                VATAmount: val.VATAmount,
+                MRP: val.MRP,
+                ProductSize: [
+                    {
+                        size: val.ProductSize[0].size,
+                        quantity: data.Size === val.ProductSize[0].size ? val.ProductSize[0].quantity + data.Quantity : val.ProductSize[0].quantity
+                    },
+                    {
+                        size: val.ProductSize[1].size,
+                        quantity: data.Size === val.ProductSize[1].size ? val.ProductSize[1].quantity + data.Quantity : val.ProductSize[1].quantity
+                    },
+                    {
+                        size: val.ProductSize[2].size,
+                        quantity: data.Size === val.ProductSize[2].size ? val.ProductSize[2].quantity + data.Quantity : val.ProductSize[2].quantity
+                    },
+                    {
+                        size: val.ProductSize[3].size,
+                        quantity: data.Size === val.ProductSize[3].size ? val.ProductSize[3].quantity + data.Quantity : val.ProductSize[3].quantity
+                    },
+
+                ],
+                files: val.files,
+                Inventory: val.Inventory,
+                Added: val.Added,
+                SI: val.SI
+
+            }
+        })
+
+        // console.log('product',product)
+        // console.log('updatedProduct',updatedProduct)
+        const checkWallet = await walletSchema.findOne({ userID: data.userID }).sort({ added: -1 });
+
+        const balance = checkWallet ? checkWallet.balance + data.Amount : data.Amount;
+
+        const walletData = {
+            userID: data.userID,
+            productID: data.productID,
+            orderID: req.body.id,
+            balance: balance,
+            transaction: 'Credit'
+        }
+
+
+        await productModel.findByIdAndUpdate(data.productID._id, updatedProduct[0], { new: true });
+
+
+        // console.log('checkWallet',checkWallet)
+
+        console.log('walletData', walletData)
+        await walletSchema.create(walletData)
+
+
+        res.redirect('admin/messageBox')
+    } else if (req.body.status === 'returnRejected') {
+        await orderModel.findByIdAndUpdate(
+            req.body.id,
+            { $set: { return: false, rejected: true } }
+        );
+    }
+
 }
 //Section for Post Method End here.....
 //.................................................................................................................................................
@@ -892,9 +1352,19 @@ module.exports = {
     CustomerFilter,
     postAddCategory,
     categoryEdit,
+    salesFilter,
     postEditProduct,
     logout,
     OrderTasks,
     orderHistory,
-    messageBox
+    messageBox,
+    coupon,
+    couponTasks,
+    salesReport,
+    offers,
+    offerTasks,
+    editOffer,
+    DeleteOffer,
+    deletCoupon
+
 }

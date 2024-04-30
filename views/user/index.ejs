@@ -281,8 +281,21 @@
                                                     <li><a href="/productOverview?id=<%= item._id %>"><i
                                                                 class="fa fa-eye"></i></a>
                                                     </li>
-                                                    <li><a href="single-product.html"><i class="fa fa-heart"></i></a>
-                                                    </li>
+                                                    <%
+                                                    let isWishlisted = false;
+                                                    productID.forEach(id => {
+                                                        if (id.toString() === item._id.toString()) {
+                                                            isWishlisted = true;
+                                                        }
+                                                    });
+                                                    %>
+                                                
+                                                <% if (isWishlisted) { %>
+                                                    <li><a href="" style="cursor: pointer;"><i class="fa fa-heart" style="color: #f00030;"></i></a></li>
+                                                <% } else { %>
+                                                    <li><a href=""  style="cursor: pointer;" onclick="wishlist('<%= item._id %>')"><i class="fa fa-heart"></i></a></li>
+                                                <% } %>
+                                             
                                                 </ul>
                                             </div>
                                             <img src=<%=item.files[1].url %> alt="">
@@ -291,8 +304,14 @@
                                             <h4>
                                                 <%= item.ProductName %>
                                             </h4>
-                                            <span>
-                                                <%= item.SalesRate %>
+                                            <span >
+                                                <%  if(item.offer > 0) { %>
+                                                    ₹ <%= item.SalesRate - item.SalesRate * item.offer / 100 %> <b style="font-weight: 500;text-decoration: line-through;"><%=item.MRP%></b>
+                                                    <b style="color: black; padding-left: 10px;font-size: 15pt;"><%=item.offer%>%OFF</b>
+                                                <% } else{ %>
+                                                    <%= item.SalesRate %> <b style="font-weight: 500;text-decoration: line-through;"><%=item.MRP%></b>
+                                                <% } %>
+                                               
                                             </span>
                                             <ul class="stars">
                                                 <li><i class="fa fa-star"></i></li>
@@ -349,8 +368,20 @@
                                                     <li><a href="/productOverview?id=<%= item._id %>"><i
                                                                 class="fa fa-eye"></i></a>
                                                     </li>
-                                                    <li><a href="single-product.html"><i class="fa fa-heart"></i></a>
-                                                    </li>
+                                                    <%
+                                                    let isWishlisted = false;
+                                                    productID.forEach(id => {
+                                                        if (id.toString() === item._id.toString()) {
+                                                            isWishlisted = true;
+                                                        }
+                                                    });
+                                                    %>
+                                                
+                                                <% if (isWishlisted) { %>
+                                                    <li><a href=""  style="cursor: pointer;"><i class="fa fa-heart" style="color: #f00030;"></i></a></li>
+                                                <% } else { %>
+                                                    <li><a href=""  style="cursor: pointer;" onclick="wishlist('<%= item._id %>')"><i class="fa fa-heart"></i></a></li>
+                                                <% } %>
                                                 </ul>
                                             </div>
                                             <img src=<%=item.files[1].url %> alt="">
@@ -360,7 +391,12 @@
                                                 <%= item.ProductName %>
                                             </h4>
                                             <span>
-                                                <%= item.SalesRate %>
+                                                <%  if(item.offer > 0) { %>
+                                                    ₹ <%= item.SalesRate - item.SalesRate * item.offer / 100 %> <b style="font-weight: 500;text-decoration: line-through;"><%=item.MRP%></b>
+                                                    <b style="color: black; padding-left: 10px;font-size: 15pt;"><%=item.offer%>%OFF</b>
+                                                <% } else{ %>
+                                                    <%= item.SalesRate %> <b style="font-weight: 500;text-decoration: line-through;"><%=item.MRP%></b>
+                                                <% } %>
                                             </span>
                                             <ul class="stars">
                                                 <li><i class="fa fa-star"></i></li>
@@ -413,8 +449,20 @@
                                                     <li><a href="/productOverview?id=<%= item._id %>"><i
                                                                 class="fa fa-eye"></i></a>
                                                     </li>
-                                                    <li><a href="single-product.html"><i class="fa fa-heart"></i></a>
-                                                    </li>
+                                                    <%
+                                                    let isWishlisted = false;
+                                                    productID.forEach(id => {
+                                                        if (id.toString() === item._id.toString()) {
+                                                            isWishlisted = true;
+                                                        }
+                                                    });
+                                                    %>
+                                                
+                                                <% if (isWishlisted) { %>
+                                                    <li><a href=""  style="cursor: pointer;"><i class="fa fa-heart" style="color: #f00030;"></i></a></li>
+                                                <% } else { %>
+                                                    <li><a href=""  style="cursor: pointer;"  onclick="wishlist('<%= item._id %>')"><i class="fa fa-heart"></i></a></li>
+                                                <% } %>
                                                 </ul>
                                             </div>
                                             <img src=<%=item.files[1].url %> alt="">
@@ -424,7 +472,12 @@
                                                 <%= item.ProductName %>
                                             </h4>
                                             <span>
-                                                <%= item.SalesRate %>
+                                                <%  if(item.offer > 0) { %>
+                                                    ₹ <%= item.SalesRate - item.SalesRate * item.offer / 100 %> <b style="font-weight: 500;text-decoration: line-through;"><%=item.MRP%></b>
+                                                    <b style="color: black; padding-left: 10px;font-size: 15pt;"><%=item.offer%>%OFF</b>
+                                                <% } else{ %>
+                                                    <%= item.SalesRate %> <b style="font-weight: 500;text-decoration: line-through;"><%=item.MRP%></b>
+                                                <% } %>
                                             </span>
                                             <ul class="stars">
                                                 <li><i class="fa fa-star"></i></li>
@@ -681,6 +734,7 @@
         <!-- Global Init -->
         <script src="/assets/js/custom.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
         <script>
             function search() {
                 const searchBar = document.getElementById('search').value
@@ -690,8 +744,7 @@
                 // Redirect to the new URL
                 window.location.href = searchLink.href;  
             }
-        </script>
-        <script>
+            
             document.getElementById('searchBtn').addEventListener('click', function () {
                 document.querySelector('.searchBar').style.display = 'block'
                 document.querySelector('.searchBar').style.display = 'flex'
@@ -714,7 +767,16 @@
             }
 
 
+            function wishlist(productID){
+                axios.post('/productOverview?task=wishlist', { productID }) // Sending productID as data
+                .then(function (response) {
 
+                })
+                .catch(function (error) {
+                    console.error('Error adding product to cart:', error);
+                    // Handle error if needed
+                });
+            }
 
             var a = false;
             document.addEventListener("DOMContentLoaded", function () {
@@ -749,6 +811,17 @@
                 });
                 console.log(a)
             });
+
+            function wishlist(productID){
+                axios.post('/productOverview?task=wishlist', { productID }) // Sending productID as data
+                .then(function (response) {
+
+                })
+                .catch(function (error) {
+                    console.error('Error adding product to cart:', error);
+                    // Handle error if needed
+                });
+            }
 
 
             $(function () {

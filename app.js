@@ -35,9 +35,9 @@ app.use(methodOverride('_method'))
 app.use('/',userRouter);
 app.use('/adminLogin',adminRoutes)
 
-// app.get('/',(req,res) => {
-//   res.render('user/404Error')
-// })
+app.get('*', (req, res) => {
+  res.render('user/404Error')
+})
 
 const port = process.env.port||8000
 app.listen(port,(err)=>{
