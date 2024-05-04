@@ -514,166 +514,105 @@ const addProductsPost = async (req, res) => {
 
 const postEditProduct = async (req, res) => {
     try {
-        const oldData = await productModel.findById(req.query.id);
 
-        const uploader = async (path) => await cloudinary.uploads(path, 'Images');
-        const urls = []
-        const files = req.files
-        let index = [];
-
-
-        console.log('files :', files)
-        if (files.length > 0) {
-
-            for (const file of files) {
-                const { path } = file
-                const { fieldname } = file;
-
-                index.push(fieldname)
-                try {
-                    const newPath = await uploader(path)
-                    urls.push(newPath)
-                    fs.unlinkSync(path)
-                } catch (uploadError) {
-                    console.error('Error uploading file to Cloudinary:', uploadError)
-                    return res.status(500).json({ error: 'Failed to upload images' })
+        if (req.query.task === 'deleteImage') {
+            try {
+                const id = req.body.id;
+                const index = req.body.index;
+        
+                // Find the product document by its ID
+                const product = await productModel.findById(id);
+        
+                // Access the files array and remove the element at the specified index
+                if (product) {
+                    product.files.splice(index, 1); // Remove 1 element at the specified index
+        
+                    // Update the product document in the database to reflect the changes
+                    await productModel.findByIdAndUpdate(id, { files: product.files });
+        
+                    console.log('Image deleted successfully');
+                    res.json({message:'success'})
+                } else {
+                    console.log('Product not found');
                 }
+            } catch (error) {
+                console.log('Error deleting image:', error);
             }
-        }
-        // if (val === "images1") {
-        //     item = val !== 'images1' ? oldData.files[0] : urls[0]
-        // }
-        // if (val === "images2") {
-        //     item = val !== 'images2' ? oldData.files[1] : urls[1]
-        // }
-        // if (val === "images3") {
-        //     item = val !== 'images3' ? oldData.files[2] : urls[2]
-        // }
-        // if (val === "images4") {
-        //     item = val !== 'images4' ? oldData.files[3] : urls[3]
-        // }
+        }else{
 
-        let item1, item2, item3, item4, minUrlLen;
+            // console.log(req.body.imageLinks)
+            const imageData = Array.isArray(req.body.imageLinks) ? req.body.imageLinks : [req.body.imageLinks];
+            const oldData = await productModel.findById(req.query.id);
+            console.log(oldData.files)
+            const imgData = []
+            oldData.files.forEach((val) => imgData.push(val))
 
-        console.log('index', index)
-        let count = 0;
+            // console.log('image Data : ',imgData)
 
-        let proData = [];
-        let a = 0;
-        for (let i = 0; i < 1; i++) {
-
-
-            if (index[a] == 'images1') {
-                console.log('urls[0]images1 : ', urls[count])
-                item1 = urls[count];
-                proData.push(item1)
-                count++;
-                a++;
-                // item = val !== 'images4' ? oldData.files[3] : urls[3]
-            } else {
-                console.log(' iam in olddata1');
-                item1 = oldData.files[0];
-                proData.push(item1)
-
+            const uploader = async (path) => await cloudinary.uploads(path, 'Images');
+            const urls = []
+            
+            // console.log('imageData.length :',imageData)
+            if (imageData.length > 0) {
+                console.log('hi iam in the if ')
+                for (const imageUrl of imageData) {
+                    try {
+                        const newPath = await uploader(imageUrl);
+                        urls.push(newPath);
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+            
             }
-
-            if (index[a] == 'images2') {
-                console.log('urls[0]images2 : ', urls[count])
-                item2 = urls[count];
-                proData.push(item2)
-                count++;
-                a++;
-            } else {
-                console.log(' iam in olddata2');
-                item2 = oldData.files[1];
-                proData.push(item2)
-
+            urls.forEach((val) =>imgData.push(val))
+    
+            const {
+                ProductName, BrandName, CategoryName, StockQuantity, subCategory,
+                PurchaseRate, SalesRate, TotalPrice, ColorNames,
+                ProductDescription, VATAmount, DiscountPrecentage, sizes
+            } = req.body
+    
+            // Prepare sizes array
+            let ProductSize = sizes.map((size, index) => ({
+                size,
+                quantity: req.body.SizeQuantity[index]
+            }));
+            //assigning all the reqested data to product variable
+    
+    
+            const Products = {
+                ProductName,
+                BrandName,
+                CategoryName,
+                StockQuantity,
+                subCategory,
+                PurchaseRate,
+                SalesRate,
+                TotalPrice,
+                ColorNames,
+                ProductDescription,
+                VATAmount,
+                DiscountPrecentage,
+                ProductSize,
+                files:imgData
+            };
+    
+            try {
+                await ProductModel.findOneAndUpdate({ _id: req.query.id }, { $set: Products }).then((result) => {
+                    // console.log('result :', result);
+                }).catch(error => {
+                    console.log(error);
+                });
+                const subCategory = await subCategorySchema.distinct('subCategory');
+                const productInfo = await ProductModel.findById(req.query.id)
+                res.render('admin/editProducts', { subCategory, productInfo, success: 'Product Successfully Edited' })
+    
+            } catch (saveError) {
+                console.error('Error saving product to database:', saveError)
+                res.status(500).json({ error: 'Failed to save product to database' })
             }
-
-
-            if (index[a] == 'images3') {
-                console.log('urls[0]images3 : ', urls[count])
-                item3 = urls[count];
-                proData.push(item3)
-                count++;
-                a++;
-            } else {
-                console.log(' iam in olddata3');
-                item3 = oldData.files[2];
-                proData.push(item3)
-
-            }
-
-            if (index[a] == 'images4') {
-                console.log('urls[0]images4 : ', urls[count])
-                item4 = urls[count];
-                proData.push(item4)
-                count++;
-                a++;
-            } else {
-                console.log(' iam in olddata4');
-                item4 = oldData.files[3];
-                proData.push(item4)
-
-            }
-
-
-        }
-
-        console.log('proData :', proData)
-
-
-
-        const imgData = []
-        imgData.push(oldData.files)
-
-        const finalImage = urls;
-
-        // requseting all the data from the body
-        const {
-            ProductName, BrandName, CategoryName, StockQuantity, subCategory,
-            PurchaseRate, SalesRate, TotalPrice, ColorNames,
-            ProductDescription, VATAmount, DiscountPrecentage, sizes
-        } = req.body
-
-        // Prepare sizes array
-        let ProductSize = sizes.map((size, index) => ({
-            size,
-            quantity: req.body.SizeQuantity[index]
-        }));
-        //assigning all the reqested data to product variable
-
-
-        const Products = {
-            ProductName,
-            BrandName,
-            CategoryName,
-            StockQuantity,
-            subCategory,
-            PurchaseRate,
-            SalesRate,
-            TotalPrice,
-            ColorNames,
-            ProductDescription,
-            VATAmount,
-            DiscountPrecentage,
-            ProductSize,
-            files: proData
-        };
-
-        try {
-            await ProductModel.findOneAndUpdate({ _id: req.query.id }, { $set: Products }).then((result) => {
-                console.log('result :', result);
-            }).catch(error => {
-                console.log(error);
-            });
-            const subCategory = await subCategorySchema.distinct('subCategory');
-            const productInfo = await ProductModel.findById(req.query.id)
-            res.render('admin/editProducts', { subCategory, productInfo, success: 'Product Successfully Edited' })
-
-        } catch (saveError) {
-            console.error('Error saving product to database:', saveError)
-            res.status(500).json({ error: 'Failed to save product to database' })
+    
         }
 
 

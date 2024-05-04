@@ -11,9 +11,8 @@
 
     <link rel="stylesheet" href="/assets/css/admin/addProducts.css">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" integrity="sha512-hvNR0F/e2J7zPPfLC9auFe3/SE0yG4aJCOd/qxew74NN7eyiSKjr7xJJMu1Jy2wf7FXITpWS1E/RY8yzuXN7VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
     <title>Edit Products</title>
@@ -27,54 +26,50 @@
         <br>
 
 
-        <div class="container-fluid conF-2">
+        <div class="container-fluid conF-2 outerDiv" id="blur">
             <div class="row1">
 
                 <div class="con-1 ">
                     <div class="box-1">
-                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png"
-                                        class="adminIcon" alt=""> <span
-                                        class="adminName">Admin</span></a>
-                </div>
-                <a href="adminDashboard">
-                        <button class="btns btnDashboard "><img class="img"
-                                        src="/assets/images/grid.png" alt=""><span
-                                        class="btnvalue">Dashboard</span></button>
-                </a>
-                <a href="ProductList">
-                        <button class="btns btnProducts btnColor"><img class="img"
-                                        src="/assets/images/grid.png" alt=""><span
-                                        class="btnvalue">Products</span></button>
-                </a>
-                <a href="Category">
-                <button class="btns btnCategory "><img class="img" src="/assets/images/grid.png"
-                                alt=""><span class="btnvalue"><span>Category</span></button>
-                </a>
-                <a href="orderHistory">
-                <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png"
-                                alt=""><span class="btnvalue">Order History</span></button>
-                </a>
-              <a href="coupon">
-                  <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png"
-                                alt=""><span class="btnvalue">Coupon</span></button>
-              </a>
-              <a href="salesReport">
-                <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png"
-                                alt=""><span class="btnvalue">Sales Report</span></button>
-              </a>
-                
-                <a href="CustomerDetails">
-                        <button class="btns btnUser"><img class="img"
-                                        src="/assets/images/grid.png" alt=""><span
-                                        class="btnvalue">User Report</span> </button>
-                </a>
-                <a href="offers">
-                        <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png"
-                                alt=""><span class="btnvalue">Offers</span></button>
-                </a>
-              
-                <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png"
-                                alt=""><span class="btnvalue">Wallet</span></button>
+                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png" class="adminIcon" alt=""> <span
+                                class="adminName">Admin</span></a>
+                    </div>
+                    <a href="adminDashboard">
+                        <button class="btns btnDashboard "><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Dashboard</span></button>
+                    </a>
+                    <a href="ProductList">
+                        <button class="btns btnProducts btnColor"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Products</span></button>
+                    </a>
+                    <a href="Category">
+                        <button class="btns btnCategory "><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue"><span>Category</span></button>
+                    </a>
+                    <a href="orderHistory">
+                        <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Order History</span></button>
+                    </a>
+                    <a href="coupon">
+                        <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Coupon</span></button>
+                    </a>
+                    <a href="salesReport">
+                        <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Sales Report</span></button>
+                    </a>
+
+                    <a href="CustomerDetails">
+                        <button class="btns btnUser"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">User Report</span> </button>
+                    </a>
+                    <a href="offers">
+                        <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Offers</span></button>
+                    </a>
+
+                    <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Wallet</span></button>
                 </div>
                 <div class="con-2">
                     <div class="row row2">
@@ -98,7 +93,7 @@
                         </div>
                         <div class="row row3">
                             <form action="editProducts?id=<%= productInfo._id %>&_method=PUT" class="frmRow3"
-                                method="post" enctype="multipart/form-data">
+                                method="post" >
                                 <div class="row generalRow">
                                     <div class="col-11 col11">
                                         <br>
@@ -171,40 +166,6 @@
                                                         value="<%= productInfo.SalesRate %>">
                                                 </div>
                                                 <div class="col-4">
-                                                    <label class="lbl" for="">Total Price</label>
-                                                    <input type="text" class="form-control inputpass" name="TotalPrice"
-                                                        id="TotalPrice" placeholder="Total Price"
-                                                        value="<%= productInfo.TotalPrice %>">
-                                                </div>
-
-                                            </div>
-
-                                            <div class="col-12 box1-col1 Description">
-                                                <div class="col-12 textAreaRow">
-                                                    <label class="lbl" for="">Product Description</label>
-
-                                                    <textarea class="inputDescription" name="ProductDescription" id=""
-                                                        placeholder="Enter your Product Description" cols="30" rows="10"
-                                                        name="ProductDescription"><%= productInfo.ProductDescription %></textarea>
-                                                </div>
-
-                                            </div>
-
-                                            <div class="col-12 box1-col1">
-                                                <div class="col-4">
-                                                    <label class="lbl" for="">VAT Amount (%)</label>
-                                                    <input type="text" class="form-control inputpass" name="VATAmount"
-                                                        id="SalesRate" placeholder="Enter VAT Amount"
-                                                        value="<%= productInfo.VATAmount %>">
-                                                </div>
-                                                <div class="col-4">
-                                                    <label class="lbl" for="">MRP</label>
-                                                    <input type="text" class="form-control inputpass"
-                                                        name="DiscountPrecentage" id="TotalPrice"
-                                                        placeholder="Enter Discount Precentage"
-                                                        value="<%= productInfo.MRP %>">
-                                                </div>
-                                                <div class="col-4 categoryRow">
                                                     <label class="lbl" for="">Color Name</label>
 
                                                     <select name="ColorNames" class="dropbtn">
@@ -227,6 +188,16 @@
 
                                             </div>
 
+                                            <div class="col-12 box1-col1 Description">
+                                                <div class="col-12 textAreaRow">
+                                                    <label class="lbl" for="">Product Description</label>
+
+                                                    <textarea class="inputDescription" name="ProductDescription" id=""
+                                                        placeholder="Enter your Product Description" cols="30" rows="10"
+                                                        name="ProductDescription"><%= productInfo.ProductDescription %></textarea>
+                                                </div>
+
+                                            </div>
 
                                             <div class="col-12 box1-col1">
                                                 <div class="col-12 sizeRow">
@@ -257,6 +228,30 @@
                                             </div>
 
 
+                                            <div class="col-12 box1-col1">
+                                                <div class="col-4">
+                                                    <label class="lbl" for="">VAT Amount (%)</label>
+                                                    <input type="text" class="form-control inputpass" name="VATAmount"
+                                                        id="SalesRate" placeholder="Enter VAT Amount"
+                                                        value="<%= productInfo.VATAmount %>">
+                                                </div>
+                                                <div class="col-4">
+                                                    <label class="lbl" for="">MRP</label>
+                                                    <input type="text" class="form-control inputpass"
+                                                        name="DiscountPrecentage" id="TotalPrice"
+                                                        placeholder="Enter Discount Precentage"
+                                                        value="<%= productInfo.MRP %>">
+                                                </div>
+                                                <div class="col-4 categoryRow">
+                                                    <label class="lbl" for="">Add Images</label>
+                                                    <input type="file" id="selectImage" style="padding: 0;"
+                                                        onchange="cropImage()" class="form-control inputpass"
+                                                        accept="image/*" multiple>
+                                                </div>
+
+                                            </div>
+
+
 
 
                                         </div>
@@ -272,44 +267,16 @@
                                             <div class="col-12 imgInput">
 
 
-
-                                                <label for="input-file1" id="drop-area1">
-                                                    <input type="file" accept="image/*"  name="images1" id="input-file1" onchange="validateImageFile()"
-                                                        hidden>
-
-                                                    <div id="img-view1" class="border" 
-                                                        style="background-image: url('<%= productInfo.files[0].url %>');">
-                                                    </div>
-                                                </label>
-
-                                                <label for="input-file2" id="drop-area2" class="ml-3">
-                                                    <input type="file" accept="image/*"  onchange="validateImageFile()"
-                                                        name="images2" id="input-file2" hidden>
-                                                    <div id="img-view2" class="border"
-                                                        style="background-image: url('<%= productInfo.files[1].url %>');">
-                                                    </div>
-
-
-                                                </label>
-
-                                                <label for="input-file3" id="drop-area3" class="ml-3">
-                                                    <input type="file" accept="image/*" onchange="validateImageFile()"
-                                                        name="images3" id="input-file3" hidden>
-                                                    <div id="img-view3" class="border" name="image"
-                                                        style="background-image: url('<%= productInfo.files[2].url %>');">
-                                                    </div>
-
-
-                                                </label>
-
-                                                <label for="input-file4" id="drop-area4" class="ml-3">
-                                                    <input type="file" accept="image/*"  onchange="validateImageFile()"
-                                                        name="images4" id="input-file4" hidden>
-                                                    <div id="img-view4" class="border"
-                                                        style="background-image: url('<%= productInfo.files[3].url %>');">
-                                                    </div>
-
-                                                </label>
+                                                <% productInfo.files.forEach((val,i)=> { %>
+                                                    <label for="input-file<%=i+1%>" id="drop-area<%=i+1%>"
+                                                        style="display: flex;align-items: start;justify-content: end; margin-left: 20px;">
+                                                        <a class="dltImage" href="" onclick="deleteImage('<%=i%>','<%= productInfo._id %>')">
+                                                            <i class="fa-solid fa-xmark" style="color: #000000;"></i></a>
+                                                        <div id="img-view<%=i+1%>" class="border"
+                                                            style="background-image: url('<%= productInfo.files[i].url %>');">
+                                                        </div>
+                                                    </label>
+                                                <% }) %>
 
 
                                             </div>
@@ -329,13 +296,41 @@
             </div>
         </div>
 
+        <div id="popup">
+            <div class="row" style="display: flex;">
+                <p>Crop Your Image Here </p>
+                <span class="btnSpan"><button class="btn " id="SaveBtn">Save</button></span>
+            </div>
 
+            <div class="row imageRow">
+                <div class="Showimage imgDiv" style="width: 50%;">
+                    <img src="/assets/images/cropImage.jpg" alt="" id="image">
+                </div>
+                <div class="Showimage" id="" style="width: 40%;">
+                    <div id="imageContainer" style="width: 100%;">
+
+                    </div>
+                    <div class="btnRow">
+                        <a href="editProducts?id=<%= productInfo._id %>">
+                            <button class="Cancel"><span><i class="fa-solid fa-xmark"
+                                        style="color: #ffffff;"></i></span>Cancel</button>
+                        </a>
+                        <button type="button" id="cropBtn" class="crop"><span><i class="fa-solid fa-crop"
+                                    style="color: #ffffff;"></i></span>Crop</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js" integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script>
-            
-        </script>
 
-        <script src="/assets/js/addProduct.js"></script>
+        <!-- <script src="/assets/js/addProduct.js"></script> -->
+        <script src="/assets/js/editProducts.js"></script>
 
 
 </body>

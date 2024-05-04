@@ -11,6 +11,9 @@ function validateImageFile() {
     }
 }
 
+
+
+
 // function SaveProducts() {
 //     console.log('hi bro iam in button')
 //     let croppedImages = document.querySelectorAll('.croppedImages')
@@ -51,7 +54,7 @@ function validateImageFile() {
 //             reader.onload = function (e) {
 //                 // Set the background image of the preview div
 //                 preview.style.backgroundImage = `url(${e.target.result})`;
-//                 preview.textContent="";
+//                 preview.textContent = "";
 //                 preview.style.border = 0
 //             };
 
@@ -63,9 +66,8 @@ function validateImageFile() {
 //     });
 // }
 
-// Call the function for each image input dynamically
+// // Call the function for each image input dynamically
 // for (let i = 1; i <= 4; i++) {
 //     handleImageInput(`input-file${i}`, `img-view${i}`);
 // }
-
 
