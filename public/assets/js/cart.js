@@ -95,7 +95,7 @@ function quantityIncDec(index,id, Products, type) {
         .then(function (response) {
             console.log('Product added to cart successfully', response);
             // Handle success response if needed
-            window.location.href = '/checkOut';
+            window.location.href = '/shoppingcart';
         })
         .catch(function (error) {
             console.error('Error adding product to cart:', error);

@@ -504,7 +504,7 @@ a {
   width: 100%;
   height: 100%;
   border-radius: 20px;
-  border: 2px dashed #bbb5ff;
+  /* border: 2px dashed #bbb5ff; */
   background-color: #f7f8ff;
   background-position: center;
   background-size: cover;
@@ -549,7 +549,7 @@ a {
   width: 100%;
   height: 100%;
   border-radius: 20px;
-  border: 2px dashed #bbb5ff;
+  /* border: 2px dashed #bbb5ff; */
   background-color: #f7f8ff;
   background-position: center;
   background-size: cover;
@@ -630,7 +630,8 @@ a {
   font-size: 10pt;
   font-family: Poppins;
 }
-.checkRow p{
+
+.checkRow p {
   padding-left: 20px;
 }
 
@@ -669,17 +670,45 @@ a {
   transition: 0.05s;
 }
 
+#popup p {
+  width: 70%;
+  text-align: end;
+  padding-top: 10px;
+  font-size: 20pt;
+}
+
 #popup.active {
   visibility: visible;
   opacity: 1;
   transition: 0.05s ease;
 }
 
+.btnSpan {
+  width: 30%;
+  text-align: end;
+  padding-right: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+#SaveBtn{
+  color: white;
+  background-color: black;
+}
+#SaveBtn:focus{
+  background-color: black;
+  color: white;
+}
+#SaveBtn:hover{
+  background-color: black;
+  color: white;
+}
 .imageRow {
   margin-top: 20px;
-  height: 600px;
+  min-height: 540px;
   display: flex;
   justify-content: center;
+  /* background-color: teal; */
   /* align-items: center; */
 }
 
@@ -692,7 +721,7 @@ a {
 .cropDiv {
   display: flex;
   flex-direction: column;
-  align-items: center;  
+  align-items: center;
   justify-content: space-between;
   height: 500px;
   /* background-color: rgb(24, 184, 85); */
@@ -700,21 +729,21 @@ a {
 
 #image {
   width: 350px;
-  height: 500px;
+  height: 470px;
   display: block;
+  border: 1px solid black;
   /* background-color: aqua; */
 }
-#Croppedimage{
-  margin-top: 30px;
-  width: 170px;
-  height: 270px;
-  /* background-color: #2196F3; */
-}
-.btnRow{
+
+
+.btnRow {
+  width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-bottom: 30px;
 }
+
 .Cancel {
   background-color: black;
   width: 100px;
@@ -725,9 +754,11 @@ a {
   height: 38px;
   border-radius: 7px;
 }
+
 .Cancel span {
   margin-right: 10px;
 }
+
 .crop {
   margin-left: 10px;
   background-color: black;
@@ -739,18 +770,36 @@ a {
   height: 38px;
   border-radius: 7px;
 }
+
 .crop span {
   margin-right: 10px;
 }
 
 .preview {
   overflow: hidden;
-  width: 160px; 
-  height: 160px;
+  width: 110px;
+  height: 110px;
   margin: 10px;
   border: 1px solid rgb(85, 85, 85);
+  cursor: pointer;
 }
 
+.Showimage {
+  height: 490px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+}
+
+#imageContainer {
+  /* background-color: #0964b0; */
+  height: 470px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
 
 
 
@@ -787,14 +836,16 @@ transform: translate(-50%, -50%);
 text-align: center;
 }  */
 
-.navRow .col-4{
+.navRow .col-4 {
   display: flex;
   justify-content: end;
 }
-.navRow .col-2{
+
+.navRow .col-2 {
   padding-left: 70px;
 }
-.msgCount{
+
+.msgCount {
   font-family: Poppins;
   color: white;
   font-weight: 600;
@@ -807,13 +858,80 @@ text-align: center;
   top: -4px;
   right: 5px;
 }
-.navRow{
+
+.navRow {
   min-height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.messageShow{
+
+.messageShow {
   font-size: 23pt;
   position: relative;
+}
+
+
+
+input[type="file"] {
+  position: relative;
+}
+
+input[type="file"]::file-selector-button {
+  width: 136px;
+  color: transparent;
+}
+
+/* Faked label styles and icon */
+input[type="file"]::before {
+  position: absolute;
+  pointer-events: none;
+  top: 7px;
+  left: 16px;
+  height: 20px;
+  width: 20px;
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230964B0'%3E%3Cpath d='M18 15v3H6v-3H4v3c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-3h-2zM7 9l1.41 1.41L11 7.83V16h2V7.83l2.59 2.58L17 9l-5-5-5 5z'/%3E%3C/svg%3E");
+}
+
+input[type="file"]::after {
+  position: absolute;
+  pointer-events: none;
+  top: 7px;
+  left: 40px;
+  color: #0964b0;
+  content: "Upload File";
+}
+
+/* ------- From Step 1 ------- */
+
+/* file upload button */
+input[type="file"]::file-selector-button {
+  padding: 0 16px;
+  height: 40px;
+  cursor: pointer;
+  background-color: white;
+  border: none;
+  border-right: 1px solid rgb(210, 210, 210);
+  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+  margin-right: 16px;
+  transition: background-color 200ms;
+}
+
+/* file upload button hover state */
+input[type="file"]::file-selector-button:hover {
+  background-color: #f3f4f6;
+}
+
+/* file upload button active state */
+input[type="file"]::file-selector-button:active {
+  background-color: #e5e7eb;
+}
+
+.file-input-container::before {
+  content: 'No chosen files';
+  position: absolute;
+  bottom: 0;
+  padding-bottom: 10px;
+  /* Adjust the padding as needed */
 }

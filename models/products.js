@@ -31,10 +31,6 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    TotalPrice: {
-        type: String,
-        required: true
-    },
     ColorNames: {
         type: String,
         required: true

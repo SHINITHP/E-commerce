@@ -473,7 +473,7 @@
 
                     console.log('orderDetails', data[0].Status)
 
-                    if(data[0].Status === 'Order Returned' || data[0].Status === 'Order Cancelled'){
+                    if(data[0].Status === 'Order Returned' || data[0].Status === 'Order Cancelled' || data[0].Status === 'Out For Delivery'){
                         document.getElementById('cancelOrderbtn').style.display='none'
                         document.getElementById('btnReturnOrder').style.display = 'none'
                     }else if(data[0].Status === 'Delivered'){

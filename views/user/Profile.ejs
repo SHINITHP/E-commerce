@@ -19,7 +19,7 @@
 
     <link rel="stylesheet" type="text/css" href="/assets/css/user/font-awesome.css">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <link rel="stylesheet" href="/assets/css/user/templatemo-hexashop.css">
 
@@ -121,7 +121,8 @@
                         <a href="/Profile" id="DropDownLi1">
                             <li style="padding-left: 68px; background-color: #afafaf; height: 50px;">Profile Information
                                 <span><i style="font-size:24px;color:#494949;padding-left:63px;"
-                                        class="fa rightAngle">&#xf105;</i></span></li>
+                                        class="fa rightAngle">&#xf105;</i></span>
+                            </li>
                         </a>
 
                         <a href="profileMenu?menu=manageAddress" id="DropDownLi2">
@@ -321,11 +322,40 @@
                                         <% }); } %>
                             </div>
                             <a style="width: 100%;display: flex; justify-content: center;">
-                                <input type="submit"  class="saveChanges" id="savebtn">
+                                <input type="submit" class="saveChanges" id="savebtn">
                             </a>
                         </form>
                     </div>
 
+                    <div class="row"
+                        style="margin-top: 20px; display: flex;flex-direction: column;align-items: center;justify-content: center;">
+                        <h5
+                            style="width: 100%; display: flex; justify-content: center;font-family: Poppins; font-size: 17pt;font-weight: bold;">
+                            Change Password
+                        </h5>
+                        <br>
+                        <form action="" style="width: 100%;display: flex;flex-direction: column ;align-items: center;justify-content: center;">
+                            <div class="col-11"
+                                style="display: flex;align-items: center;justify-content: center;padding: 15px;">
+                                <label for="oldpassword" style="width: 50%;color: rgb(107, 107, 107);">Enter old
+                                    password
+                                    <input type="text" class="form-control firstNameInput" name="oldPassword"
+                                        id="oldpassword" placeholder="Enter old password" required>
+                                </label>
+
+                                <label for="newPassword"
+                                    style="width: 50%;color: rgb(107, 107, 107);margin-left: 20px;">Enter new password
+                                    <input type="text"  class="form-control firstNameInput" name="newPassword"
+                                        id="newPassword" placeholder="Enter new password" required>
+                                </label>
+                            </div>
+
+                            <input type="submit" style="background-color: black;color: white;border-radius: 5px;"
+                                class="btn" value="Change Password">
+                        </form>
+
+                    </div>
+                    <br>
 
                     <div class="row" style="margin-top: 20px;">
                         <h5

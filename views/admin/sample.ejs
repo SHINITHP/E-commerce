@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/assets/css/admin/addProducts.css">
+</head>
+<body style="width: 100%; height: 100%;">
+    
+<div  id="popup active" style="background-color: tan;width: 50%;">
+    <p style="">Crop Your Image Here</p>
+
+    <div class="row imageRow" style="background-color: teal;display: flex;">
+        <div class="col-6 Showimage imgDiv" style="background-color: azure;">
+            <!-- <img src="" alt="" id="image" > -->
+        </div>
+        <div class="col-6 Showimage" style="width: 40%;background-color: aqua;display: flex;flex-wrap: wrap;">
+            <div id="Croppedimage" class="preview" style="background-color: red;"></div>
+            <div id="Croppedimage" class="preview" style="background-color: red;"></div>
+            <div id="Croppedimage" class="preview" style="background-color: red;"></div>
+            <div id="Croppedimage" class="preview" style="background-color: red;"></div>
+            <div id="Croppedimage" class="preview" style="background-color: red;"></div>
+            <div id="Croppedimage" class="preview" style="background-color: red;"></div>
+        </div>
+    </div>
+    <div class="row btnRow" style="background-color: blueviolet;display: flex;justify-content: center; margin-bottom: 20px;">
+        <a href="addProducts">
+            <button class="Cancel"><span><i class="fa-solid fa-xmark"
+                        style="color: #ffffff;"></i></span>Cancel</button>
+        </a>
+        <button type="button" id="cropBtn" class="crop"><span><i class="fa-solid fa-crop" style="color: #ffffff;"></i></span>Crop Image</button>
+
+    </div>
+</div>
+</body>
+</html>
+

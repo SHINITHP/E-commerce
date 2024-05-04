@@ -684,6 +684,7 @@ const overviewFilter = async (req, res) => {
       }
       console.log(details)
       await wishlistSchema.create(details)
+      res.json({message:'success'})
       // const wishlistExist = await wishlistSchema.findOne({ userID: userID, productID: req.body.productID });
       // console.log('wishlistExist : ',wishlistExist)
       // if(!wishlistEntry){
@@ -697,7 +698,7 @@ const overviewFilter = async (req, res) => {
       // }
 
     } catch (error) {
-
+      console.log(error)
     }
   }
 
