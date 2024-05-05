@@ -1,0 +1,11 @@
+.btnNormal .active{
+    color: black;
+}
+
+.AddWishlistBtn{
+    display: none;
+    background-color: aquamarine;
+}
+.InWishlistBtn{
+    display: none;
+}

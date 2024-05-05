@@ -289,7 +289,7 @@ const priceFilter = async (req, res) => {
       const maximum = req.body.maximum;
       const BrandName = req.body.brandName;
 
-      console.log('BrandName : ',BrandName)
+      console.log('BrandName : ', BrandName)
 
       if (req.query.cat !== 'allProducts') {
         const ProductData = await productModel.find({
@@ -421,7 +421,7 @@ const logout = async (req, res) => {
 }
 
 const filterProducts = async (req, res) => {
-  
+
   let allProducts = await productModel.find({})
 
   let BrandNames = allProducts.map((val) => val.BrandName)
@@ -500,7 +500,7 @@ const profileMenu = async (req, res) => {
       res.render('user/myOrders', { orderDetails })
     }
     else if (req.query.menu == 'wishlist') {
-      const wishlist = await wishlistSchema.find({userID:userID}).populate('productID')
+      const wishlist = await wishlistSchema.find({ userID: userID }).populate('productID')
       res.render('user/wishlist', { wishlist })
     }
     else if (req.query.menu == 'Wallet') {
@@ -684,7 +684,7 @@ const overviewFilter = async (req, res) => {
       }
       console.log(details)
       await wishlistSchema.create(details)
-      res.json({message:'success'})
+      res.json({ message: 'success' })
       // const wishlistExist = await wishlistSchema.findOne({ userID: userID, productID: req.body.productID });
       // console.log('wishlistExist : ',wishlistExist)
       // if(!wishlistEntry){
@@ -700,8 +700,19 @@ const overviewFilter = async (req, res) => {
     } catch (error) {
       console.log(error)
     }
-  }
+  }else if (req.query.task === 'Removewishlist') {
+    // console.log('wishlist:', req.body.productID, userID)
+    try {
+      const productID = req.body.productID
+    
+      await wishlistSchema.deleteOne({productID:productID,userID:userID})
+      res.json({ message: 'success' })
 
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
   // const data = productModel.aggregate([
   //   {
   //     $group: {
@@ -716,7 +727,7 @@ const overviewFilter = async (req, res) => {
   //     }
   //   }
   // ])
-}
+// }
 
 
 
@@ -725,7 +736,7 @@ const checkOut = async (req, res) => {
   const userID = verifyToken(token); // Verify token and get userID
   couponApplied = false
 
-  console.log('couponApplied',couponApplied)
+  console.log('couponApplied', couponApplied)
   try {
     if (req.query.task == 'checkWallet') {
       // console.log('checkWallet')
@@ -799,45 +810,21 @@ const orderDetails = async (req, res) => {
   try {
 
     const cartItems = JSON.parse(req.body.cartData);
+    await orderDetailsModel.deleteMany({ userID: userID });
     console.log('cartItems', cartItems)
     for (const item of cartItems) {
       const { userID, productID, quantity, size, totalPrice } = item;
 
-      if (userID && productID._id && quantity && size && totalPrice) {
-        const existingItem = await orderDetailsModel.findOne({
-          userID: userID,
-          productID: productID._id,
-          quantity: quantity,
-          size: size,
-          totalPrice: req.body.total,
-        });
+      await orderDetailsModel.create({
+        userID: userID,
+        productID: productID._id,
+        quantity: quantity,
+        size: size,
+        totalPrice: req.body.total,
+        totalMRP: item.totalMRP,
+        discount: req.body.discountAmt
+      });
 
-
-        const orderDetails = await orderDetailsModel.find({}); // Fetch all products from order summary
-
-        const cartProductIDs = cartItems.map(item => item.productID._id); // Extract product IDs from the cart
-
-        // Filter out the products from the order summary which are not present in the cart by comparing their IDs
-        const productsToDelete = orderDetails.filter(item => !cartProductIDs.includes(item.productID.toString()));
-
-        // Delete the products not in the cart from the order summary
-        for (const product of productsToDelete) {
-          await orderDetailsModel.deleteOne({ _id: product._id });
-        }
-
-
-        if (!existingItem) {
-          await orderDetailsModel.create({
-            userID: userID,
-            productID: productID._id,
-            quantity: quantity,
-            size: size,
-            totalPrice: req.body.total,
-            totalMRP: item.totalMRP,
-            discount: req.body.discountAmt
-          });
-        }
-      }
     }
 
     res.json({ message: 'success' })
@@ -983,7 +970,7 @@ const checkOutTasks = async (req, res) => {
 
       console.log('wallet details :', order)
 
-      
+
 
 
       console.log('details :', orderDetails[0].userID)
@@ -1032,12 +1019,12 @@ const checkOutTasks = async (req, res) => {
       console.log('UpdatedData  ', UpdatedData)
       const id = orderDetails[0].productID;
       await productModel.findByIdAndUpdate(id, UpdatedData[0], { new: true });
-      
+
       for (const element of ProductData) {
         // console.log('element.productID._id : ', element.productID._id);
         const orderDetails = await orderDetailsModel.deleteMany({ productID: element.productID._id });
         const addToCart = await addtToCartModel.deleteMany({ productID: element.productID._id });
-       
+
       }
 
       await walletSchema.create(order)
@@ -1130,7 +1117,7 @@ const checkOutTasks = async (req, res) => {
         // console.log('element.productID._id : ', element.productID._id);
         const orderDetails = await orderDetailsModel.deleteMany({ productID: element.productID._id });
         const addToCart = await addtToCartModel.deleteMany({ productID: element.productID._id });
-       
+
       }
 
       const orderData = await orderSchema.create(orderDetails)
@@ -1252,23 +1239,23 @@ const checkOutTasks = async (req, res) => {
     }
   } else if (req.query.task === 'checkCoupon') {
     try {
-      
+
       const currentDate = new Date(); // Get today's date
       const couponExist = await couponModel.findOne({
         couponCode: req.body.couponCode,
-        Expire : { $gte: currentDate },
-        status : 'Listed'
-    });
+        Expire: { $gte: currentDate },
+        status: 'Listed'
+      });
 
       const cartData = await addtToCartModel.find({ userID: userID })
 
       const couponUsed = await appliedCoupon.findOne({ couponCode: req.body.couponCode })
-      console.log('couponUsed : ',couponApplied,couponExist)
+      console.log('couponUsed : ', couponApplied, couponExist)
       if (couponApplied === false) {
 
         if (couponExist) {
 
-          if (!couponUsed ) {
+          if (!couponUsed) {
             console.log('iam in couponExist', couponExist.discountAmount)
             couponApplied = true;
             res.json({ message: couponExist.discountAmount })

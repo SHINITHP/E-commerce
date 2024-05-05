@@ -4,33 +4,39 @@ const dropDownLi2 = document.getElementById('DropDownLi2');
 let isDropDownVisible = false;
 let url = '/Profile?_method=PATCH'
 
-document.getElementById('savebtn').addEventListener('click',function(event){
-    var inputs = document.querySelectorAll('.firstNameInput');
-    var isValid = true;
+document.getElementById('savebtn').addEventListener('click', function(event) {
+    let inputs = document.querySelectorAll('.firstNameInput');
+    let isValid = true;
 
     for (var i = 0; i < inputs.length; i++) {
-        var input = inputs[i];
-        if (input.value.trim() === '' || /\s/.test(input.value)) {
+        let input = inputs[i];
+        // Check if input value is not undefined and not null, and if it has whitespace
+        if (!input.value || input.value.trim() === '' || /\s/.test(input.value)) {
             isValid = false;
             break; // Exit the loop if any field is invalid
         }
     }
 
     if (!isValid) {
-        const confirmation = confirm('Please fill in all fields without whitespace.');
-        if (!confirmation) {
-            document.getElementById('updateForm').method = 'GET';
-            document.getElementById('updateForm').action='/Profile' // Prevent form submission if user cancels the confirmation
-        }
-    }else{
+        console.log('input :',inputs)
+        event.preventDefault(); // Prevent form submission
+        Swal.fire({
+            icon: 'info',
+            title: '<span style="color: red">Please ensure that all your information are correct!</span>',
+            timer: 4000, // Duration in milliseconds
+            toast: true,
+            position: 'top', // Toast position
+            showConfirmButton: false
+        });
+    } else {
+        // If all inputs are valid, submit the form
         document.getElementById('updateForm').method = 'Post';
-        document.getElementById('updateForm').action = url
+        document.getElementById('updateForm').action = url;
+        document.getElementById('savebtn').type = 'submit';
     }
-})
+});
 
-// function Validation(){
-   
-// }
+
 
 
 
@@ -148,21 +154,28 @@ function compressImage(canvas, quality) {
 }
 
 document.getElementById('edit').addEventListener('click', function (event) {
-    const confirmation = confirm('Are you sure to edit your information?');
-    if (!confirmation) {
-        event.preventDefault(); // Prevent form submission
-    } else {
-        document.getElementById('fullName').removeAttribute("readonly");
-        document.getElementById('EmailAddress').removeAttribute("readonly");
-        document.getElementById('cityDistrictTown').removeAttribute("readonly");
-        document.getElementById('MobileNo').removeAttribute("readonly");
-        document.getElementById('PinCode').removeAttribute("readonly");
-        const saveBtn = document.getElementById('savebtn')
-        document.getElementById('edit').style.display='none'
-        saveBtn.style.display = 'block'
-        document.getElementById('cancelEdit').style.display='block'
-    }
-
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to edit your Information?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('fullName').removeAttribute("readonly");
+            document.getElementById('EmailAddress').removeAttribute("readonly");
+            document.getElementById('cityDistrictTown').removeAttribute("readonly");
+            document.getElementById('MobileNo').removeAttribute("readonly");
+            document.getElementById('PinCode').removeAttribute("readonly");
+            const saveBtn = document.getElementById('savebtn')
+            document.getElementById('edit').style.display='none'
+            saveBtn.style.display = 'block'
+            document.getElementById('cancelEdit').style.display='block'
+        } else {
+            event.preventDefault();
+        }
+    });
 })
 
 document.getElementById('cancelEdit').addEventListener('click', function(){
@@ -175,4 +188,5 @@ document.getElementById('cancelEdit').addEventListener('click', function(){
     saveBtn.style.display = 'none'
     document.getElementById('cancelEdit').style.display='none'
     document.getElementById('edit').style.display='block'
+    window.location.href='/Profile'
 })

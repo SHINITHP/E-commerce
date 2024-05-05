@@ -34,7 +34,7 @@ router.route('/sendEmailOtp').get(userAuth,sendEmailOtp).post(postsendEmailOtp)/
 router.route('/forgotEnterOtp').get(forgotEnterOtp).post(postForgotEnterOtp)// Enter otp for forgotpassword
 router.route('/resetPassword').get(resetPassword).patch(createPassword)// resetpassword page
 router.route('/resendOtp').post(resendOtp)//resend otp 
-router.route('/productOverview').get(productOverview).post(overviewFilter)//productOverview 
+router.route('/productOverview').get(productOverview).post(overviewFilter).delete(overviewFilter)//productOverview 
 router.route('/allProducts').get(landingPage).post(priceFilter)//allProducts
 router.route('/filterProducts').get(filterProducts)
 router.route('/filterCategory').get(landingPage)//listCategory

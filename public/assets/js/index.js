@@ -4,7 +4,7 @@ function search() {
     console.log(searchBar)
     searchLink.href = "/allProducts?task=search&page=1&text=" + searchBar;
     // Redirect to the new URL
-    window.location.href = searchLink.href;  
+    window.location.href = searchLink.href;
 }
 
 document.getElementById('searchBtn').addEventListener('click', function () {
@@ -28,30 +28,61 @@ function shoppingCart(index, productID, Price) {
         });
 }
 
-function ShowWistedBtn(i){
-    console.log('hiiiii')
-    document.getElementById(`wishlisted${i}`).style.display='block'
+
+
+
+
+
+function removeFromWishlist(element) {
+
+    let i = element.getAttribute('data-index');
+    console.log(element)
+    let removeIcon = element.querySelector('.remove');
+    let add = element.querySelector('.add');
+    if (removeIcon.style.display === 'none') {
+        removeIcon.style.display = 'inline'; // or 'block' depending on your needs
+        add.style.display = 'none'; // or 'block' depending on your needs
+
+        Swal.fire({
+            icon: 'success',
+            text: 'Successfully added to wishlist!',
+            timer: 4000, // Duration in milliseconds
+            toast: true,
+            position: 'top', // Toast position
+            showConfirmButton: false // Hide confirmation button
+        });
+
+        axios.post('/productOverview?task=wishlist', { productID }) // Sending productID as data
+            .then(function (response) {
+            })
+            .catch(function (error) {
+                console.error('Error adding product to cart:', error);
+                // Handle error if needed
+            });
+
+    } else {
+        removeIcon.style.display = 'none';
+        add.style.display = 'inline';
+
+        Swal.fire({
+            icon: 'info',
+            text: 'Successfully Removed from wishlist!',
+            timer: 4000, // Duration in milliseconds
+            toast: true,
+            position: 'top', // Toast position
+            showConfirmButton: false // Hide confirmation button
+        });
+        axios.delete('/productOverview?task=Removewishlist', { data: { productID: productID } }) // Sending productID as data
+            .then(function (response) {
+            })
+            .catch(function (error) {
+                console.error('Error adding product to cart:', error);
+                // Handle error if needed
+            });
+    }
+    // element.style.display='none'
+    // document.getElementById('addWishlist'+i).style.display='inline-block'
 }
-
-function wishlist(productID,i){
-    
-    document.getElementById(`wishlistBtnHidden${i}`).style.display = 'none';
-    document.getElementById(`wishlistBtn${i}`).style.display = 'inline'; // Show the initially hidden heart icon
-    console.log('wishlist', document.getElementById(`wishlistBtnHidden${i}`),document.getElementById(`wishlistBtn${i}`));
-
-    // axios.post('/productOverview?task=wishlist', { productID }) // Sending productID as data
-    // .then(function (response) {
-    //     console.log(response)
-
-        
-    // })
-    // .catch(function (error) {
-    //     console.error('Error adding product to cart:', error);
-    //     // Handle error if needed
-    // });
-}
-
-
 
 var a = false;
 document.addEventListener("DOMContentLoaded", function () {
