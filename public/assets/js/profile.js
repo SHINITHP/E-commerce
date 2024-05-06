@@ -4,7 +4,137 @@ const dropDownLi2 = document.getElementById('DropDownLi2');
 let isDropDownVisible = false;
 let url = '/Profile?_method=PATCH'
 
-document.getElementById('savebtn').addEventListener('click', function(event) {
+function checkValidOTP() {
+    const NewOTP = document.getElementById('NewOTP').value
+    const newEmail = document.getElementById('otpLabel').innerText;
+    if (NewOTP.trim() === '' || /\s/.test(NewOTP)) {
+        Swal.fire({
+            icon: 'info',
+            title: '<span style="color: red">Please ensure that to Enter Correct OTP!</span>',
+            timer: 4000, // Duration in milliseconds
+            toast: true,
+            position: 'top', // Toast position
+            showConfirmButton: false
+        });
+    } else {
+        console.log('iam in axios')
+        axios.patch('/Profile?task=checkEmailotp', { NewOTP, newEmail }) // Sending productID as data
+            .then(function (response) {
+                console.log('Product added to cart successfully', response);
+                location.href = '/Profile'
+
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Email Successfully Changed',
+                    timer: 4000, // Duration in milliseconds
+                    toast: true,
+                    position: 'top', // Toast position
+                    showConfirmButton: false // Hide confirmation button
+                });
+            })
+            .catch(function (error) {
+                console.error('Error adding product to cart:', error);
+                // Handle error if needed
+            });
+
+    }
+}
+
+function changePassword(){
+    const oldPassword = document.getElementById('oldpassword').value
+    const newPassword = document.getElementById('newPassword').value
+
+    if (oldPassword.trim() === '' || /\s/.test(oldPassword) || newPassword.trim() === '' || /\s/.test(newPassword)) {
+        Swal.fire({
+            icon: 'info',
+            title: '<span style="color: red"> Please ensure that the entered data is correct!</span>',
+            timer: 4000, // Duration in milliseconds
+            toast: true,
+            position: 'top', // Toast position
+            showConfirmButton: false
+        });
+    }else {
+        axios.patch('/Profile?task=changePassword', { newPassword , oldPassword}) // Sending productID as data
+            .then(function (response) {
+                console.log('Product added to cart successfully', response);
+                if (response.data.message === 'error') {
+                    Swal.fire({
+                        icon: 'info',
+                        title: '<span style="color: red"> Please ensure that the old password you entered is accurate.!</span>',
+                        timer: 4000, // Duration in milliseconds
+                        toast: true,
+                        position: 'top', // Toast position
+                        showConfirmButton: false
+                    });
+                } else if(response.data.message === 'Success'){
+                    Swal.fire({
+                        icon: 'success',
+                        text: 'Password successfully changed',
+                        timer: 4000, // Duration in milliseconds
+                        toast: true,
+                        position: 'top', // Toast position
+                        showConfirmButton: false // Hide confirmation button
+                    });
+                    document.getElementById('oldpassword').value=''
+                    document.getElementById('newPassword').value=''
+                }else{
+                    Swal.fire({
+                        icon: 'info',
+                        title: '<span style="color: red"> Something Went Wrong!</span>',
+                        timer: 4000, // Duration in milliseconds
+                        toast: true,
+                        position: 'top', // Toast position
+                        showConfirmButton: false
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.error('Error adding product to cart:', error);
+                // Handle error if needed
+            });
+
+
+    }
+
+}
+
+function changeEmail() {
+    const newEmailAddress = document.getElementById('newEmailAddress').value
+    if (newEmailAddress.trim() === '' || /\s/.test(newEmailAddress)) {
+        Swal.fire({
+            icon: 'info',
+            title: '<span style="color: red"> Please ensure that the entered data is correct!</span>',
+            timer: 4000, // Duration in milliseconds
+            toast: true,
+            position: 'top', // Toast position
+            showConfirmButton: false
+        });
+    } else {
+        axios.post('/Profile', { newEmailAddress }) // Sending productID as data
+            .then(function (response) {
+                console.log('Product added to cart successfully', response);
+                if (response.data.message === 'SameEmail') {
+                    document.getElementById('emailError').innerHTML = 'New email is same as existing email'
+                } else {
+                    localStorage.removeItem('newEmailAddress');
+                    localStorage.setItem('newEmailAddress', newEmailAddress);
+                    const newEmail = localStorage.getItem('newEmailAddress');
+                    document.getElementById('otpLabel').innerHTML = newEmail
+                    location.href = '#open-modal'
+                }
+            })
+            .catch(function (error) {
+                console.error('Error adding product to cart:', error);
+                // Handle error if needed
+            });
+
+
+    }
+
+}
+
+
+document.getElementById('savebtn').addEventListener('click', function (event) {
     let inputs = document.querySelectorAll('.firstNameInput');
     let isValid = true;
 
@@ -18,7 +148,7 @@ document.getElementById('savebtn').addEventListener('click', function(event) {
     }
 
     if (!isValid) {
-        console.log('input :',inputs)
+        console.log('input :', inputs)
         event.preventDefault(); // Prevent form submission
         Swal.fire({
             icon: 'info',
@@ -164,29 +294,29 @@ document.getElementById('edit').addEventListener('click', function (event) {
     }).then((result) => {
         if (result.isConfirmed) {
             document.getElementById('fullName').removeAttribute("readonly");
-            document.getElementById('EmailAddress').removeAttribute("readonly");
-            document.getElementById('cityDistrictTown').removeAttribute("readonly");
+            // document.getElementById('EmailAddress').removeAttribute("readonly");
+            // document.getElementById('cityDistrictTown').removeAttribute("readonly");
             document.getElementById('MobileNo').removeAttribute("readonly");
             document.getElementById('PinCode').removeAttribute("readonly");
             const saveBtn = document.getElementById('savebtn')
-            document.getElementById('edit').style.display='none'
+            document.getElementById('edit').style.display = 'none'
             saveBtn.style.display = 'block'
-            document.getElementById('cancelEdit').style.display='block'
+            document.getElementById('cancelEdit').style.display = 'block'
         } else {
             event.preventDefault();
         }
     });
 })
 
-document.getElementById('cancelEdit').addEventListener('click', function(){
+document.getElementById('cancelEdit').addEventListener('click', function () {
     document.getElementById('fullName').readOnly = true;
-    document.getElementById('EmailAddress').readOnly = true;
-    document.getElementById('cityDistrictTown').readOnly = true;
+    // document.getElementById('EmailAddress').readOnly = true;
+    // document.getElementById('cityDistrictTown').readOnly = true;
     document.getElementById('MobileNo').readOnly = true;
     document.getElementById('PinCode').readOnly = true;
     const saveBtn = document.getElementById('savebtn')
     saveBtn.style.display = 'none'
-    document.getElementById('cancelEdit').style.display='none'
-    document.getElementById('edit').style.display='block'
-    window.location.href='/Profile'
+    document.getElementById('cancelEdit').style.display = 'none'
+    document.getElementById('edit').style.display = 'block'
+    window.location.href = '/Profile'
 })

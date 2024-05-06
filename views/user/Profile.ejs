@@ -41,7 +41,7 @@
 <body>
 
 
-
+<div class="container-fluid" style="padding: 0;margin: 0;">
 
     <!-- ***** Header Area Start ***** -->
     <header class="header-area header-sticky" style="position: fixed;">
@@ -194,41 +194,21 @@
                                     if(data.selected === true) {
                                     %>
                                     <div class="col-6"
-                                        style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                        style=" min-height: 200px;  display: flex; flex-direction: column; justify-content: space-around;">
                                         <label class="lbl" for="firstName">Full Name
                                             <input type="text" class="form-control firstNameInput" name="fullName"
                                                 id="fullName" placeholder="Enter Full Name" required
                                                 value="<%=data.fullName%>" readonly>
                                         </label>
-
-                                        <label class="lbl" for="EmailAddress"> Email Address
-                                            <input type="email" class="form-control firstNameInput" name="emailAddress"
-                                                id="EmailAddress" placeholder="Enter Email Address" required
-                                                value="<%=data.emailAddress%>" readonly>
-                                        </label>
-                                        <label class="lbl" for="EmailAddress"> City/District/Town
-                                            <input type="text" class="form-control firstNameInput"
-                                                name="cityDistrictTown" id="cityDistrictTown"
-                                                placeholder="City/District/Town" required
-                                                value="<%=data.cityDistrictTown%>" readonly>
+                                        <label class="lbl" for="PinCode"> Pin-Code
+                                            <input type="text" class="form-control firstNameInput" name="pinCode"
+                                                id="PinCode" placeholder="Enter Pin-Code" required
+                                                value="<%=data.pincode%>" readonly>
                                         </label>
 
-                                        <label class="lbl" for="State"> State
-                                            <select name="state" class="dropbtn firstNameInput" style="outline: none;"
-                                                id="State">
-                                                <option value="" <%=data.state==='' ? 'selected' :'' %>>Select State
-                                                </option>
-                                                <option value="Kerala" <%=data.state==='Kerala' ? 'selected' : '' %>
-                                                    >Kerala</option>
-                                                <option value="Karnadaka" <%=data.state==='Karnadaka' ? 'selected' : ''
-                                                    %> >Karnadaka</option>
-                                                <option value="TamilNadu" <%=data.state==='TamilNadu' ? 'selected' : ''
-                                                    %> >TamilNadu</option>
-                                            </select>
-                                        </label>
                                     </div>
                                     <div class="col-6"
-                                        style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                        style=" min-height: 200px;  display: flex; flex-direction: column; justify-content: space-around;">
                                         <label class="lbl" for="MobileNo"> Mobile Number
                                             <input type="text" class="form-control firstNameInput" name="mobileNo"
                                                 id="MobileNo" placeholder="Enter Mobile Number" required
@@ -242,59 +222,26 @@
                                                     <%=data.gender==='Female' ? 'checked' : '' %>> Female
                                             </div>
                                         </label>
-                                        <label class="lbl" for="State"> Country
-                                            <select name="country" class="dropbtn firstNameInput" style="outline: none;"
-                                                id="State">
-                                                <option value="" <%=data.country==='' ? 'selected' :'' %>>Select Country
-                                                </option>
-                                                <option value="India" <%=data.country==='India' ? 'selected' : '' %>
-                                                    >India</option>
-                                                <option value="Australia" <%=data.country==='Australia' ? 'selected'
-                                                    : '' %>>Australia</option>
-                                                <option value="New Zealand" <%=data.country==='New Zealand' ? 'selected'
-                                                    : '' %>>New Zealand</option>
-                                            </select>
-                                        </label>
-                                        <label class="lbl" for="PinCode"> Pin-Code
-                                            <input type="text" class="form-control firstNameInput" name="pinCode"
-                                                id="PinCode" placeholder="Enter Pin-Code" required
-                                                value="<%=data.pincode%>" readonly>
-                                        </label>
+                                     
                                     </div>
-                                    <% selectedFound=true; } }); if (!selectedFound) { userData.forEach((data)=> {
+                                    <% selectedFound=true; }  }); if (!selectedFound) { userData.forEach((data)=> {
                                         %>
                                         <div class="col-6"
-                                            style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                            style=" min-height: 200px;  display: flex; flex-direction: column; justify-content: space-around;">
                                             <label class="lbl" for="firstName">Full Name
                                                 <input type="text" class="form-control firstNameInput" name="fullName"
                                                     id="fullName" placeholder="Enter Full Name" required
                                                     value="<%=data.userName%>" readonly>
                                             </label>
-
-                                            <label class="lbl" for="EmailAddress"> Email Address
-                                                <input type="email" class="form-control firstNameInput"
-                                                    name="emailAddress" id="EmailAddress"
-                                                    placeholder="Enter Email Address" required
-                                                    value="<%=data.emailAddress%>" readonly>
+                                            <label class="lbl" for="PinCode"> Pin-Code
+                                                <input type="text" class="form-control firstNameInput" name="pinCode"
+                                                    id="PinCode" placeholder="Enter Pin-Code" required value=""
+                                                    readonly>
                                             </label>
-                                            <label class="lbl" for="EmailAddress"> City/District/Town
-                                                <input type="text" class="form-control firstNameInput"
-                                                    name="cityDistrictTown" id="cityDistrictTown"
-                                                    placeholder="City/District/Town" required value="" readonly>
-                                            </label>
-
-                                            <label class="lbl" for="State"> State
-                                                <select name="state" class="dropbtn firstNameInput"
-                                                    style="outline: none;" id="State">
-                                                    <option value="">Select State</option>
-                                                    <option value="Kerala">Kerala</option>
-                                                    <option value="Karnadaka">Karnadaka</option>
-                                                    <option value="TamilNadu">TamilNadu</option>
-                                                </select>
-                                            </label>
+                                        
                                         </div>
                                         <div class="col-6"
-                                            style=" min-height: 350px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                            style=" min-height: 200px;  display: flex; flex-direction: column; justify-content: space-around;">
                                             <label class="lbl" for="MobileNo"> Mobile Number
                                                 <input type="text" class="form-control firstNameInput" name="mobileNo"
                                                     id="MobileNo" placeholder="Enter Mobile Number" required
@@ -306,20 +253,7 @@
                                                     <input type="radio" name="gender" value="Female"> Female
                                                 </div>
                                             </label>
-                                            <label class="lbl" for="State"> Country
-                                                <select name="country" class="dropbtn firstNameInput"
-                                                    style="outline: none;" id="State">
-                                                    <option value="">Select Country</option>
-                                                    <option value="India">India</option>
-                                                    <option value="Australia">Australia</option>
-                                                    <option value="New Zealand">New Zealand</option>
-                                                </select>
-                                            </label>
-                                            <label class="lbl" for="PinCode"> Pin-Code
-                                                <input type="text" class="form-control firstNameInput" name="pinCode"
-                                                    id="PinCode" placeholder="Enter Pin-Code" required value=""
-                                                    readonly>
-                                            </label>
+                                
                                         </div>
                                         <% }); } %>
                             </div>
@@ -329,14 +263,40 @@
                         </form>
                     </div> 
 
-                    <div class="row"
-                        style="margin-top: 20px; display: flex;flex-direction: column;align-items: center;justify-content: center;">
-                        <h5
-                            style="width: 100%; display: flex; justify-content: center;font-family: Poppins; font-size: 17pt;font-weight: bold;">
-                            Change Password
-                        </h5>
+                    <div class="row"style="margin-top: 20px; display: flex;flex-direction: column;align-items: center;justify-content: center;">
+                     
+                        <div class="col-11" style="display: flex;justify-content: space-between;">
+                            <h5 style="width: 50%; display: flex; justify-content: start;font-family: Poppins; font-size: 17pt;font-weight: bold;">Change Email</h5>
+                            <a  onclick="changeEmail()" ><input type="submit" style="background-color: black;color: white;" class="btn btnEdit"  value="Change"></a>
+                        </div>
+                       
                         <br>
-                        <form action="" style="width: 100%;display: flex;flex-direction: column ;align-items: center;justify-content: center;">
+                    
+                            <div class="col-11"
+                                style="display: flex;flex-direction: column;align-items: start;justify-content: start;padding: 15px;">
+                                <label for="oldpassword" style="width: 50%;color: rgb(107, 107, 107);padding: 0;margin: 0;">Enter new
+                                    Email
+
+                                    <% let oldemail = userData.length > 0 ? userData[0].emailAddress : '' %>
+                                    <input type="text" class="form-control changePassword" name="newEmail"
+                                        id="newEmailAddress" placeholder="<%=oldemail%>" >
+                                </label>
+                                <p id="emailError" style="padding-left:5px;font-size: 9pt;color: red;"></p>
+                            </div>
+
+                       
+                    </div>
+                    <br>
+
+                    <div class="row"style="margin-top: 20px; display: flex;flex-direction: column;align-items: center;justify-content: center;">
+                       
+                        <div class="col-11" style="display: flex;justify-content: space-between;">
+                            <h5 style="width: 50%; display: flex; justify-content: start;font-family: Poppins; font-size: 17pt;font-weight: bold;">Change Password</h5>
+                            <input type="submit" style="background-color: black;color: white;border-radius: 5px;" class="btn" onclick="changePassword()" value="Change">
+                        </div>
+                       
+                        <br>
+                    
                             <div class="col-11"
                                 style="display: flex;align-items: center;justify-content: center;padding: 15px;">
                                 <label for="oldpassword" style="width: 50%;color: rgb(107, 107, 107);">Enter old
@@ -352,10 +312,7 @@
                                 </label>
                             </div>
 
-                            <input type="submit" style="background-color: black;color: white;border-radius: 5px;"
-                                class="btn" value="Change Password">
-                        </form>
-
+                       
                     </div>
                     <br>
 
@@ -417,11 +374,29 @@
     <!-- eFooter starts here... -->
     <%- include('../../views/user/footer.ejs') %>
         <!-- Footer end  here... -->
+</div>
 
-
-
-
-
+<div id="open-modal" class="modal-window">
+    <div>
+      <a href="#" title="Close" class="modal-close">Close</a>
+     
+      <div class="row" style="display: flex;justify-content: space-between;padding: 20px;">
+        <h1>Verify OTP</h1>
+        <a href="" style="font-size: 10pt;color: blue;">Resend OTP</a>
+      </div>
+      <div class="row" style="display: flex;flex-direction: column;justify-content:center;">
+        <label for="oldEmailOTP" style="width: 100%;padding: 10px;">
+            <p style="font-size: 9pt;">Enter OTP sent to <span id="otpLabel"></span></p>
+            <input type="number" maxlength="6" id="NewOTP" class="form-control" style="width: 100%;height: 40px;">
+        </label>
+      </div>
+      
+      <div class="row" style="display: flex;align-items: center;justify-content: center;">
+        <a onclick="checkValidOTP()" href=""><button class="btn btnEdit" style="border-radius:20px;height: 40px;width: 130px;">Submit</button></a>
+      </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
         <script src="/assets/js/profile.js">  </script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>  

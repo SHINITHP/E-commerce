@@ -5,7 +5,7 @@ const {
     logout, profile, profileMenu, google, shoppingCart, updateCart, sendEmailOtp, postsendEmailOtp,
     forgotEnterOtp, postForgotEnterOtp, resetPassword, createPassword, saveUserAddress, filterProducts,
     enterOtp, sentOTP, createUser, resendOtp, productOverview, saveImage, overviewFilter, checkOut,
-    checkOutTasks, orderDetails, updateProfile,onlinPayment,verifyPayment,priceFilter,DeleteData
+    checkOutTasks, orderDetails, updateProfile,onlinPayment,verifyPayment,priceFilter,DeleteData,profileTasks
 } = require("../../controller/user/userConroller.js");
 
 const { userAuth } = require('../../middlewares/authMiddleware.js')
@@ -30,7 +30,7 @@ router.route('/google/redirect').get(passport.authenticate('google'), (req, res)
     res.redirect('/')
 })
 router.route('/shoppingcart').get(userAuth, shoppingCart).post(orderDetails).patch(updateCart).delete(removeCartProduct)//shoppingcart 
-router.route('/sendEmailOtp').get(userAuth,sendEmailOtp).post(postsendEmailOtp)//enter email page to send otp for forgotpassword
+router.route('/sendEmailOtp').get(sendEmailOtp).post(postsendEmailOtp)//enter email page to send otp for forgotpassword
 router.route('/forgotEnterOtp').get(forgotEnterOtp).post(postForgotEnterOtp)// Enter otp for forgotpassword
 router.route('/resetPassword').get(resetPassword).patch(createPassword)// resetpassword page
 router.route('/resendOtp').post(resendOtp)//resend otp 
@@ -38,7 +38,7 @@ router.route('/productOverview').get(productOverview).post(overviewFilter).delet
 router.route('/allProducts').get(landingPage).post(priceFilter)//allProducts
 router.route('/filterProducts').get(filterProducts)
 router.route('/filterCategory').get(landingPage)//listCategory
-router.route('/Profile').get(userAuth, profile).patch(updateProfile)
+router.route('/Profile').get(userAuth, profile).post(profileTasks).patch(updateProfile)
 router.route('/checkOut').get(userAuth, checkOut).post(checkOutTasks).put(updateCheckout)
 router.route('/logout').get(logout)//logout
 router.route('/profileMenu').get(userAuth,profileMenu).post(saveUserAddress).put(saveUserAddress).delete(DeleteData)

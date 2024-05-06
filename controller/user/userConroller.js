@@ -475,6 +475,7 @@ const profile = async (req, res) => {
     const userInfo = await addressModel.find({ userID: userID }).populate('userID')
     const data = await UserModel.findById(userID).select('-password');
     let userData = data ? [data] : [];
+    console.log(userData, ' : userData')
     res.render('user/Profile', { error: '', userInfo, userData })
 
   } catch (error) {
@@ -571,6 +572,31 @@ const saveUserAddress = async (req, res) => {
       console.log(error)
     }
 
+  }else if (req.query.task === 'addToCart') {
+    // console.log('wishlist:', req.body.productID, userID)
+    try {
+      console.log('iam in the add to cart')
+      const productID = req.body.productID
+      const data = await productModel.findById(productID);
+      const cartExist = await addtToCartModel.find({productID:productID})
+      if(cartExist){
+        res.json({message:'success'})
+      }else{
+        const details = {
+          userID,
+          productID,
+          quantity:1,
+          totalPrice: data.SalesRate,
+          size: data.ProductSize[0].size,
+          totalMRP: data.MRP
+        }
+        console.log('Received cart data:', details);
+        await addtToCartModel.create(details)
+        res.json({message:'success'})
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
   else if (req.query.type === 'manageAddress') {
     try {
@@ -700,12 +726,12 @@ const overviewFilter = async (req, res) => {
     } catch (error) {
       console.log(error)
     }
-  }else if (req.query.task === 'Removewishlist') {
+  } else if (req.query.task === 'Removewishlist') {
     // console.log('wishlist:', req.body.productID, userID)
     try {
       const productID = req.body.productID
-    
-      await wishlistSchema.deleteOne({productID:productID,userID:userID})
+
+      await wishlistSchema.deleteOne({ productID: productID, userID: userID })
       res.json({ message: 'success' })
 
     } catch (error) {
@@ -713,20 +739,20 @@ const overviewFilter = async (req, res) => {
     }
   }
 }
-  // const data = productModel.aggregate([
-  //   {
-  //     $group: {
-  //       _id: `${ProductSize}`, // Group by size field
-  //       count: { $sum: 1 } // Count occurrences of each size
-  //     }
-  //   },
-  //   {
-  //     $project: {// Exclude _id field from output
-  //       size: "$_id", // Rename _id to size
-  //       count: 1 // Include count field
-  //     }
-  //   }
-  // ])
+// const data = productModel.aggregate([
+//   {
+//     $group: {
+//       _id: `${ProductSize}`, // Group by size field
+//       count: { $sum: 1 } // Count occurrences of each size
+//     }
+//   },
+//   {
+//     $project: {// Exclude _id field from output
+//       size: "$_id", // Rename _id to size
+//       count: 1 // Include count field
+//     }
+//   }
+// ])
 // }
 
 
@@ -1309,36 +1335,118 @@ const removeCartProduct = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
+  console.log('iam in change email')
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
   const userID = verifyToken(token); // Verify token and get userID
-  const newData = {
-    $set: {
-      fullName: req.body.fullName,
-      emailAddress: req.body.emailAddress,
-      phoneNo: req.body.mobileNo,
-      cityDistrictTown: req.body.cityDistrictTown,
-      state: req.body.state,
-      country: req.body.country,
-      pincode: req.body.pinCode
-    }
-  };
+  const oldEmail = await UserModel.findById(userID, { _id: 0, emailAddress: 1 });
+  const emailAddress = oldEmail.emailAddress;
+  if (req.query.task === 'checkEmailotp') {
+    try {
+      console.log(req.body.NewOTP)
+      const newOTP = req.body.NewOTP
+      const newEmail = req.body.newEmail;
+      const response = await OTPModel.find({ emailAddress }).sort({ createdAt: -1 }).limit(1);
+      console.log(response[0].otp, 'dshsdsdmn :', newOTP)
 
-  const result = await addressModel.updateOne({ userID: userID, selected: true }, {
-    $set: {
-      fullName: req.body.fullName,
-      emailAddress: req.body.emailAddress,
-      phoneNo: req.body.mobileNo,
-      cityDistrictTown: req.body.cityDistrictTown,
-      state: req.body.state,
-      country: req.body.country,
-      pincode: req.body.pinCode
+      if (newOTP === response[0].otp) {
+        await UserModel.findByIdAndUpdate(userID, { $set: { emailAddress: newEmail } })
+        res.json({ message: 'success' })
+      } else {
+        res.json({ message: 'error' })
+      }
+    } catch (error) {
+      console.log(error)
     }
-  });
+  }
+  else if (req.query.task === 'changePassword') {
+    try {
+      console.log('iam in change password')
+      const oldPassword = req.body.oldPassword;
+      const newPassword = req.body.newPassword;
+      const Password = await UserModel.findById(userID, { _id: 0, password: 1 })
+      console.log('correct password')
+      const isPasswordMatch = await bcrypt.compare(oldPassword, Password.password)
+      let hashedPassword;
+      if (isPasswordMatch) {
+     
+        hashedPassword = await bcrypt.hash(newPassword, 10);
+        console.log(hashedPassword,' : hashedPassword')
+        await UserModel.findByIdAndUpdate(userID,{$set:{password:hashedPassword}})
+        res.json({message:'Success'})
+      }else{
+        res.json({message:'error'})
+      }
 
-  res.redirect('/Profile')
+
+    } catch (error) {
+      console.log(error)
+    }
+  } else {
+    const newData = {
+      $set: {
+        fullName: req.body.fullName,
+        emailAddress: req.body.emailAddress,
+        phoneNo: req.body.mobileNo,
+        cityDistrictTown: req.body.cityDistrictTown,
+        state: req.body.state,
+        country: req.body.country,
+        pincode: req.body.pinCode
+      }
+    };
+
+    const result = await addressModel.updateOne({ userID: userID, selected: true }, {
+      $set: {
+        fullName: req.body.fullName,
+        emailAddress: req.body.emailAddress,
+        phoneNo: req.body.mobileNo,
+        cityDistrictTown: req.body.cityDistrictTown,
+        state: req.body.state,
+        country: req.body.country,
+        pincode: req.body.pinCode
+      }
+    });
+
+    res.redirect('/Profile')
+  }
 
 }
 
+const profileTasks = async (req, res) => {
+  try {
+    const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+    const userID = verifyToken(token);
+
+    console.log(req.body.newEmailAddress)
+    const newEmail = req.body.newEmailAddress;
+
+    const oldEmail = await UserModel.findById(userID, { _id: 0, emailAddress: 1 });
+    console.log(oldEmail)
+    const emailAddress = oldEmail.emailAddress;
+    if (newEmail === oldEmail.emailAddress) {
+      res.json({ message: 'SameEmail' })
+    } else {
+      otp = otpGenerator.generate(6, {
+        upperCaseAlphabets: false,
+        lowerCaseAlphabets: false,
+        specialChars: false,
+      })
+
+      let result = await OTPModel.findOne({ otp: otp });
+      while (result) {
+        otp = otpGenerator.generate(6, {
+          upperCaseAlphabets: false,
+        });
+        result = await OTPModel.findOne({ otp: otp });
+      }
+      const otpPayload = { emailAddress, otp };
+      await OTPModel.create(otpPayload);
+      res.json({ message: 'success' })
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 
 //send OTP for the registration of user 
@@ -1546,10 +1654,7 @@ const postForgotEnterOtp = async (req, res) => {
     console.log(otp);
     console.log(response[0].otp);
     if (response.length === 0 || combinedOTP !== response[0].otp) {
-      return res.status(400).json({
-        success: false,
-        message: 'The OTP is not valid',
-      });
+      res.render('user/enterOtp', { message: 'Invalid OTP', timer: '2:00' })
     } else {
       res.redirect('/resetPassword')
     }
@@ -1673,5 +1778,6 @@ module.exports = {
   logout, profile, profileMenu, google, shoppingCart, updateCart, sendEmailOtp, postsendEmailOtp,
   forgotEnterOtp, postForgotEnterOtp, resetPassword, createPassword, saveUserAddress, filterProducts,
   enterOtp, sentOTP, createUser, resendOtp, productOverview, saveImage, overviewFilter, checkOut,
-  checkOutTasks, orderDetails, updateProfile, onlinPayment, verifyPayment, priceFilter, DeleteData
+  checkOutTasks, orderDetails, updateProfile, onlinPayment, verifyPayment, priceFilter, DeleteData,
+  profileTasks
 }

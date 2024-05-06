@@ -31,9 +31,7 @@ function shoppingCart(index, productID, Price) {
 
 
 
-
-
-function removeFromWishlist(element) {
+function Wishlist(element,productID) {
 
     let i = element.getAttribute('data-index');
     console.log(element)
