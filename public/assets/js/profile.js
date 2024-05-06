@@ -2,7 +2,7 @@ const changeIcon = document.getElementById('changeIcon');
 const dropDownLi1 = document.getElementById('DropDownLi1');
 const dropDownLi2 = document.getElementById('DropDownLi2');
 let isDropDownVisible = false;
-let url = '/Profile?_method=PATCH'
+let url = '/Profile?task=changeinfo&_method=PATCH'
 
 function checkValidOTP() {
     const NewOTP = document.getElementById('NewOTP').value
@@ -159,6 +159,7 @@ document.getElementById('savebtn').addEventListener('click', function (event) {
             showConfirmButton: false
         });
     } else {
+        console.log('hlo bro ')
         // If all inputs are valid, submit the form
         document.getElementById('updateForm').method = 'Post';
         document.getElementById('updateForm').action = url;
@@ -294,10 +295,9 @@ document.getElementById('edit').addEventListener('click', function (event) {
     }).then((result) => {
         if (result.isConfirmed) {
             document.getElementById('fullName').removeAttribute("readonly");
-            // document.getElementById('EmailAddress').removeAttribute("readonly");
-            // document.getElementById('cityDistrictTown').removeAttribute("readonly");
             document.getElementById('MobileNo').removeAttribute("readonly");
-            document.getElementById('PinCode').removeAttribute("readonly");
+            document.getElementById('emailCancelbtn').style.display='block'
+            document.getElementById('passwordCancelbtn').style.display='block'
             const saveBtn = document.getElementById('savebtn')
             document.getElementById('edit').style.display = 'none'
             saveBtn.style.display = 'block'
@@ -310,13 +310,13 @@ document.getElementById('edit').addEventListener('click', function (event) {
 
 document.getElementById('cancelEdit').addEventListener('click', function () {
     document.getElementById('fullName').readOnly = true;
-    // document.getElementById('EmailAddress').readOnly = true;
-    // document.getElementById('cityDistrictTown').readOnly = true;
+    document.getElementById('emailCancelbtn').style.display='none'
+    document.getElementById('passwordCancelbtn').style.display='none'
     document.getElementById('MobileNo').readOnly = true;
-    document.getElementById('PinCode').readOnly = true;
     const saveBtn = document.getElementById('savebtn')
     saveBtn.style.display = 'none'
     document.getElementById('cancelEdit').style.display = 'none'
     document.getElementById('edit').style.display = 'block'
     window.location.href = '/Profile'
 })
+

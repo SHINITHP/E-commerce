@@ -93,7 +93,7 @@ function cropImage() {
             srcInput.hidden = true;
             srcInput.value = element.src
             imgLabel.appendChild(srcInput)
-
+console.log(srcInput.value)
             const imgDiv = document.createElement('img');
             imgDiv.classList.add('croppedImages')
             imgDiv.id = `img-view${i + 1}`;

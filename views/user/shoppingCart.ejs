@@ -96,7 +96,7 @@
         </div>
     </div>
 </header>
-
+<% let count , cartCount%>
 
         <!-- show product datas -->
         <div class="container-fluid con-f1">
@@ -115,7 +115,12 @@
                 </div>
                 <div class="col-1 colms"></div>
             </div>
-            <% let count , cartCount%>
+            <% if(cartItems.length === 0) { %>
+                <div class="row row-2 " style="min-height: 300px;display: flex;align-items: center;justify-content: center;">
+                    <span>Your Cart section is currently empty, awaiting your selections.</span>
+                </div>
+            <% } else { %>  
+            
             <% cartItems.forEach((item,index)=> { %>
                 <% count = index + 1  , cartCount = index%>
                 <% var itemId=item._id; %>
@@ -195,6 +200,8 @@
                     </div>
 
                     <% }) %>
+
+                <% } %>
                         <br>
                         <div class="row row-3">
                             <div class="col-lg-6 col-md-6 col-sm-6">

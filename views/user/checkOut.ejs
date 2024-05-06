@@ -112,7 +112,7 @@
                         <button class="btn update" id="changeBtn" data-index="">Change</button>
                     </div>
                 </div>
-
+                <% let totalDiscount = cartDetails.reduce((acc, curr) => acc + (curr.totalMRP - (curr.productID.SalesRate * curr.quantity)), 0); %>
                 <div class="col-12 orderSummary">
                     <h1>Order Summary</h1>
                     <% let count = 0 , discount %>
@@ -156,7 +156,7 @@
                                                 style="padding-right: 15px;" class="TotalAmount">
                                                 <%=item.productID.SalesRate * item.quantity%>
                                             </span> ₹<span id="discount<%=index%>" class="discount" style="text-decoration: line-through;">
-                                                <%=item.productID.MRP * item.quantity %>
+                                                <%=item.productID.MRP * item.quantity%>
                                             </span>
                                         </h5>
                                         <a href="/checkOut"><input type="button"
@@ -187,7 +187,7 @@
                         PRICE DETAILS
                     </div>
                     <% let totalPrice = cartDetails.reduce((acc, curr) => acc + (curr.productID.MRP * curr.quantity), 0); %>
-                    <% let totalDiscount = cartDetails.reduce((acc, curr) => acc + (curr.totalMRP - (curr.productID.SalesRate * curr.quantity)), 0); %>
+                    
                     <% let checkOutTotal = cartDetails.reduce((acc,curr) => acc + (curr.totalPrice),0); %>
                     <div class="row priceDetails">
                         <div class="col-8 priceDetails-Left">
@@ -565,6 +565,7 @@
             <h2>Your Order Is Confirmed</h2>
             <h6>We'll send you a shipping confirmation email</h6>
             <h6>as soon as your order ships.</h6>
+            <br>
             <a href="/profileMenu?menu=myOrders" class="primary-btn PlaceOrder">Check Status</a>
             <!-- /profileMenu?menu=myOrders -->
         </div>

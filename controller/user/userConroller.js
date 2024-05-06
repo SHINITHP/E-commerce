@@ -505,20 +505,56 @@ const profileMenu = async (req, res) => {
       res.render('user/wishlist', { wishlist })
     }
     else if (req.query.menu == 'Wallet') {
+
+      const page = req.query.page;
+      const perPage = 4;
+      let docCount;
+
+      const lastdetails = await walletSchema.findOne({ userID: userID }).sort({ added: -1 });
       const walletDetails = await walletSchema.find({ userID: userID })
         .populate('userID')
         .populate('productID')
         .populate('orderID')
-
-
-      if (walletDetails.length > 0) {
-        const lastdetails = await walletSchema.findOne({ userID: userID }).sort({ added: -1 });
-        console.log(walletDetails)
-        res.render('user/wallet', { walletDetails, balance: lastdetails.balance })
-      }
-      else {
-        res.render('user/wallet', { walletDetails, balance: '' })
-      }
+        .countDocuments()
+        .then(documents => {
+          docCount = documents;
+          return walletSchema.find({ userID: userID })
+            .populate('userID')
+            .populate('productID')
+            .populate('orderID')
+            .skip((page - 1) * perPage)
+            .limit(perPage)
+        })
+        .then(walletDetails => {
+          if (walletDetails.length > 0) { 
+            res.render('user/wallet', {
+              route: 'wallet',
+              walletDetails,
+              currentPage: page,
+              totalDocuments: docCount,
+              pages: Math.ceil(docCount / perPage),
+              balance: lastdetails.balance
+            })
+          }else{
+            res.render('user/wallet', {
+              route: 'wallet',
+              walletDetails,
+              currentPage: page,
+              totalDocuments: docCount,
+              pages: Math.ceil(docCount / perPage),
+              balance: ''
+            })
+          }
+        })
+        
+      // if (walletDetails.length > 0) {
+      //   const lastdetails = await walletSchema.findOne({ userID: userID }).sort({ added: -1 });
+      //   console.log(walletDetails)
+      //   res.render('user/wallet', { walletDetails, balance: lastdetails.balance })
+      // }
+      // else {
+      //   res.render('user/wallet', { walletDetails, balance: '' })
+      // }
 
     } else if (req.query.menu === 'coupon') {
       res.render('user/coupon')
@@ -572,27 +608,27 @@ const saveUserAddress = async (req, res) => {
       console.log(error)
     }
 
-  }else if (req.query.task === 'addToCart') {
+  } else if (req.query.task === 'addToCart') {
     // console.log('wishlist:', req.body.productID, userID)
     try {
       console.log('iam in the add to cart')
       const productID = req.body.productID
       const data = await productModel.findById(productID);
-      const cartExist = await addtToCartModel.find({productID:productID})
-      if(cartExist){
-        res.json({message:'success'})
-      }else{
+      const cartExist = await addtToCartModel.find({ productID: productID })
+      if (cartExist) {
+        res.json({ message: 'success' })
+      } else {
         const details = {
           userID,
           productID,
-          quantity:1,
+          quantity: 1,
           totalPrice: data.SalesRate,
           size: data.ProductSize[0].size,
           totalMRP: data.MRP
         }
         console.log('Received cart data:', details);
         await addtToCartModel.create(details)
-        res.json({message:'success'})
+        res.json({ message: 'success' })
       }
     } catch (error) {
       console.log(error)
@@ -1368,44 +1404,30 @@ const updateProfile = async (req, res) => {
       const isPasswordMatch = await bcrypt.compare(oldPassword, Password.password)
       let hashedPassword;
       if (isPasswordMatch) {
-     
+
         hashedPassword = await bcrypt.hash(newPassword, 10);
-        console.log(hashedPassword,' : hashedPassword')
-        await UserModel.findByIdAndUpdate(userID,{$set:{password:hashedPassword}})
-        res.json({message:'Success'})
-      }else{
-        res.json({message:'error'})
+        console.log(hashedPassword, ' : hashedPassword')
+        await UserModel.findByIdAndUpdate(userID, { $set: { password: hashedPassword } })
+        res.json({ message: 'Success' })
+      } else {
+        res.json({ message: 'error' })
       }
 
 
     } catch (error) {
       console.log(error)
     }
-  } else {
-    const newData = {
-      $set: {
-        fullName: req.body.fullName,
-        emailAddress: req.body.emailAddress,
-        phoneNo: req.body.mobileNo,
-        cityDistrictTown: req.body.cityDistrictTown,
-        state: req.body.state,
-        country: req.body.country,
-        pincode: req.body.pinCode
-      }
-    };
+  } else if (req.query.task === 'changeinfo') {
+    console.log('hi bro', req.body.fullName, req.body.mobileNo)
+    // const newData = {
+    //   $set: {
+    //     fullName: req.body.fullName,
+    //     phoneNo: req.body.mobileNo,
+    //   }
+    // };
 
-    const result = await addressModel.updateOne({ userID: userID, selected: true }, {
-      $set: {
-        fullName: req.body.fullName,
-        emailAddress: req.body.emailAddress,
-        phoneNo: req.body.mobileNo,
-        cityDistrictTown: req.body.cityDistrictTown,
-        state: req.body.state,
-        country: req.body.country,
-        pincode: req.body.pinCode
-      }
-    });
-
+    const result = await UserModel.findByIdAndUpdate(userID, { $set: { userName: req.body.fullName, phoneNo: req.body.mobileNo } });
+    console.log(result)
     res.redirect('/Profile')
   }
 
@@ -1712,14 +1734,18 @@ const productOverview = async (req, res) => {
     const id = req.query.id
     const ProductData = await productModel.find({ _id: id })
     const cart = await addtToCartModel.find({ userID: userID, productID: id })
-
-    console.log('cart ', cart)
+    const wishListExist = await wishlistSchema.find({ userID: userID, productID: id }, 'productID');
+    let isWishlisted = false;
+    if(wishListExist.length > 0){
+      isWishlisted = true;
+    }
+    console.log('cart ', cart,wishListExist)
 
     const productColor = await productModel.find({ ProductName: ProductData[0].ProductName })
     const firstProduct = ProductData[0];
     const CategoryName = firstProduct.CategoryName;
     const relatedItem = await productModel.find({ CategoryName: CategoryName })
-    res.render('user/productOverview', { ProductData, relatedItem, productColor, cart })
+    res.render('user/productOverview', { ProductData, relatedItem, productColor, cart ,isWishlisted})
   } catch (error) {
     console.log(error)
   }

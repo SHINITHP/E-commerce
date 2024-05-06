@@ -407,7 +407,7 @@ const addProductsPost = async (req, res) => {
         const uploader = async (path) => await cloudinary.uploads(path, 'Images')
         const urls = [];
         const imageData = Array.isArray(req.body.imageLinks) ? req.body.imageLinks : [req.body.imageLinks];
-
+        // console.log(imageData,req.body.imageLinks)
         for (const imageUrl of imageData) {
             try {
                 const newPath = await uploader(imageUrl);

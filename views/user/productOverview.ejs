@@ -43,6 +43,8 @@
 
     <link rel="stylesheet" href="/assets/css/user/style2.css">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 </head>
 
 <body>
@@ -133,22 +135,26 @@
                                 <div class="product__details__price">
                                     <i class="fa-solid fa-indian-rupee-sign"
                                         style="color: #ab1717; font-size:20pt;"></i>
-                                        <% if(item.offer > 0 ) { %> 
+                                    <% if(item.offer> 0 ) { %>
 
-                                            <%= item.SalesRate - item.SalesRate * item.offer / 100 %> <span style="padding-bottom: 20px;"><i
-                                                class="fa-solid fa-indian-rupee-sign" style=" font-size:12pt;"></i>
-                                            <%=item.MRP %>   
-                                        </span><b style="color: black; padding-left: 10px;font-size: 15pt; "><%=item.offer%>%OFF</b>
-                                            
-                                        <% } else { %> 
-                                            
-                                            <%= item.SalesRate %> <span style="padding-bottom: 20px;"><i
-                                                class="fa-solid fa-indian-rupee-sign" style=" font-size:12pt;"></i>
-                                            <%=item.MRP %>   
-                                        </span>
-                                            
-                                        <% } %>
-                                    
+                                        <%= item.SalesRate - item.SalesRate * item.offer / 100 %> <span
+                                                style="padding-bottom: 20px;"><i class="fa-solid fa-indian-rupee-sign"
+                                                    style=" font-size:12pt;"></i>
+                                                <%=item.MRP %>
+                                            </span><b style="color: black; padding-left: 10px;font-size: 15pt; ">
+                                                <%=item.offer%>%OFF
+                                            </b>
+
+                                            <% } else { %>
+
+                                                <%= item.SalesRate %> <span style="padding-bottom: 20px;"><i
+                                                            class="fa-solid fa-indian-rupee-sign"
+                                                            style=" font-size:12pt;"></i>
+                                                        <%=item.MRP %>
+                                                    </span>
+
+                                                    <% } %>
+
                                 </div>
 
                                 <p>
@@ -161,21 +167,30 @@
                                             <input type="text" id="quantity">
                                         </div>
                                     </div>
-                                    
-                                   
+
+
                                     <% if(cart.length < 1 ) { %>
-                                        <a onclick="shoppingCart('<%=index%>','<%= item._id %>','<%= item.SalesRate %>','<%= item.DiscountPrecentage %>')" href="/shoppingCart" id="shopingCartBtn" class="cart-btn">
+                                        <a onclick="shoppingCart('<%=index%>','<%= item._id %>','<%= item.SalesRate %>','<%= item.DiscountPrecentage %>')"
+                                            href="/shoppingCart" id="shopingCartBtn" class="cart-btn">
                                             <span class="icon_bag_alt"></span> Add to cart
                                         </a>
-                                        <a id="outOFStockBtn" class="cart-btn" style="display: none;cursor: pointer;">  <span class="icon_bag_alt" ></span> Add To Cart</a>
-                                    <% } else { %> 
-                                        <a href="/shoppingCart" id="shopingCartBtn1" class="cart-btn">Check On Cart</a>
-                                    <% } %>
-                                    
-                                            <ul>
-                                                <li><a href="" onclick="wishlist('<%= item._id %>')"><span class="icon_heart_alt"></span></a></li>
-                                                <!-- <li><a href="#"><span class="icon_adjust-horiz"></span></a></li> -->
-                                            </ul>
+                                        <a id="errorBtn" class="cart-btn" style="display: none;cursor: pointer;"> <span
+                                                class="icon_bag_alt"></span> Add To Cart</a>
+                                        <% } else { %>
+                                            <a href="/shoppingCart" id="shopingCartBtn1" class="cart-btn">Check On
+                                                Cart</a>
+                                            <% } %>
+                                                <ul>
+                                                    <li id="removeWishlisted<%=index%>">
+                                                        <a id="RemoveWishlist<%=index%>" data-index="<%=index%>"
+                                                            onclick="Wishlist(this,'<%=item._id%>')">
+                                                            <i class="fa fa-heart remove" style="cursor: pointer;color: red;<%= isWishlisted ? '' : 'display: none;' %>"></i>
+                                                            <i class="fa fa-heart add" style="cursor: pointer;<%= isWishlisted ? 'display: none;' : '' %>"></i>
+                                                        </a>
+                                                    </li>
+                                                    <!-- <li><a href="" onclick="wishlist('<%= item._id %>')"><span class="icon_heart_alt"></span></a></li> -->
+                                                    <!-- <li><a href="#"><span class="icon_adjust-horiz"></span></a></li> -->
+                                                </ul>
                                 </div>
                                 <div class="product__details__widget">
                                     <ul>
@@ -185,13 +200,12 @@
 
 
                                             <div class="stock__checkbox">
-                                                <% if(item.ProductSize[0].quantity > 0) {%>
-                                                    <label for="stockin" id="stockIn" style="color: green;">In Stock
-                                                    </label>
-                                                    <% } else { %>
-                                                        <label for="stockin" id="outOfStock" style="color: red;">Out of
-                                                            Stock</label>
-                                                        <% } %>
+                                                <% let checkQty; %>
+                                                    <% item.ProductSize[0].quantity> 0 ? checkQty = 'StockIn' :
+                                                        checkQty='Out ofStock' %>
+                                                        <label for="stockin" id="stockAvailability">
+                                                            <%=checkQty%>
+                                                        </label>
                                             </div>
                                         </li>
                                         <li>
@@ -200,8 +214,9 @@
                                             <div class="color__checkbox">
 
                                                 <% productColor.forEach((color,i)=> { %>
-                                                    <input type="button" id="colorBtn<%=i%>" class="colorBtn" value="<%= color.ColorNames %>">
-                                                <% }) %>
+                                                    <input type="button" id="colorBtn<%=i%>" class="colorBtn"
+                                                        value="<%= color.ColorNames %>">
+                                                    <% }) %>
 
 
                                             </div>
@@ -216,7 +231,8 @@
                                                         onclick="CheckSizeStock('<%= JSON.stringify(ProductData) %>', '<%= i %>')"
                                                         class="active sizeInput"
                                                         style="width: 35px; height: 35px; border: 1px solid rgb(184, 184, 184);display: flex; align-items: center; justify-content: center;">
-                                                        <input type="radio" name="sizeRdo" id="xs-btn<%=i%>" value="<%= size.size %>">
+                                                        <input type="radio" name="sizeRdo" id="xs-btn<%=i%>"
+                                                            value="<%= size.size %>">
                                                         <%= size.size %>
                                                     </label>
 
@@ -403,92 +419,10 @@
 
 
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 
 
-
-            <script>
-                let quantity = document.getElementById('quantity');
-                quantity.value = "1";
-                let totalQty = quantity.value;
-                let size;
-
-                document.querySelector('.inc .qtybtn', addEventListener('click', function () {
-                    quantity.value + 1;
-                    console.log(quantity)
-                    console.log("q :", quantity.value)
-                    totalQty = quantity.value
-                }))
-
-
-                function CheckSizeStock(product, index) {
-                    const allInputs = document.querySelectorAll('.sizeInput');
-                    allInputs.forEach((item)=>{
-                        item.classList.remove("focuscolor");
-                    })
-                    size = document.getElementById(`xs-btn${index}`).value
-                    const sizeBtn = document.getElementById(`sizeBtn${index}`)
-                    const stockIn = document.getElementById('stockIn')
-                    const outOfStock = document.getElementById('outOfStock')
-                    sizeBtn.classList.add("focuscolor");
-                    let btnShoppingCart = document.getElementById('shopingCartBtn');
-                    let outOFStockBtn = document.getElementById('outOFStockBtn')
-
-
-                    const productdata = JSON.parse(product);
-
- 
-                    if (productdata) {
-                      console.log('productdata',productdata[0].ProductSize[index].quantity)
-                      const sizeQty = productdata[0].ProductSize[index].quantity;
-                      console.log(sizeQty)
-                        if (sizeQty <= '0') {
-                            console.log('iam heree..')
-                            stockIn.innerHTML = 'Out Of Stock'
-                            stockIn.style.color = 'red'
-                            btnShoppingCart.style.display='none'
-                            outOFStockBtn.style.display='block'
-                        } else {
-                            stockIn.innerHTML = 'In Stock'
-                            stockIn.style.color = 'green'
-                            btnShoppingCart.style.display='block'
-                            outOFStockBtn.style.display='none'
-                        }
-                        
-                    } else {
-                        console.log("Product or ProductSize array not found.");
-                    }
-                }
-
-          
-
-                function shoppingCart(index, productID, Price,discount) {
-                    const proDiscount= Price*discount/100
-                    let btnShoppingCart = document.getElementById('shopingCartBtn');
-
-                    console.log('I am here...');
-                    axios.post('/productOverview?task=addToCart', { productID,Price, quantity: totalQty,size,proDiscount }) // Sending productID as data
-                        .then(function (response) {
-                        })
-                        .catch(function (error) {
-                            console.error('Error adding product to cart:', error);
-                            // Handle error if needed
-                        });
-                }
-
-
-                function wishlist(productID){
-                    axios.post('/productOverview?task=wishlist', { productID }) // Sending productID as data
-                    .then(function (response) {
-
-                    })
-                    .catch(function (error) {
-                        console.error('Error adding product to cart:', error);
-                        // Handle error if needed
-                    });
-                }
-
-
-            </script>
+            <script src="/assets/js/productOverView.js"></script>
 
 
 

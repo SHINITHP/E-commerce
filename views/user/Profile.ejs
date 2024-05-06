@@ -160,7 +160,7 @@
                                 </span>
                             </li>
                         </a>
-                        <a href="profileMenu?menu=Wallet">
+                        <a href="profileMenu?menu=Wallet&page=1">
                             <li><i class="fa-solid fa-wallet menuIcon" style="color: #000000;"></i><span
                                     class="spanText">Wallet</span>
                                 <span>
@@ -190,72 +190,29 @@
                         <form id="updateForm" >
                             <div class="row">
 
-                                <% let selectedFound=false; userInfo.forEach((data)=> {
-                                    if(data.selected === true) {
-                                    %>
+                                <% userData.forEach((data)=> { %>
                                     <div class="col-6"
-                                        style=" min-height: 200px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                        style=" min-height: 100px;  display: flex; flex-direction: column; justify-content: space-around;">
                                         <label class="lbl" for="firstName">Full Name
                                             <input type="text" class="form-control firstNameInput" name="fullName"
                                                 id="fullName" placeholder="Enter Full Name" required
-                                                value="<%=data.fullName%>" readonly>
+                                                value="<%=data.userName%>" readonly>
                                         </label>
-                                        <label class="lbl" for="PinCode"> Pin-Code
-                                            <input type="text" class="form-control firstNameInput" name="pinCode"
-                                                id="PinCode" placeholder="Enter Pin-Code" required
-                                                value="<%=data.pincode%>" readonly>
-                                        </label>
+
 
                                     </div>
                                     <div class="col-6"
-                                        style=" min-height: 200px;  display: flex; flex-direction: column; justify-content: space-around;">
+                                        style=" min-height: 100px;  display: flex; flex-direction: column; justify-content: space-around;">
                                         <label class="lbl" for="MobileNo"> Mobile Number
                                             <input type="text" class="form-control firstNameInput" name="mobileNo"
                                                 id="MobileNo" placeholder="Enter Mobile Number" required
                                                 value="<%=data.phoneNo%>" readonly>
                                         </label>
-                                        <label class="lbl" for="gender"> Gender
-                                            <div style="padding-top: 10px; font-size: 12pt;">
-                                                <input type="radio" id="gender" name="gender" value="Male"
-                                                    <%=data.gender==='Male' ? 'checked' : '' %> > Male
-                                                <input type="radio" name="gender" value="Female"
-                                                    <%=data.gender==='Female' ? 'checked' : '' %>> Female
-                                            </div>
-                                        </label>
+
                                      
                                     </div>
-                                    <% selectedFound=true; }  }); if (!selectedFound) { userData.forEach((data)=> {
-                                        %>
-                                        <div class="col-6"
-                                            style=" min-height: 200px;  display: flex; flex-direction: column; justify-content: space-around;">
-                                            <label class="lbl" for="firstName">Full Name
-                                                <input type="text" class="form-control firstNameInput" name="fullName"
-                                                    id="fullName" placeholder="Enter Full Name" required
-                                                    value="<%=data.userName%>" readonly>
-                                            </label>
-                                            <label class="lbl" for="PinCode"> Pin-Code
-                                                <input type="text" class="form-control firstNameInput" name="pinCode"
-                                                    id="PinCode" placeholder="Enter Pin-Code" required value=""
-                                                    readonly>
-                                            </label>
-                                        
-                                        </div>
-                                        <div class="col-6"
-                                            style=" min-height: 200px;  display: flex; flex-direction: column; justify-content: space-around;">
-                                            <label class="lbl" for="MobileNo"> Mobile Number
-                                                <input type="text" class="form-control firstNameInput" name="mobileNo"
-                                                    id="MobileNo" placeholder="Enter Mobile Number" required
-                                                    value="<%=data.phoneNo%>" readonly>
-                                            </label>
-                                            <label class="lbl" for="gender"> Gender
-                                                <div  style="padding-top: 10px; font-size: 12pt;">
-                                                    <input type="radio" id="gender" name="gender" value="Male"> Male
-                                                    <input type="radio" name="gender" value="Female"> Female
-                                                </div>
-                                            </label>
-                                
-                                        </div>
-                                        <% }); } %>
+                                    <% }) %>
+    
                             </div>
                             <a style="width: 100%;display: flex; justify-content: center;">
                                 <input type="button" class="saveChanges" id="savebtn" value="Submit">
@@ -267,7 +224,7 @@
                      
                         <div class="col-11" style="display: flex;justify-content: space-between;">
                             <h5 style="width: 50%; display: flex; justify-content: start;font-family: Poppins; font-size: 17pt;font-weight: bold;">Change Email</h5>
-                            <a  onclick="changeEmail()" ><input type="submit" style="background-color: black;color: white;" class="btn btnEdit"  value="Change"></a>
+                            <a  onclick="changeEmail()" style="display: none;" id="emailCancelbtn"><input type="submit" style="background-color: black;color: white;" class="btn btnEdit"  value="Change"></a>
                         </div>
                        
                         <br>
@@ -292,7 +249,7 @@
                        
                         <div class="col-11" style="display: flex;justify-content: space-between;">
                             <h5 style="width: 50%; display: flex; justify-content: start;font-family: Poppins; font-size: 17pt;font-weight: bold;">Change Password</h5>
-                            <input type="submit" style="background-color: black;color: white;border-radius: 5px;" class="btn" onclick="changePassword()" value="Change">
+                            <input type="submit" id="passwordCancelbtn" style="background-color: black;color: white;border-radius: 5px;display: none;" class="btn" onclick="changePassword()" value="Change">
                         </div>
                        
                         <br>

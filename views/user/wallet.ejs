@@ -173,8 +173,8 @@
                                 </li>
                             </a>
                             <a href="profileMenu?menu=Wallet">
-                                <li style="background-color: #afafaf;"><i class="fa-solid fa-wallet menuIcon" style="color: #000000;"></i><span
-                                        class="spanText">Wallet</span>
+                                <li style="background-color: #afafaf;"><i class="fa-solid fa-wallet menuIcon"
+                                        style="color: #000000;"></i><span class="spanText">Wallet</span>
                                     <span>
                                         <i style="font-size:24px;color:#494949;" class="fa rightAngle">&#xf105;</i>
                                     </span>
@@ -203,36 +203,94 @@
                                     <span>
                                         Balancing Amount
                                     </span>
-                                    <% if(balance > 0 ){ %> 
-                                    <h5>₹ <%=balance%></h5>
-                                    <% } else { %>
-                                        <h5> ₹0 </h5>
-                                    <% } %>
+                                    <% if(balance> 0 ){ %>
+                                        <h5>₹ <%=balance%>
+                                        </h5>
+                                        <% } else { %>
+                                            <h5> ₹0 </h5>
+                                            <% } %>
                                 </div>
                             </div>
                         </div>
-<br>
+                        <br>
 
-                        <div class="row" style="display: flex;justify-content: center;">
+                        <div class="row" style="display: flex;justify-content: center;min-height: 400px;">
                             <div class="col-11 columnHeading">
                                 <h5 class="SI">SI</h5>
                                 <h5 class="productData">Product Details</h5>
                                 <h5 class="transactionDetails">Transaction</h5>
                                 <h5 class="amount">Amount</h5>
                             </div>
-                            <% walletDetails.forEach((val,index) => { %> 
-                            <div class="col-11 detailsRow">
-                                <p class="SI"><%=index+1%></p>
-                                <h6 class="productData">
-                                    <img src="<%=val.productID.files[0].url%>" alt="" >
-                                    <span style="padding-left: 8px;width: 70%;"><%=val.productID.ProductName%></span>
-                                </h6>
-                                <h6 class="transactionDetails"><%=val.transaction%></h6>
-                                <h6 class="amount">₹ <span style="padding-left: 4px;"><%=val.orderID.Amount%></span></h6>
-
+                            <div class="container" style="min-height:500px;display: flex;justify-content: center;padding: 0;margin: 0;">
+                                <% if(walletDetails.length === 0 ) { %>
+                                    <div class="row" style="min-height: 500px;display: flex;align-items: center;justify-content: center;">
+                                        <span style="font-weight: bolder;color: #6e6e6e;">The Wallet section is currently empty</span>
+                                    </div>
+                                <% } else { %>
+                                <% walletDetails.forEach((val,index)=> { %>
+                                   
+                                    <div class="col-11 detailsRow">
+                                        <p class="SI">
+                                            <%=index+1%>
+                                        </p>
+                                        <h6 class="productData">
+                                            <img src="<%=val.productID.files[0].url%>" alt="">
+                                            <span style="padding-left: 8px;width: 70%;">
+                                                <%=val.productID.ProductName%>
+                                            </span>
+                                        </h6>
+                                        <h6 class="transactionDetails">
+                                            <%=val.transaction%>
+                                        </h6>
+                                        <h6 class="amount">₹ <span style="padding-left: 4px;">
+                                                <%=val.orderID.Amount%>
+                                            </span></h6>
+    
+                                    </div>
+                                   
+                                    <% }) %>
+    
+                                <% } %>
                             </div>
-                            <% }) %>
+                            <% if(route=='wallet'){ %> 
+                                <div class="col-12 " style="text-align: center;">
+                                    <div class="pagination__option">
+                                        <% if(currentPage > 1) { %>
+                                            <a href="" style="padding-right: 5px;"><i class="fa fa-angle-left"></i></a>
+                                        <% } %>
+                                        <% for(let i =1; i<= pages; i++) { %>
+                                            <% if(i == currentPage) { %>
+                                                <a href=""><button style="background-color: black;color: white;width: 35px;height: 35px;border: none;border-radius: 5px;"><%= i %></button></a>
+                                            <% } else {%>
+                                                <a href=""><button style="background-color: black;color: white;width: 35px;height: 35px;border: none;border-radius: 5px;"><%= i %></button></a>
+                                            <% } %>
+                                        <% } %> 
+                                        <% if(currentPage < pages ) { %>
+                                            <a href="" style="padding-left:5px ;"><i class="fa fa-angle-right"></i></a>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            <% } else{ %>
+                                <div class="col-12 text-align" style="text-align: center;">
+                                    <div class="pagination__option">
+                                        <% if(currentPage > 1) { %>
+                                            <a href=""><i class="fa fa-angle-left"></i></a>
+                                        <% } %>
+                                        <% for(let i =1; i<= pages; i++) { %>
+                                            <% if(i == currentPage) { %>
+                                                <a href=""><button style="background-color: black;color: white;width: 35px;height: 35px;border: none;border-radius: 5px;"><%= i %></button></a>
+                                            <% } else {%>
+                                                <a href=""><button style="background-color: black;color: white;width: 35px;height: 35px;border: none;border-radius: 5px;"><%= i %></button></a>
+                                            <% } %>
+                                        <% } %>  
+                                        <% if(currentPage < pages ) { %>
+                                            <a href="" style="padding-left:5px ;"><i class="fa fa-angle-right"></i></a>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            <% } %>
                         </div>
+
 
                         
                     </div>
@@ -242,44 +300,44 @@
             </div>
         </div>
 
-            <!-- eFooter starts here... -->
-            <%- include('../../views/user/footer.ejs') %>
-                <!-- Footer end  here... -->
+        <!-- eFooter starts here... -->
+        <%- include('../../views/user/footer.ejs') %>
+            <!-- Footer end  here... -->
 
-                <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-                <script>
-                    <!-- account Settings -->
-                    const changeIcon = document.getElementById('changeIcon');
-                    const dropDownLi1 = document.getElementById('DropDownLi1');
-                    const dropDownLi2 = document.getElementById('DropDownLi2');
-                    let isDropDownVisible = true;
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <script>
+                <!-- account Settings -->
+                const changeIcon = document.getElementById('changeIcon');
+                const dropDownLi1 = document.getElementById('DropDownLi1');
+                const dropDownLi2 = document.getElementById('DropDownLi2');
+                let isDropDownVisible = true;
 
-                    changeIcon.addEventListener('click', function () {
-                        let icon = document.getElementById('icon');
+                changeIcon.addEventListener('click', function () {
+                    let icon = document.getElementById('icon');
 
-                        if (isDropDownVisible) {
-                            icon.innerHTML = '&#xf107;'; // Change to the new icon
-                            dropDownLi1.style.display = 'block';
-                            dropDownLi2.style.display = 'block';
+                    if (isDropDownVisible) {
+                        icon.innerHTML = '&#xf107;'; // Change to the new icon
+                        dropDownLi1.style.display = 'block';
+                        dropDownLi2.style.display = 'block';
 
 
-                        } else {
-                            icon.innerHTML = '&#xf105;'; // Change back to the original icon
-                            dropDownLi1.style.display = 'none';
-                            dropDownLi2.style.display = 'none';
-                        }
+                    } else {
+                        icon.innerHTML = '&#xf105;'; // Change back to the original icon
+                        dropDownLi1.style.display = 'none';
+                        dropDownLi2.style.display = 'none';
+                    }
 
-                        // Toggle the state
-                        isDropDownVisible = !isDropDownVisible;
-                    });
+                    // Toggle the state
+                    isDropDownVisible = !isDropDownVisible;
+                });
 
-                </script>
+            </script>
 
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"
-                    integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg=="
-                    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"
+                integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-                <!-- <script src="/assets/js/profile.js"></script> -->
+            <!-- <script src="/assets/js/profile.js"></script> -->
 
 
 

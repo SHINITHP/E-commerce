@@ -15,7 +15,7 @@ const adminAuth = require('../../middlewares/adminMiddleware.js')
 router.route('/').get( adminLogin).post(adminLoginPost)//loginpage page
 router.route('/adminDashboard').get(adminAuth,adminDashboard)//dashboard page
 router.route('/ProductList').get(adminAuth,productList).post(productListEdit)//productlist page
-router.route('/ProductList/addProducts').get(adminAuth,productList).post(upload.array('images'), addProductsPost)//addProducts page
+router.route('/ProductList/addProducts').get(adminAuth,productList).post(addProductsPost)//addProducts page
 router.route('/editProducts').get(adminAuth, productList).put(postEditProduct).delete(postEditProduct)
 router.route('/deleteInventory').delete(deleteInventory)
 router.route('/CustomerDetails').get(adminAuth,CustomerDetails).patch(updateUser)//customer page//CustomerFilter//listed and unlisted incustomer page
