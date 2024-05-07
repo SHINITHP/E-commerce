@@ -21,16 +21,28 @@ function checkValidOTP() {
         axios.patch('/Profile?task=checkEmailotp', { NewOTP, newEmail }) // Sending productID as data
             .then(function (response) {
                 console.log('Product added to cart successfully', response);
-                location.href = '/Profile'
+                if(response.data.message ==='success'){
+                    window.location.href = '/Profile'
 
-                Swal.fire({
-                    icon: 'success',
-                    text: 'Email Successfully Changed',
-                    timer: 4000, // Duration in milliseconds
-                    toast: true,
-                    position: 'top', // Toast position
-                    showConfirmButton: false // Hide confirmation button
-                });
+                    Swal.fire({
+                        icon: 'success',
+                        text: 'Email Successfully Changed',
+                        timer: 4000, // Duration in milliseconds
+                        toast: true,
+                        position: 'top', // Toast position
+                        showConfirmButton: false // Hide confirmation button
+                    });
+                }else if(response.data.message ==='error'){
+                    Swal.fire({
+                        icon: 'info',
+                        title: '<span style="color: red">Please ensure that, Enter Correct OTP!</span>',
+                        timer: 4000, // Duration in milliseconds
+                        toast: true,
+                        position: 'top', // Toast position
+                        showConfirmButton: false
+                    });
+                }
+              
             })
             .catch(function (error) {
                 console.error('Error adding product to cart:', error);

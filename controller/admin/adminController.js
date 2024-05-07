@@ -552,8 +552,8 @@ const postEditProduct = async (req, res) => {
             const uploader = async (path) => await cloudinary.uploads(path, 'Images');
             const urls = []
             
-            // console.log('imageData.length :',imageData)
-            if (imageData.length > 0) {
+            console.log(imageData.length,'imageData.length :',imageData)
+            if (imageData.length === 0) {
                 console.log('hi iam in the if ')
                 for (const imageUrl of imageData) {
                     try {
@@ -565,8 +565,11 @@ const postEditProduct = async (req, res) => {
                 }
             
             }
-            urls.forEach((val) =>imgData.push(val))
-    
+            if(urls.length === 0){
+                console.log('i bro i am in urls',urls.length,urls)
+                urls.forEach((val) =>imgData.push(val))
+            }
+
             const {
                 ProductName, BrandName, CategoryName, StockQuantity, subCategory,
                 PurchaseRate, SalesRate, TotalPrice, ColorNames,
@@ -1065,6 +1068,7 @@ const deletCoupon = async (req, res) => {
     try {
         const id = req.body.id;
         await couponSchema.findByIdAndDelete(id)
+        res.json({message:'sucess'})
     } catch (error) {
         console.log(error)
     }
@@ -1080,6 +1084,7 @@ const messageBox = async (req, res) => {
             { return: true }
         ]
     }).populate('userID').populate('productID');
+    console.log(requestedData)
     res.render('admin/messageBox', { requestedData })
 }
 
@@ -1181,15 +1186,15 @@ const updateRequest = async (req, res) => {
         const productArray = [product];
         let returnData;
         let updatedProduct = productArray.map((val, index) => {
+            console.log(parseFloat(val.StockQuantity) + parseFloat(data.Quantity))
             return returnData = {
                 ProductName: val.ProductName,
                 BrandName: val.BrandName,
                 CategoryName: val.CategoryName,
-                StockQuantity: val.StockQuantity + val.quantity,
+                StockQuantity: parseFloat(val.StockQuantity) + parseFloat(data.Quantity),
                 subCategory: val.subCategory,
                 PurchaseRate: val.PurchaseRate,
                 SalesRate: val.SalesRate,
-                TotalPrice: val.TotalPrice,
                 ColorNames: val.ColorNames,
                 ProductDescription: val.ProductDescription,
                 VATAmount: val.VATAmount,
@@ -1211,6 +1216,10 @@ const updateRequest = async (req, res) => {
                         size: val.ProductSize[3].size,
                         quantity: data.Size === val.ProductSize[3].size ? val.ProductSize[3].quantity + data.Quantity : val.ProductSize[3].quantity
                     },
+                    {
+                        size: val.ProductSize[4].size,
+                        quantity: data.Size === val.ProductSize[4].size ? val.ProductSize[4].quantity + data.Quantity : val.ProductSize[4].quantity
+                    }
 
                 ],
                 files: val.files,
@@ -1258,22 +1267,23 @@ const updateRequest = async (req, res) => {
             req.body.id,
             { $set: { return: false, Status: 'Order Returned' } }
         );
+        // 
 
-
-
+        
         const product = await productModel.findById(data.productID._id)
         const productArray = [product];
         let returnData;
+        console.log('productArray :',data.Quantity)
         let updatedProduct = productArray.map((val, index) => {
+            console.log(parseFloat(val.StockQuantity) + parseFloat(data.Quantity))
             return returnData = {
                 ProductName: val.ProductName,
                 BrandName: val.BrandName,
                 CategoryName: val.CategoryName,
-                StockQuantity: val.StockQuantity - val.quantity,
+                StockQuantity: parseFloat(val.StockQuantity) + parseFloat(data.Quantity),
                 subCategory: val.subCategory,
                 PurchaseRate: val.PurchaseRate,
                 SalesRate: val.SalesRate,
-                TotalPrice: val.TotalPrice,
                 ColorNames: val.ColorNames,
                 ProductDescription: val.ProductDescription,
                 VATAmount: val.VATAmount,
@@ -1295,6 +1305,10 @@ const updateRequest = async (req, res) => {
                         size: val.ProductSize[3].size,
                         quantity: data.Size === val.ProductSize[3].size ? val.ProductSize[3].quantity + data.Quantity : val.ProductSize[3].quantity
                     },
+                    {
+                        size: val.ProductSize[4].size,
+                        quantity: data.Size === val.ProductSize[4].size ? val.ProductSize[4].quantity + data.Quantity : val.ProductSize[4].quantity
+                    }
 
                 ],
                 files: val.files,
@@ -1306,7 +1320,8 @@ const updateRequest = async (req, res) => {
         })
 
         // console.log('product',product)
-        // console.log('updatedProduct',updatedProduct)
+        console.log('updatedProduct',updatedProduct)
+
         const checkWallet = await walletSchema.findOne({ userID: data.userID }).sort({ added: -1 });
 
         const balance = checkWallet ? checkWallet.balance + data.Amount : data.Amount;
@@ -1327,7 +1342,6 @@ const updateRequest = async (req, res) => {
 
         console.log('walletData', walletData)
         await walletSchema.create(walletData)
-
 
         res.redirect('admin/messageBox')
     } else if (req.body.status === 'returnRejected') {

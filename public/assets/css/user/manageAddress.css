@@ -16,7 +16,9 @@ a {
 a:hover {
     color: black;
 }
-
+.rightAngle{
+    margin-right: 20px;
+}
 .conF-1 {
     min-height: 800px;
     margin: 10px;

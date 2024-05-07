@@ -135,14 +135,3 @@ function shoppingCart(index, productID, Price, discount) {
         });
 }
 
-
-function wishlist(productID) {
-    axios.post('/productOverview?task=wishlist', { productID }) // Sending productID as data
-        .then(function (response) {
-
-        })
-        .catch(function (error) {
-            console.error('Error adding product to cart:', error);
-            // Handle error if needed
-        });
-}

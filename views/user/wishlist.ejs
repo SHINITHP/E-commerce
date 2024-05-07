@@ -42,7 +42,7 @@
         <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
-
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
         <title>Document</title>
     </head>
 
@@ -123,23 +123,24 @@
                                         class="spanText">Account
                                         Settings</span>
                                     <span>
-                                        <i id="icon" class="fa rightAngle">&#xf105;</i>
+                                        <i style=" margin-right: 20px;" id="icon" class="fa rightAngle">&#xf107;</i>
                                     </span>
                                 </li>
                             </a>
 
 
                             <a href="/Profile" id="DropDownLi1" style="display: none;">
-                                <li style="padding-left: 68px; height: 50px;">Profile Information <span><i
-                                            style="font-size:24px;color:#494949;padding-left:63px;"
+                                <li style="padding-left: 50px; height: 50px;">Profile Information <span  style="width: 30px;"><i
+                                            style="font-size:24px;color:#494949;padding-left:55px;"
                                             class="fa rightAngle">&#xf105;</i></span></li>
                             </a>
 
                             <a href="profileMenu?menu=manageAddress" id="DropDownLi2" style="display: none;">
-                                <li style="padding-left: 68px;height: 50px;">Manage Address <span><i
-                                            style="font-size:24px;color:#494949;padding-left:79px;"
+                                <li style="padding-left: 50px;height: 50px;">Manage Address <span style="width: 30px;"><i
+                                            style="font-size:24px;color:#494949;padding-left:69px;"
                                             class="fa rightAngle">&#xf105;</i></span></li>
                             </a>
+
 
 
                             <a href="profileMenu?menu=myOrders">
@@ -255,6 +256,7 @@
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>  
 
             <script>
                 function removeWishlist(productID) {
@@ -281,7 +283,19 @@
                     axios.post('/profileMenu?task=addToCart', {productID})
                         .then(function (response) {
                             // Redirect to wishlist page after successful removal
-                            location.href ='/shoppingCart'
+                            if(response.data.message==='success'){
+                                location.href ='/shoppingCart'
+                            }else{
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: '<span style="color: red">Product is Already Exist!</span>',
+                                    timer: 4000, // Duration in milliseconds
+                                    toast: true,
+                                    position: 'top', // Toast position
+                                    showConfirmButton: false
+                                });
+                            }
+                            
                         })
                         .catch(function (error) {
                             console.error('Error removing product from wishlist:', error);

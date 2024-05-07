@@ -126,23 +126,22 @@
                                         class="spanText">Account
                                         Settings</span>
                                     <span>
-                                        <i id="icon" class="fa rightAngle">&#xf107;</i>
+                                        <i style=" margin-right: 20px;" id="icon" class="fa rightAngle">&#xf107;</i>
                                     </span>
                                 </li>
                             </a>
 
 
-                            <a href="/Profile" id="DropDownLi1">
-                                <li style="padding-left: 68px; height:50px;">Profile Information <span><i
-                                            style="font-size:24px;color:#494949;padding-left:63px;"
+                            <a href="/Profile" id="DropDownLi1" style="display: none;">
+                                <li style="padding-left: 50px; height: 50px;">Profile Information <span  style="width: 30px;"><i
+                                            style="font-size:24px;color:#494949;padding-left:55px;"
                                             class="fa rightAngle">&#xf105;</i></span></li>
                             </a>
 
-                            <a href="profileMenu?menu=manageAddress" id="DropDownLi2">
-                                <li style="padding-left: 68px;height:50px;">Manage Address
-                                    <span><i style="font-size:24px;color:#494949;padding-left:79px;"
-                                            class="fa rightAngle">&#xf105;</i></span>
-                                </li>
+                            <a href="profileMenu?menu=manageAddress" id="DropDownLi2" style="display: none;">
+                                <li style="padding-left: 50px;height: 50px;">Manage Address <span style="width: 30px;"><i
+                                            style="font-size:24px;color:#494949;padding-left:69px;"
+                                            class="fa rightAngle">&#xf105;</i></span></li>
                             </a>
 
 
@@ -221,15 +220,14 @@
                                 <h5 class="transactionDetails">Transaction</h5>
                                 <h5 class="amount">Amount</h5>
                             </div>
-                            <div class="container" style="min-height:500px;display: flex;justify-content: center;padding: 0;margin: 0;">
+                            <div class="container" style="min-height:500px;display: flex;flex-direction: column;align-items: center;padding: 0;margin: 0;">
                                 <% if(walletDetails.length === 0 ) { %>
                                     <div class="row" style="min-height: 500px;display: flex;align-items: center;justify-content: center;">
                                         <span style="font-weight: bolder;color: #6e6e6e;">The Wallet section is currently empty</span>
                                     </div>
                                 <% } else { %>
                                 <% walletDetails.forEach((val,index)=> { %>
-                                   
-                                    <div class="col-11 detailsRow">
+                                    <div class="row detailsRow" style="height: 90px; width: 92%;">
                                         <p class="SI">
                                             <%=index+1%>
                                         </p>
@@ -245,28 +243,27 @@
                                         <h6 class="amount">₹ <span style="padding-left: 4px;">
                                                 <%=val.orderID.Amount%>
                                             </span></h6>
-    
+                                
                                     </div>
-                                   
-                                    <% }) %>
-    
-                                <% } %>
+                                <% }) %>
+
+                            <% } %>
                             </div>
                             <% if(route=='wallet'){ %> 
                                 <div class="col-12 " style="text-align: center;">
                                     <div class="pagination__option">
                                         <% if(currentPage > 1) { %>
-                                            <a href="" style="padding-right: 5px;"><i class="fa fa-angle-left"></i></a>
+                                            <a href="/profileMenu?menu=Wallet&page=<%= currentPage > 1 ? parseInt(currentPage) - 1 : currentPage %>" style="padding-right: 5px;"><i class="fa fa-angle-left"></i></a>
                                         <% } %>
                                         <% for(let i =1; i<= pages; i++) { %>
                                             <% if(i == currentPage) { %>
-                                                <a href=""><button style="background-color: black;color: white;width: 35px;height: 35px;border: none;border-radius: 5px;"><%= i %></button></a>
+                                                <a href="/profileMenu?menu=Wallet&page=<%= i %>"><button style="background-color: black;color: white;width: 35px;height: 35px;border: none;border-radius: 5px;"><%= i %></button></a>
                                             <% } else {%>
-                                                <a href=""><button style="background-color: black;color: white;width: 35px;height: 35px;border: none;border-radius: 5px;"><%= i %></button></a>
+                                                <a href="/profileMenu?menu=Wallet&page=<%= i %>"><button style="background-color: black;color: white;width: 35px;height: 35px;border: none;border-radius: 5px;"><%= i %></button></a>
                                             <% } %>
                                         <% } %> 
                                         <% if(currentPage < pages ) { %>
-                                            <a href="" style="padding-left:5px ;"><i class="fa fa-angle-right"></i></a>
+                                            <a href="/profileMenu?menu=Wallet&page=<%=parseInt(currentPage) + 1%>" style="padding-left:5px ;"><i class="fa fa-angle-right"></i></a>
                                         <% } %>
                                     </div>
                                 </div>

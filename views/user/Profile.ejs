@@ -104,7 +104,7 @@
                                 onclick="cropImage('imgInput','profilePic')" />
 
                         </label>
-                        <p>Welcome , Shinith </p>
+                        <p>Welcome , <% let name; userData.forEach((val) => name = val.userName)%> <%=name%></p>
                     </div>
 
 
@@ -119,19 +119,19 @@
                             </li>
                         </a>
 
-
-                        <a href="/Profile" id="DropDownLi1">
-                            <li style="padding-left: 68px; background-color: #afafaf; height: 50px;">Profile Information
-                                <span><i style="font-size:24px;color:#494949;padding-left:63px;"
-                                        class="fa rightAngle">&#xf105;</i></span>
-                            </li>
-                        </a>
-
-                        <a href="profileMenu?menu=manageAddress" id="DropDownLi2">
-                            <li style="padding-left: 68px; height: 50px;">Manage Address <span><i
-                                        style="font-size:24px;color:#494949;padding-left:79px;"
+                        <a href="/Profile" id="DropDownLi1" style="display: none;">
+                            <li style="padding-left: 50px; height: 50px;">Profile Information <span  style="width: 30px;"><i
+                                        style="font-size:24px;color:#494949;padding-left:55px;"
                                         class="fa rightAngle">&#xf105;</i></span></li>
                         </a>
+
+                        <a href="profileMenu?menu=manageAddress" id="DropDownLi2" style="display: none;">
+                            <li style="padding-left: 50px;height: 50px;">Manage Address <span style="width: 30px;"><i
+                                        style="font-size:24px;color:#494949;padding-left:69px;"
+                                        class="fa rightAngle">&#xf105;</i></span></li>
+                        </a>
+
+
 
 
 
@@ -349,7 +349,7 @@
       </div>
       
       <div class="row" style="display: flex;align-items: center;justify-content: center;">
-        <a onclick="checkValidOTP()" href=""><button class="btn btnEdit" style="border-radius:20px;height: 40px;width: 130px;">Submit</button></a>
+        <a onclick="checkValidOTP()" ><button class="btn btnEdit" style="border-radius:20px;height: 40px;width: 130px;">Submit</button></a>
       </div>
     </div>
 </div>

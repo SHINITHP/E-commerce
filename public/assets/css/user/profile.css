@@ -23,7 +23,9 @@ a:hover {
     padding-left: 0px;
     padding-right: 0px;
 }
-
+.rightAngle{
+    margin-right: 20px;
+}
 .myAccount {
     height: 70px;
     font-family: Poppins;

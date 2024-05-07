@@ -43,7 +43,7 @@
     <link rel="stylesheet" href="/assets/css/user/lightbox.css">
 
 
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 
 </head>
@@ -248,7 +248,7 @@
                                     <a style="cursor: pointer;"   onclick="saveOrder('<%= JSON.stringify(cartItems) %>')"
                                         class="primary-btn checkoutBtn">Proceed to checkout</a>
                                     <% } else{ %> 
-                                        <a style="cursor: pointer;" id="" class="primary-btn checkoutBtn" >Proceed to checkout</a>
+                                        <a style="cursor: pointer;" id="errorCheckoutBtn" onclick="cartError()" class="primary-btn checkoutBtn" >Proceed to checkout</a>
                                     <% } %>
                                 </div>
                             </div>
@@ -264,7 +264,7 @@
 
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
             <script src="/assets/js/cart.js"></script>
-
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>  
 
 
             <!-- Js Plugins -->

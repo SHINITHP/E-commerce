@@ -526,7 +526,7 @@ const profileMenu = async (req, res) => {
             .limit(perPage)
         })
         .then(walletDetails => {
-          if (walletDetails.length > 0) { 
+          if (walletDetails.length > 0) {
             res.render('user/wallet', {
               route: 'wallet',
               walletDetails,
@@ -535,7 +535,7 @@ const profileMenu = async (req, res) => {
               pages: Math.ceil(docCount / perPage),
               balance: lastdetails.balance
             })
-          }else{
+          } else {
             res.render('user/wallet', {
               route: 'wallet',
               walletDetails,
@@ -546,7 +546,7 @@ const profileMenu = async (req, res) => {
             })
           }
         })
-        
+
       // if (walletDetails.length > 0) {
       //   const lastdetails = await walletSchema.findOne({ userID: userID }).sort({ added: -1 });
       //   console.log(walletDetails)
@@ -615,8 +615,8 @@ const saveUserAddress = async (req, res) => {
       const productID = req.body.productID
       const data = await productModel.findById(productID);
       const cartExist = await addtToCartModel.find({ productID: productID })
-      if (cartExist) {
-        res.json({ message: 'success' })
+      if (cartExist.length > 0) {
+        res.json({ message: 'Already Exist' })
       } else {
         const details = {
           userID,
@@ -701,7 +701,7 @@ const saveUserAddress = async (req, res) => {
           $set: { return: true, requestReason: req.body.reason, comment: optionalComment }
         })
     } catch (error) {
-
+      console.log(error)
     }
   }
 }
@@ -872,24 +872,60 @@ const orderDetails = async (req, res) => {
   try {
 
     const cartItems = JSON.parse(req.body.cartData);
-    await orderDetailsModel.deleteMany({ userID: userID });
     console.log('cartItems', cartItems)
-    for (const item of cartItems) {
-      const { userID, productID, quantity, size, totalPrice } = item;
 
-      await orderDetailsModel.create({
-        userID: userID,
-        productID: productID._id,
-        quantity: quantity,
-        size: size,
-        totalPrice: req.body.total,
-        totalMRP: item.totalMRP,
-        discount: req.body.discountAmt
-      });
+    cartItems.forEach(async (cartval) => {
+      let id = cartval.productID._id;
+      const productData = [await productModel.findById(id).lean()];
+      console.log('productData : ', productData)
+      productData.forEach(async(val, i) => {
+        if (val.ProductSize[i].size === cartval.size) {
+          console.log('first if', val.ProductSize[i].quantity)
+          if (val.ProductSize[i].quantity === 0) {
+            res.json({ message: 'error' })
+          }else{
+            await orderDetailsModel.deleteMany({ userID: userID });
 
-    }
+            for (const item of cartItems) {
+              const { userID, productID, quantity, size, totalPrice } = item;
+        
+              await orderDetailsModel.create({
+                userID: userID,
+                productID: productID._id,
+                quantity: quantity,
+                size: size,
+                totalPrice: req.body.total,
+                totalMRP: item.totalMRP,
+                discount: req.body.discountAmt
+              });
+        
+            }
+        
+            res.json({ message: 'success' })
+      
+          }
+        }
+      })
+    })
 
-    res.json({ message: 'success' })
+    // await orderDetailsModel.deleteMany({ userID: userID });
+    // let checkQty;
+    // productData.forEach((val,i) =>{
+    //   if(val.productID.ProductSize[i].size === val.size){
+    //      if(val.productID.ProductSize[i].quantity === 0){
+    //       console.log('OutOfStock')
+    //       checkQty = 'OutOfStock'
+    //       console.log(checkQty,'size :',val.productID.ProductSize[i].quantity)
+    //      }
+    //   }
+    // })
+    // cartItems.productID.ProductSize.forEach((val) => {
+    //   if (val.size === cartItems.size) {
+    //     checkQty = val.quantity;
+    //   }
+    // });
+
+
 
 
 
@@ -1047,7 +1083,6 @@ const checkOutTasks = async (req, res) => {
           subCategory: val.productID.subCategory,
           PurchaseRate: val.productID.PurchaseRate,
           SalesRate: val.productID.SalesRate,
-          TotalPrice: val.productID.TotalPrice,
           ColorNames: val.productID.ColorNames,
           ProductDescription: val.productID.ProductDescription,
           VATAmount: val.productID.VATAmount,
@@ -1069,6 +1104,10 @@ const checkOutTasks = async (req, res) => {
               size: val.productID.ProductSize[3].size,
               quantity: orderDetails[index].Size === val.productID.ProductSize[3].size ? val.productID.ProductSize[3].quantity - orderDetails[index].Quantity : val.productID.ProductSize[3].quantity
             },
+            {
+              size: val.productID.ProductSize[4].size,
+              quantity: orderDetails[index].Size === val.productID.ProductSize[4].size ? val.productID.ProductSize[4].quantity - orderDetails[index].Quantity : val.productID.ProductSize[4].quantity
+            }
 
           ],
           files: val.productID.files,
@@ -1140,7 +1179,6 @@ const checkOutTasks = async (req, res) => {
           subCategory: val.productID.subCategory,
           PurchaseRate: val.productID.PurchaseRate,
           SalesRate: val.productID.SalesRate,
-          TotalPrice: val.productID.TotalPrice,
           ColorNames: val.productID.ColorNames,
           ProductDescription: val.productID.ProductDescription,
           VATAmount: val.productID.VATAmount,
@@ -1162,6 +1200,10 @@ const checkOutTasks = async (req, res) => {
               size: val.productID.ProductSize[3].size,
               quantity: orderDetails[index].Size === val.productID.ProductSize[3].size ? val.productID.ProductSize[3].quantity - orderDetails[index].Quantity : val.productID.ProductSize[3].quantity
             },
+            {
+              size: val.productID.ProductSize[4].size,
+              quantity: orderDetails[index].Size === val.productID.ProductSize[4].size ? val.productID.ProductSize[4].quantity - orderDetails[index].Quantity : val.productID.ProductSize[4].quantity
+            }
 
           ],
           files: val.productID.files,
@@ -1228,7 +1270,6 @@ const checkOutTasks = async (req, res) => {
           subCategory: val.productID.subCategory,
           PurchaseRate: val.productID.PurchaseRate,
           SalesRate: val.productID.SalesRate,
-          TotalPrice: val.productID.TotalPrice,
           ColorNames: val.productID.ColorNames,
           ProductDescription: val.productID.ProductDescription,
           VATAmount: val.productID.VATAmount,
@@ -1250,6 +1291,10 @@ const checkOutTasks = async (req, res) => {
               size: val.productID.ProductSize[3].size,
               quantity: orderDetails[index].Size === val.productID.ProductSize[3].size ? val.productID.ProductSize[3].quantity - orderDetails[index].Quantity : val.productID.ProductSize[3].quantity
             },
+            {
+              size: val.productID.ProductSize[4].size,
+              quantity: orderDetails[index].Size === val.productID.ProductSize[4].size ? val.productID.ProductSize[4].quantity - orderDetails[index].Quantity : val.productID.ProductSize[4].quantity
+            }
 
           ],
           files: val.productID.files,
@@ -1311,14 +1356,14 @@ const checkOutTasks = async (req, res) => {
 
       const cartData = await addtToCartModel.find({ userID: userID })
 
-      const couponUsed = await appliedCoupon.findOne({ couponCode: req.body.couponCode })
+      const couponUsed = await appliedCoupon.findOne({ userID:userID , couponCode: req.body.couponCode })
       console.log('couponUsed : ', couponApplied, couponExist)
       if (couponApplied === false) {
 
         if (couponExist) {
 
           if (!couponUsed) {
-            console.log('iam in couponExist', couponExist.discountAmount)
+            console.log('iam in not used', couponExist.discountAmount)
             couponApplied = true;
             res.json({ message: couponExist.discountAmount })
           } else {
@@ -1328,7 +1373,7 @@ const checkOutTasks = async (req, res) => {
 
         } else {
           res.json({ error: 'Coupon Is Already Expired' })
-          console.log('already couponExist')
+          console.log('already Expired')
         }
 
       } else {
@@ -1736,16 +1781,16 @@ const productOverview = async (req, res) => {
     const cart = await addtToCartModel.find({ userID: userID, productID: id })
     const wishListExist = await wishlistSchema.find({ userID: userID, productID: id }, 'productID');
     let isWishlisted = false;
-    if(wishListExist.length > 0){
+    if (wishListExist.length > 0) {
       isWishlisted = true;
     }
-    console.log('cart ', cart,wishListExist)
+    console.log('cart ', cart, wishListExist)
 
     const productColor = await productModel.find({ ProductName: ProductData[0].ProductName })
     const firstProduct = ProductData[0];
     const CategoryName = firstProduct.CategoryName;
     const relatedItem = await productModel.find({ CategoryName: CategoryName })
-    res.render('user/productOverview', { ProductData, relatedItem, productColor, cart ,isWishlisted})
+    res.render('user/productOverview', { ProductData, relatedItem, productColor, cart, isWishlisted })
   } catch (error) {
     console.log(error)
   }

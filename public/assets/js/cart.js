@@ -127,12 +127,33 @@ function saveOrder(data) {
             console.log('Product added to cart successfully', response);
             // Handle success response if needed
             console.log('I am here...');
+            if(response.data.message === 'error'){
+                Swal.fire({
+                    icon: 'info',
+                    title: '<span style="color: red">Regrettably,One of the product is currently out of stock.!</span>',
+                    timer: 4000, // Duration in milliseconds
+                    toast: true,
+                    position: 'top', // Toast position
+                    showConfirmButton: false
+                });
+            }else{
                 location.href ='/checkOut'  
+            }
+                
 
         })
         .catch(function (error) {
             console.error('Error adding product to cart:', error);
             // Handle error if needed
+        });
+    }else{
+        Swal.fire({
+            icon: 'info',
+            title: '<span style="color: red; font-size:10pt;">Regrettably,One of the product is currently out of stock.!</span>',
+            timer: 4000, // Duration in milliseconds
+            toast: true,
+            position: 'top', // Toast position
+            showConfirmButton: false
         });
     }
     
@@ -141,3 +162,13 @@ function saveOrder(data) {
 
 
 
+function cartError(){
+    Swal.fire({
+        icon: 'info',
+        title: '<span style="color: red">Your Cart is Empty!</span>',
+        timer: 4000, // Duration in milliseconds
+        toast: true,
+        position: 'top', // Toast position
+        showConfirmButton: false
+    });
+}

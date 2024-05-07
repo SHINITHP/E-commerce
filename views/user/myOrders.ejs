@@ -26,10 +26,11 @@
         <link rel="stylesheet" href="/assets/css/user/templatemo-hexashop.css">
         <!-- <link rel="stylesheet" href="/assets/css/user/owl-carousel.css"> -->
         <!-- <link rel="stylesheet" href="/assets/css/user/lightbox.css"> -->
+        <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
         <link rel="stylesheet" href="/assets/css/user/wishlist.css">
         <link rel="stylesheet" href="/assets/css/user/myOrder.css">
 
-        <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+     
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
 
         <title>Document</title>
@@ -131,14 +132,14 @@
 
 
                             <a href="/Profile" id="DropDownLi1" style="display: none;">
-                                <li style="padding-left: 68px; height: 50px;">Profile Information <span><i
-                                            style="font-size:24px;color:#494949;padding-left:63px;"
+                                <li style="padding-left: 50px; height: 50px;">Profile Information <span  style="width: 30px;"><i
+                                            style="font-size:24px;color:#494949;padding-left:55px;"
                                             class="fa rightAngle">&#xf105;</i></span></li>
                             </a>
 
                             <a href="profileMenu?menu=manageAddress" id="DropDownLi2" style="display: none;">
-                                <li style="padding-left: 68px;height: 50px;">Manage Address <span><i
-                                            style="font-size:24px;color:#494949;padding-left:79px;"
+                                <li style="padding-left: 50px;height: 50px;">Manage Address <span style="width: 30px;"><i
+                                            style="font-size:24px;color:#494949;padding-left:69px;"
                                             class="fa rightAngle">&#xf105;</i></span></li>
                             </a>
 
@@ -471,12 +472,12 @@
                         return val._id == orderId ? true : false
                     })
 
-                    console.log('orderDetails', data[0].Status)
+                    console.log('orderDetails', data[0].rejected)
 
-                    if(data[0].Status === 'Order Returned' || data[0].Status === 'Order Cancelled' || data[0].Status === 'Out For Delivery'){
+                    if(data[0].Status === 'Order Returned' || data[0].Status === 'Order Cancelled' || data[0].Status === 'Out For Delivery' || data[0].rejected === true){
                         document.getElementById('cancelOrderbtn').style.display='none'
                         document.getElementById('btnReturnOrder').style.display = 'none'
-                    }else if(data[0].Status === 'Delivered'){
+                    }else if(data[0].Status === 'Delivered' && data[0].rejected === false){
                         document.getElementById('cancelOrderbtn').style.display='none'
                         document.getElementById('btnReturnOrder').style.display = 'block'
                     }else{
@@ -516,15 +517,24 @@
                         lineThree.classList.toggle('active');
                         textcenter.innerHTML = 'Your order is on its way and is currently marked as Out For Delivery.'
                     }
-                    else if (data[0].Status === 'Delivered') {
+                    else if (data[0].Status === 'Delivered' && data[0].rejected === false) {
                         lineOne.classList.toggle('active');
                         lineTwo.classList.toggle('active');
                         lineThree.classList.toggle('active');
                         lineFour.classList.toggle('active');
                         textcenter.innerHTML = 'Your order has been successfully delivered.'
 
-                        document.getElementById('cancelOrderbtn').style.display = 'none'
-                        document.getElementById('btnReturnOrder').style.display = 'block'
+                       
+                        console.log('iam in the ')
+                        saveLastShownDate(); 
+
+                    }else if (data[0].Status === 'Delivered' && data[0].rejected === true) {
+                        lineOne.classList.toggle('active');
+                        lineTwo.classList.toggle('active');
+                        lineThree.classList.toggle('active');
+                        lineFour.classList.toggle('active');
+                        textcenter.innerHTML = 'Your return request has been rejected.'
+
                         console.log('iam in the ')
                         saveLastShownDate(); 
 
