@@ -190,57 +190,99 @@
                     <div class="col-md-9 col-sm-12 col9">
                         <h3 style="width: 100%;">Wishlist</h3>
                         <br>
-                        <% wishlist.forEach((val)=> { %>
-                            <div class="container con2" style="margin-top: 5px;">
-                                <div class="row con2Row1">
-                                    <div class="col-2 rowcol6-1">
-                                        <img src="<%=val.productID.files[0].url%>" alt="">
+                        <div class="container" style="display: flex;flex-direction: column;min-height: 780px;">
+                            <% wishlist.forEach((val)=> { %>
+                                <div class="container con2" style="margin-top: 5px;">
+                                    <div class="row con2Row1">
+                                        <div class="col-2 rowcol6-1">
+                                            <img src="<%=val.productID.files[0].url%>" alt="">
+                                        </div>
+                                        <div class="col-4 rowcol6-2">
+                                            <a href="/productOverview?id=<%= val.productID._id %>">
+                                                <p>
+                                                    <%=val.productID.ProductName%>
+                                                </p>
+                                            </a>
+                                            <ul class="stars">
+                                                <li><i class="fa fa-star"></i></li>
+                                                <li><i class="fa fa-star"></i></li>
+                                                <li><i class="fa fa-star"></i></li>
+                                                <li><i class="fa fa-star"></i></li>
+                                                <li><i class="fa fa-star"></i></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-6 rowcol6-3">
+                                            <a href=""><button class="btn" onclick="removeWishlist('<%=val._id%>')"
+                                                    id="remove">Remove</button></a>
+                                            <a onclick="addToCart('<%= val.productID._id %>')"><button class="btn"
+                                                    style="font-size: 11pt;margin-left: 10px;" id="edit">Add To
+                                                    Cart</button></a>
+                                        </div>
                                     </div>
-                                    <div class="col-4 rowcol6-2">
-                                        <a href="/productOverview?id=<%= val.productID._id %>">
+                                    <div class="row con2Row2">
+                                        <div class="col-4 rowcol4-1">
+                                            <h5>BrandName</h5>
                                             <p>
-                                                <%=val.productID.ProductName%>
+                                                <%=val.productID.BrandName%>
                                             </p>
-                                        </a>
-                                        <ul class="stars">
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-6 rowcol6-3">
-                                        <a href=""><button class="btn" onclick="removeWishlist('<%=val._id%>')"
-                                                id="remove">Remove</button></a>
-                                        <a onclick="addToCart('<%= val.productID._id %>')"><button class="btn"
-                                                style="font-size: 11pt;margin-left: 10px;" id="edit">Add To
-                                                Cart</button></a>
-                                    </div>
-                                </div>
-                                <div class="row con2Row2">
-                                    <div class="col-4 rowcol4-1">
-                                        <h5>BrandName</h5>
-                                        <p>
-                                            <%=val.productID.BrandName%>
-                                        </p>
-                                    </div>
-                                    <div class="col-4 rowcol4-2">
-                                        <h5>Availability</h5>
-                                        <p>In Stock</p>
-                                    </div>
-                                    <div class="col-4 rowcol4-3">
-                                        <h5>Price</h5>
-                                        <p>
-                                            <%=val.productID.SalesRate%> <span
-                                                    style="padding-left: 5px;text-decoration: line-through;">
-                                                    <%=val.productID.MRP%>
-                                                </span>
-                                        </p>
+                                        </div>
+                                        <div class="col-4 rowcol4-2">
+                                            <h5>Availability</h5>
+                                            <p>In Stock</p>
+                                        </div>
+                                        <div class="col-4 rowcol4-3">
+                                            <h5>Price</h5>
+                                            <p>
+                                                <%=val.productID.SalesRate%> <span
+                                                        style="padding-left: 5px;text-decoration: line-through;">
+                                                        <%=val.productID.MRP%>
+                                                    </span>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <% }) %>
+                                <% }) %>
+                        </div>
+                       
+
+
+                            <% if(route=='wishlist'){ %> 
+                                <div class="col-12 " style="text-align: center;">
+                                    <div class="pagination__option">
+                                        <% if(currentPage > 1) { %>
+                                            <a href="/profileMenu?menu=wishlist&page=<%= currentPage > 1 ? parseInt(currentPage) - 1 : currentPage %>" style="padding-right: 5px;"><i class="fa fa-angle-left"></i></a>
+                                        <% } %>
+                                        <% for(let i =1; i<= pages; i++) { %>
+                                            <% if(i == currentPage) { %>
+                                                <a href="/profileMenu?menu=wishlist&page=<%= i %>"><button style="background-color: black;color: white;width: 35px;height: 35px;border: none;border-radius: 5px;"><%= i %></button></a>
+                                            <% } else {%>
+                                                <a href="/profileMenu?menu=wishlist&page=<%= i %>"><button style="background-color: black;color: white;width: 35px;height: 35px;border: none;border-radius: 5px;"><%= i %></button></a>
+                                            <% } %>
+                                        <% } %> 
+                                        <% if(currentPage < pages ) { %>
+                                            <a href="/profileMenu?menu=wishlist&page=<%=parseInt(currentPage) + 1%>" style="padding-left:5px ;"><i class="fa fa-angle-right"></i></a>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            <% } else{ %>
+                                <div class="col-12 text-align" style="text-align: center;">
+                                    <div class="pagination__option">
+                                        <% if(currentPage > 1) { %>
+                                            <a href=""><i class="fa fa-angle-left"></i></a>
+                                        <% } %>
+                                        <% for(let i =1; i<= pages; i++) { %>
+                                            <% if(i == currentPage) { %>
+                                                <a href=""><button style="background-color: black;color: white;width: 35px;height: 35px;border: none;border-radius: 5px;"><%= i %></button></a>
+                                            <% } else {%>
+                                                <a href=""><button style="background-color: black;color: white;width: 35px;height: 35px;border: none;border-radius: 5px;"><%= i %></button></a>
+                                            <% } %>
+                                        <% } %>  
+                                        <% if(currentPage < pages ) { %>
+                                            <a href="" style="padding-left:5px ;"><i class="fa fa-angle-right"></i></a>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            <% } %>
                     </div>
                 </div>
             </div>

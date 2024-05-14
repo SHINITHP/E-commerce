@@ -35,49 +35,45 @@
 
                 <div class="con-1 ">
                     <div class="box-1">
-                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png"
-                                        class="adminIcon" alt=""> <span
-                                        class="adminName">Admin</span></a>
-                </div>
-                <a href="adminDashboard">
-                        <button class="btns btnDashboard "><img class="img"
-                                        src="/assets/images/grid.png" alt=""><span
-                                        class="btnvalue">Dashboard</span></button>
-                </a>
-                <a href="ProductList">
-                        <button class="btns btnProducts "><img class="img"
-                                        src="/assets/images/grid.png" alt=""><span
-                                        class="btnvalue">Products</span></button>
-                </a>
-                <a href="Category">
-                <button class="btns btnCategory "><img class="img" src="/assets/images/grid.png"
-                                alt=""><span class="btnvalue"><span>Category</span></button>
-                </a>
-                <a href="orderHistory">
-                <button class="btns btnOrder btnColor"><img class="img" src="/assets/images/grid.png"
+                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png" class="adminIcon" alt=""> <span
+                                class="adminName">Admin</span></a>
+                    </div>
+                    <a href="adminDashboard">
+                        <button class="btns btnDashboard "><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Dashboard</span></button>
+                    </a>
+                    <a href="ProductList">
+                        <button class="btns btnProducts "><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Products</span></button>
+                    </a>
+                    <a href="Category">
+                        <button class="btns btnCategory "><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue"><span>Category</span></button>
+                    </a>
+                    <a href="orderHistory">
+                        <button class="btns btnOrder btnColor"><img class="img" src="/assets/images/grid.png"
                                 alt=""><span class="btnvalue">Order History</span></button>
-                </a>
-              <a href="coupon">
-                  <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png"
-                                alt=""><span class="btnvalue">Coupon</span></button>
-              </a>
-              <a href="salesReport">
-                <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png"
-                                alt=""><span class="btnvalue">Sales Report</span></button>
-              </a>
-                
-                <a href="CustomerDetails">
-                        <button class="btns btnUser"><img class="img"
-                                        src="/assets/images/grid.png" alt=""><span
-                                        class="btnvalue">User Report</span> </button>
-                </a>
-                <a href="offers">
-                        <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png"
-                                alt=""><span class="btnvalue">Offers</span></button>
-                </a>
-              
-                <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png"
-                                alt=""><span class="btnvalue">Wallet</span></button>
+                    </a>
+                    <a href="coupon">
+                        <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Coupon</span></button>
+                    </a>
+                    <a href="salesReport">
+                        <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Sales Report</span></button>
+                    </a>
+
+                    <a href="CustomerDetails">
+                        <button class="btns btnUser"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">User Report</span> </button>
+                    </a>
+                    <a href="offers">
+                        <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Offers</span></button>
+                    </a>
+
+                    <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Wallet</span></button>
                 </div>
 
                 <div class="con-2">
@@ -90,18 +86,21 @@
                     <div class="row filterRow">
                         <div class="col-7 filter-col7">
                             <div class="filterBox">
-                                <a href="" id="all">All Status</a>
-                                <span><a href="" id="Processing">Order Placed</a></span>
-                                <span><a href="" id="Delivered">Delivered</a></span>
-                                <span><a href="" id="Cancelled">Cancelled</a></span>
+                                <a href="/adminLogin/orderHistory?task=all" style="color: blue;" id="all">All Status</a>
+                                <span><a href="/adminLogin/orderHistory?task=OrderPlaced" style="color: rgb(108, 243, 17);" id="Processing">Order
+                                        Placed</a></span>
+                                <span><a href="/adminLogin/orderHistory?task=Delivered" style="color: green;"
+                                        id="Delivered">Delivered</a></span>
+                                <span><a href="/adminLogin/orderHistory?task=Cancelled" style="color: red;"
+                                        id="Cancelled">Cancelled</a></span>
                             </div>
                         </div>
                         <div class="col-5 filter-col5">
                             <div class="dateBox">
-                                <input type="date" class="dateInput" id="startDate">
+                                <input type="date" onchange="customDateFilter()" class="dateInput" id="startDate">
                             </div>
                             <div class="dateBox2">
-                                <input type="date" class="dateInput" id="endDate">
+                                <input type="date" onchange="customDateFilter()" class="dateInput" id="endDate">
                             </div>
                         </div>
                     </div>
@@ -170,13 +169,15 @@
                                         </h5>
                                     </div>
                                     <div class="action">
-                                        <% if(items.Status != 'Order Cancelled' && items.Status != 'Order Returned') { %>
-                                            <a id="editIcon" onclick="changeOrderStatus('<%=items.Status%>','<%=items._id%>')"
+                                        <% if(items.Status !='Order Cancelled' && items.Status !='Order Returned' ) { %>
+                                            <a id="editIcon"
+                                                onclick="changeOrderStatus('<%=items.Status%>','<%=items._id%>')"
                                                 style="cursor: pointer;"><img src="/assets/images/edit.png" alt=""
                                                     style="width: 25px;height: 25px;"></a>
-                                        <% } else { %>
-                                            <a id="" style="cursor: pointer;"><img src="/assets/images/edit.png" alt="" style="width: 25px;height: 25px;"></a>
-                                        <% } %>                                        
+                                            <% } else { %>
+                                                <a id="" style="cursor: pointer;"><img src="/assets/images/edit.png"
+                                                        alt="" style="width: 25px;height: 25px;"></a>
+                                                <% } %>
                                     </div>
                                 </div>
                                 <% }) %>
@@ -206,27 +207,37 @@
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script>
+
+
+            function customDateFilter() {
+                const startDate = document.getElementById('startDate').value
+                const endDate = document.getElementById('endDate').value
+                if (startDate && endDate) {
+                    location.href = `/adminLogin/orderHistory?task=customDate&startDate=${startDate}&endDate=${endDate}`
+                }
+            }
+
             let orderID;
 
-            function changeStatus(){
+            function changeStatus() {
                 let selectElement = document.getElementById('orderstatusDropDown')
 
                 const orderStatus = selectElement.value;
-                
-                axios.patch('/adminLogin/orderHistory?task=updateStatus&_method=PATCH', {orderID:orderID,orderStatus:orderStatus})// Sending productID as data
-                .then(function (response) {
-                    // Handle success response if needed
-                })
-                .catch(function (error) {
-                    console.error('Error adding product to cart:', error);
-                    // Handle error if needed
-                });
+
+                axios.patch('/adminLogin/orderHistory?task=updateStatus&_method=PATCH', { orderID: orderID, orderStatus: orderStatus })// Sending productID as data
+                    .then(function (response) {
+                        // Handle success response if needed
+                    })
+                    .catch(function (error) {
+                        console.error('Error adding product to cart:', error);
+                        // Handle error if needed
+                    });
 
             }
 
-            function changeOrderStatus(Status,id) {
+            function changeOrderStatus(Status, id) {
                 console.log(id)
-                orderID=id;
+                orderID = id;
                 let blur = document.getElementById('blur');
                 blur.classList.toggle('active');
 
@@ -250,11 +261,11 @@
                 }
             }
 
-           
+
 
             document.getElementById('btnCancel').addEventListener('click', function () {
                 let blur = document.getElementById('blur');
-                blur.classList.remove('active'); 
+                blur.classList.remove('active');
 
                 let popup = document.querySelector('.popup');
                 popup.classList.remove('active');
@@ -266,6 +277,19 @@
 
             })
 
+            $(function () {
+                var selectedClass = "";
+                $("p").click(function () {
+                    selectedClass = $(this).attr("data-rel");
+                    $("#portfolio").fadeTo(50, 0.1);
+                    $("#portfolio div").not("." + selectedClass).fadeOut();
+                    setTimeout(function () {
+                        $("." + selectedClass).fadeIn();
+                        $("#portfolio").fadeTo(50, 1);
+                    }, 500);
+
+                });
+            });
         </script>
 
 
@@ -291,23 +315,6 @@
         <!-- Global Init -->
         <!-- <script src="assets/js/custom.js"></script> -->
 
-        <script>
-
-            $(function () {
-                var selectedClass = "";
-                $("p").click(function () {
-                    selectedClass = $(this).attr("data-rel");
-                    $("#portfolio").fadeTo(50, 0.1);
-                    $("#portfolio div").not("." + selectedClass).fadeOut();
-                    setTimeout(function () {
-                        $("." + selectedClass).fadeIn();
-                        $("#portfolio").fadeTo(50, 1);
-                    }, 500);
-
-                });
-            });
-
-        </script>
 
 </body>
 

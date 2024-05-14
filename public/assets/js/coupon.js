@@ -1,6 +1,15 @@
 let blur = document.getElementById('blur');
 let popup = document.getElementById('popup');
 
+
+function customDateFilter(){
+    const startDate = document.getElementById('startDate').value
+    const endDate = document.getElementById('endDate').value
+    if(startDate && endDate){
+        location.href =`/adminLogin/coupon?task=customDate&startDate=${startDate}&endDate=${endDate}`
+    }
+}
+
 function deleteOffer(id, productID) {
     console.log(id,productID)
     axios.delete('/adminLogin/coupon', { data: { id } })

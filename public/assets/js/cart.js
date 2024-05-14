@@ -126,11 +126,11 @@ function saveOrder(data) {
         .then(function (response) {
             console.log('Product added to cart successfully', response);
             // Handle success response if needed
-            console.log('I am here...');
+            console.log('I am here...',response);
             if(response.data.message === 'error'){
                 Swal.fire({
                     icon: 'info',
-                    title: '<span style="color: red">Regrettably,One of the product is currently out of stock.!</span>',
+                    title: '<span style="color: red;font-size:9pt;">Regrettably,One of the product is currently out of stock.!</span>',
                     timer: 4000, // Duration in milliseconds
                     toast: true,
                     position: 'top', // Toast position

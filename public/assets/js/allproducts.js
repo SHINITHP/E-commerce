@@ -3,7 +3,7 @@
 
 let mainCategory = document.querySelectorAll('.collapse');
 console.log('mainCategory', mainCategory)
-let value;
+let value ='';
 
 mainCategory.forEach((val, index) => {
     if (val.classList.contains('show')) {
@@ -17,6 +17,8 @@ mainCategory.forEach((val, index) => {
     }
 })
 
+
+
 console.log('value ;', value)
 
 document.getElementById('searchBtn').addEventListener('click', function () {
@@ -27,6 +29,7 @@ document.getElementById('searchBtn').addEventListener('click', function () {
 })
 
 function search() {
+    
     const searchBar = document.getElementById('search').value
     var searchLink = document.getElementById("searchLink");
     console.log(searchBar)
@@ -39,7 +42,8 @@ function Filter() {
     const minimum = document.getElementById('minimumValue').value
     const maximum = document.getElementById('maximumValue').value
     if (minimum !=='' || maximum !=='') {
-        if (value === undefined) {
+        console.log(value)
+        if (!value) {
             document.getElementById("FilterForm").action = `allProducts?task=priceFilter&page=1&cat=allProducts`
         } else {
             document.getElementById("FilterForm").action = `allProducts?task=priceFilter&page=1&cat=${value}`
@@ -50,3 +54,6 @@ function Filter() {
 
 
 }
+
+
+

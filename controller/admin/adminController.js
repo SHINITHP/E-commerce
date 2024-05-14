@@ -277,12 +277,63 @@ const logout = (req, res) => {
 }
 
 const orderHistory = async (req, res) => {
-    const orderDetails = await orderModel.find({})
-        .populate('productID')
-        .populate('userID')
-        .populate('addressID')
-    console.log('order details', orderDetails)
-    res.render('admin/orderHistory', { orderDetails })
+
+    if (req.query.task === 'all') {
+        const orderDetails = await orderModel.find({})
+            .populate('productID')
+            .populate('userID')
+            .populate('addressID')
+        console.log('order details', orderDetails)
+        res.render('admin/orderHistory', { orderDetails })
+    } else if (req.query.task === 'OrderPlaced') {
+        const orderDetails = await orderModel.find({ Status: 'Order Placed' })
+            .populate('productID')
+            .populate('userID')
+            .populate('addressID')
+        console.log('order details', orderDetails)
+        res.render('admin/orderHistory', { orderDetails })
+    } else if (req.query.task === 'Delivered') {
+        const orderDetails = await orderModel.find({ Status: 'Delivered' })
+            .populate('productID')
+            .populate('userID')
+            .populate('addressID')
+        console.log('order details', orderDetails)
+        res.render('admin/orderHistory', { orderDetails })
+    } else if (req.query.task === 'Cancelled') {
+        const orderDetails = await orderModel.find({ Status: 'Cancelled' })
+            .populate('productID')
+            .populate('userID')
+            .populate('addressID')
+        console.log('order details', orderDetails)
+        res.render('admin/orderHistory', { orderDetails })
+    } else if (req.query.task === 'customDate') {
+
+
+
+
+        const startDate = req.query.startDate
+        const endDate = req.query.endDate
+
+        const orderDetails = await orderModel.find({
+            OrderDate: {
+                $gte: new Date(startDate), // Start of the specified date range
+                $lte: new Date(endDate) // End of the specified date range
+            }
+        }).sort({ OrderDate: 1 })
+            .populate('productID')
+            .populate('userID')
+            .populate('addressID')
+        console.log('order details', orderDetails)
+        res.render('admin/orderHistory', { orderDetails })
+    } else {
+        const orderDetails = await orderModel.find({})
+            .populate('productID')
+            .populate('userID')
+            .populate('addressID')
+        console.log('order details', orderDetails)
+        res.render('admin/orderHistory', { orderDetails })
+    }
+
 }
 
 
@@ -416,7 +467,7 @@ const addProductsPost = async (req, res) => {
                 console.log(error)
             }
         }
-        console.log('urls : ',urls);
+        console.log('urls : ', urls);
         const {
             ProductName, BrandName, CategoryName, StockQuantity, subCategory,
             PurchaseRate, SalesRate, ColorNames,
@@ -519,26 +570,26 @@ const postEditProduct = async (req, res) => {
             try {
                 const id = req.body.id;
                 const index = req.body.index;
-        
+
                 // Find the product document by its ID
                 const product = await productModel.findById(id);
-        
+
                 // Access the files array and remove the element at the specified index
                 if (product) {
                     product.files.splice(index, 1); // Remove 1 element at the specified index
-        
+
                     // Update the product document in the database to reflect the changes
                     await productModel.findByIdAndUpdate(id, { files: product.files });
-        
+
                     console.log('Image deleted successfully');
-                    res.json({message:'success'})
+                    res.json({ message: 'success' })
                 } else {
                     console.log('Product not found');
                 }
             } catch (error) {
                 console.log('Error deleting image:', error);
             }
-        }else{
+        } else {
 
             // console.log(req.body.imageLinks)
             const imageData = Array.isArray(req.body.imageLinks) ? req.body.imageLinks : [req.body.imageLinks];
@@ -551,8 +602,8 @@ const postEditProduct = async (req, res) => {
 
             const uploader = async (path) => await cloudinary.uploads(path, 'Images');
             const urls = []
-            
-            console.log(imageData.length,'imageData.length :',imageData)
+
+            console.log(imageData.length, 'imageData.length :', imageData)
             if (imageData.length === 0) {
                 console.log('hi iam in the if ')
                 for (const imageUrl of imageData) {
@@ -563,11 +614,11 @@ const postEditProduct = async (req, res) => {
                         console.log(error)
                     }
                 }
-            
+
             }
-            if(urls.length === 0){
-                console.log('i bro i am in urls',urls.length,urls)
-                urls.forEach((val) =>imgData.push(val))
+            if (urls.length === 0) {
+                console.log('i bro i am in urls', urls.length, urls)
+                urls.forEach((val) => imgData.push(val))
             }
 
             const {
@@ -575,15 +626,15 @@ const postEditProduct = async (req, res) => {
                 PurchaseRate, SalesRate, TotalPrice, ColorNames,
                 ProductDescription, VATAmount, DiscountPrecentage, sizes
             } = req.body
-    
+
             // Prepare sizes array
             let ProductSize = sizes.map((size, index) => ({
                 size,
                 quantity: req.body.SizeQuantity[index]
             }));
             //assigning all the reqested data to product variable
-    
-    
+
+
             const Products = {
                 ProductName,
                 BrandName,
@@ -598,9 +649,9 @@ const postEditProduct = async (req, res) => {
                 VATAmount,
                 DiscountPrecentage,
                 ProductSize,
-                files:imgData
+                files: imgData
             };
-    
+
             try {
                 await ProductModel.findOneAndUpdate({ _id: req.query.id }, { $set: Products }).then((result) => {
                     // console.log('result :', result);
@@ -610,12 +661,12 @@ const postEditProduct = async (req, res) => {
                 const subCategory = await subCategorySchema.distinct('subCategory');
                 const productInfo = await ProductModel.findById(req.query.id)
                 res.render('admin/editProducts', { subCategory, productInfo, success: 'Product Successfully Edited' })
-    
+
             } catch (saveError) {
                 console.error('Error saving product to database:', saveError)
                 res.status(500).json({ error: 'Failed to save product to database' })
             }
-    
+
         }
 
 
@@ -896,7 +947,8 @@ const categoryEdit = async (req, res) => {
 
         const isExist = await subCategorySchema.findOne({
             CategoryName,
-            subCategory
+            subCategory,
+            image: finalImage.length > 0 ? urls : oldData.image
         })
         //assigning reqested data to the category variable
         const category = {
@@ -1011,8 +1063,37 @@ const deleteInventory = async (req, res) => {
 }
 
 const coupon = async (req, res) => {
-    const coupons = await couponSchema.find({})
-    res.render('admin/Coupon', { coupons })
+    if (req.query.task === 'All') {
+        const coupons = await couponSchema.find({})
+        res.render('admin/Coupon', { coupons })
+    } else if (req.query.task === 'Active') {
+        const coupons = await couponSchema.find({status: 'Listed' })
+        res.render('admin/Coupon', { coupons })
+    }
+    else if (req.query.task === 'Expired') {
+        console.log('Unlisted')
+        const coupons = await couponSchema.find({status: 'Unlisted' })
+        res.render('admin/Coupon', { coupons })
+    }else if (req.query.task === 'customDate'){
+        const startDate = req.query.startDate
+        const endDate = req.query.endDate
+
+        const coupons = await couponSchema.find({
+            startDate: {
+                $gte: new Date(startDate), // Start of the specified date range
+            },
+            Expire: {
+                $lte: new Date(endDate), // Start of the specified date range
+            }
+
+        }).sort({ OrderDate: 1 })
+
+        res.render('admin/Coupon', { coupons })
+    }else{
+        const coupons = await couponSchema.find({})
+        res.render('admin/Coupon', { coupons })
+    }
+
 }
 
 function generateSimpleUniqueId() {
@@ -1068,7 +1149,7 @@ const deletCoupon = async (req, res) => {
     try {
         const id = req.body.id;
         await couponSchema.findByIdAndDelete(id)
-        res.json({message:'sucess'})
+        res.json({ message: 'sucess' })
     } catch (error) {
         console.log(error)
     }
@@ -1269,11 +1350,11 @@ const updateRequest = async (req, res) => {
         );
         // 
 
-        
+
         const product = await productModel.findById(data.productID._id)
         const productArray = [product];
         let returnData;
-        console.log('productArray :',data.Quantity)
+        console.log('productArray :', data.Quantity)
         let updatedProduct = productArray.map((val, index) => {
             console.log(parseFloat(val.StockQuantity) + parseFloat(data.Quantity))
             return returnData = {
@@ -1320,7 +1401,7 @@ const updateRequest = async (req, res) => {
         })
 
         // console.log('product',product)
-        console.log('updatedProduct',updatedProduct)
+        console.log('updatedProduct', updatedProduct)
 
         const checkWallet = await walletSchema.findOne({ userID: data.userID }).sort({ added: -1 });
 

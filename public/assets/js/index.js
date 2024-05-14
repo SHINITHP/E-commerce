@@ -2,7 +2,7 @@ function search() {
     const searchBar = document.getElementById('search').value
     var searchLink = document.getElementById("searchLink");
     console.log(searchBar)
-    searchLink.href = "/allProducts?task=search&page=1&text=" + searchBar;
+    searchLink.href = "/allProducts?task=search&cat=&page=1&text=" + searchBar;
     // Redirect to the new URL
     window.location.href = searchLink.href;
 }
@@ -38,20 +38,25 @@ function Wishlist(element,productID) {
     let removeIcon = element.querySelector('.remove');
     let add = element.querySelector('.add');
     if (removeIcon.style.display === 'none') {
-        removeIcon.style.display = 'inline'; // or 'block' depending on your needs
-        add.style.display = 'none'; // or 'block' depending on your needs
-
-        Swal.fire({
-            icon: 'success',
-            text: 'Successfully added to wishlist!',
-            timer: 4000, // Duration in milliseconds
-            toast: true,
-            position: 'top', // Toast position
-            showConfirmButton: false // Hide confirmation button
-        });
+       
 
         axios.post('/productOverview?task=wishlist', { productID }) // Sending productID as data
             .then(function (response) {
+                if(response.data.message ==='' || response.data.message === undefined){
+                    window.location.href ='/login'
+                }else{
+                    removeIcon.style.display = 'inline'; // or 'block' depending on your needs
+                    add.style.display = 'none'; // or 'block' depending on your needs
+    
+                    Swal.fire({
+                        icon: 'success',
+                        text: 'Successfully added to wishlist!',
+                        timer: 4000, // Duration in milliseconds
+                        toast: true,
+                        position: 'top', // Toast position
+                        showConfirmButton: false // Hide confirmation button
+                    });
+                }
             })
             .catch(function (error) {
                 console.error('Error adding product to cart:', error);

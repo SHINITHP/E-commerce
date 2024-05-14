@@ -4,15 +4,6 @@ let popup = document.getElementById('popup');
 const status = document.querySelectorAll('.status')
 
 
-// function customDateFilter(){
-//     const startDate = document.getElementById('startDate').value
-//     const endDate = document.getElementById('endDate').value
-//     if(startDate && endDate){
-//         location.href =`/adminLogin/offers?filter=customDate&startDate=${startDate}&endDate=${endDate}`
-//     }
-// }
-
-
 function deleteOffer(id, productID) {
     console.log(id,productID)
     axios.delete('/adminLogin/offers', { data: { id, productID } })
@@ -63,7 +54,7 @@ function selectProduct() {
         .then(function (response) {
             console.log(response)
             if (response) {
-
+                document.getElementById('showProducts').innerHTML=''
                 const data = response.data.products;
                 data.forEach(element => {
                     const option = document.createElement('option');

@@ -144,7 +144,7 @@
                                 </span>
                             </li>
                         </a>
-                        <a href="profileMenu?menu=wishlist">
+                        <a href="profileMenu?menu=wishlist&page=1">
                             <li><i class="fa fa-heart menuIcon" style="color: black;"></i><span
                                     class="spanText">Wishlist</span>
                                 <span>
@@ -221,10 +221,10 @@
                     </div> 
 
                     <div class="row"style="margin-top: 20px; display: flex;flex-direction: column;align-items: center;justify-content: center;">
-                     
+                        <% let oldemail = userData.length > 0 ? userData[0].emailAddress : '' %>
                         <div class="col-11" style="display: flex;justify-content: space-between;">
                             <h5 style="width: 50%; display: flex; justify-content: start;font-family: Poppins; font-size: 17pt;font-weight: bold;">Change Email</h5>
-                            <a  onclick="changeEmail()" style="display: none;" id="emailCancelbtn"><input type="submit" style="background-color: black;color: white;" class="btn btnEdit"  value="Change"></a>
+                            <a  onclick="changeEmail('<%=oldemail%>')" style="display: none;" id="emailCancelbtn"><input type="submit" style="background-color: black;color: white;" class="btn btnEdit"  value="Change"></a>
                         </div>
                        
                         <br>
@@ -234,7 +234,7 @@
                                 <label for="oldpassword" style="width: 50%;color: rgb(107, 107, 107);padding: 0;margin: 0;">Enter new
                                     Email
 
-                                    <% let oldemail = userData.length > 0 ? userData[0].emailAddress : '' %>
+                                   
                                     <input type="text" class="form-control changePassword" name="newEmail"
                                         id="newEmailAddress" placeholder="<%=oldemail%>" >
                                 </label>

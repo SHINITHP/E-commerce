@@ -5,20 +5,28 @@ function Wishlist(element, productID) {
     let removeIcon = element.querySelector('.remove');
     let add = element.querySelector('.add');
     if (removeIcon.style.display === 'none') {
-        removeIcon.style.display = 'inline'; // or 'block' depending on your needs
-        add.style.display = 'none'; // or 'block' depending on your needs
 
-        Swal.fire({
-            icon: 'success',
-            text: 'Successfully added to wishlist!',
-            timer: 4000, // Duration in milliseconds
-            toast: true,
-            position: 'top', // Toast position
-            showConfirmButton: false // Hide confirmation button
-        });
 
         axios.post('/productOverview?task=wishlist', { productID }) // Sending productID as data
             .then(function (response) {
+                console.log('hiewjfjnjd ',response.data.message,response)
+
+                if(response.data.message ==='' || response.data.message === undefined){
+                    window.location.href ='/login'
+                }else{
+                    removeIcon.style.display = 'inline'; // or 'block' depending on your needs
+                    add.style.display = 'none'; // or 'block' depending on your needs
+    
+                    Swal.fire({
+                        icon: 'success',
+                        text: 'Successfully added to wishlist!',
+                        timer: 4000, // Duration in milliseconds
+                        toast: true,
+                        position: 'top', // Toast position
+                        showConfirmButton: false // Hide confirmation button
+                    });
+                }
+
             })
             .catch(function (error) {
                 console.error('Error adding product to cart:', error);
@@ -128,6 +136,7 @@ function shoppingCart(index, productID, Price, discount) {
     console.log('I am here...');
     axios.post('/productOverview?task=addToCart', { productID, Price, quantity: totalQty, size, proDiscount }) // Sending productID as data
         .then(function (response) {
+            location.href ='/shoppingCart'
         })
         .catch(function (error) {
             console.error('Error adding product to cart:', error);

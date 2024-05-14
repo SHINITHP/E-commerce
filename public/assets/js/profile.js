@@ -110,7 +110,7 @@ function changePassword(){
 
 }
 
-function changeEmail() {
+function changeEmail(oldEmail) {
     const newEmailAddress = document.getElementById('newEmailAddress').value
     if (newEmailAddress.trim() === '' || /\s/.test(newEmailAddress)) {
         Swal.fire({
@@ -127,9 +127,18 @@ function changeEmail() {
                 console.log('Product added to cart successfully', response);
                 if (response.data.message === 'SameEmail') {
                     document.getElementById('emailError').innerHTML = 'New email is same as existing email'
-                } else {
+                }else if(response.data.message === 'AlreadyExist'){
+                    Swal.fire({
+                        icon: 'info',
+                        title: '<span style="color: red">Entered email is already exist!</span>',
+                        timer: 4000, // Duration in milliseconds
+                        toast: true,
+                        position: 'top', // Toast position
+                        showConfirmButton: false
+                    });
+                }else {
                     localStorage.removeItem('newEmailAddress');
-                    localStorage.setItem('newEmailAddress', newEmailAddress);
+                    localStorage.setItem('newEmailAddress', oldEmail);
                     const newEmail = localStorage.getItem('newEmailAddress');
                     document.getElementById('otpLabel').innerHTML = newEmail
                     location.href = '#open-modal'

@@ -5,11 +5,11 @@ const Selectpayment = document.getElementById('Selectpayment');
 const onlinePayment = document.getElementById('onlinePayment');
 let couponDiscount = 0;
 
-document.getElementById('toTalAmount').innerHTML = parseFloat(document.getElementById('cartTotal').innerText) -  parseFloat(document.getElementById('discountAmt').innerText)
+document.getElementById('toTalAmount').innerHTML = parseFloat(document.getElementById('cartTotal').innerText) - parseFloat(document.getElementById('discountAmt').innerText)
 
 let AppliedCode;
 function applyCouuponCode() {
-    
+
     const couponCode = document.getElementById('couponCode').value
     AppliedCode = couponCode
     console.log('couponCode :', couponCode)
@@ -19,10 +19,10 @@ function applyCouuponCode() {
             if (response.data.error === 'Coupon Is Already Applied') {
                 document.getElementById('couponCode').value = response.data.error
                 document.getElementById('couponCode').style.color = 'red'
-            }else if(response.data.error === 'Coupon Is Already Expired'){
+            } else if (response.data.error === 'Coupon Is Already Expired') {
                 document.getElementById('couponCode').value = response.data.error
                 document.getElementById('couponCode').style.color = 'red'
-            }else{
+            } else {
                 console.log(response)
                 couponDiscount = response.data.message
                 let discountAmt = document.getElementById('discountAmt').innerText
@@ -32,8 +32,8 @@ function applyCouuponCode() {
                 document.getElementById('discountAmt').innerHTML = parseFloat(discountAmt) + parseFloat(discount);
                 document.getElementById('toTalAmount').innerHTML = parseFloat(total) - parseFloat(discount);
             }
-           
-           
+
+
 
         })
         .catch((err) => {
@@ -41,6 +41,49 @@ function applyCouuponCode() {
         })
 }
 
+function AddMoneyTOWallet(user) {
+    let userInfo = JSON.parse(user)
+    const AddAmount = document.getElementById('AddAmount').value;
+    axios.post('/create-payment', { amount: AddAmount })
+        .then(function (response) {
+            const responseData = response.data;
+            console.log(responseData.amount)
+
+
+            const options = {
+                key: 'rzp_test_TrCYwkpURRftvO',
+                amount: responseData.amount,
+                currency: 'INR',
+                description: 'Add Money To Wallet',
+                wallet_id: responseData.id,
+                handler: function (response) {
+
+                    console.log(userInfo, 'addressID')
+                    axios.post('/checkOut?task=AddToWallet', { AddAmount }) // Sending productID as data
+                        .then(function (response) {
+                            // Handle success response if needed
+                        })
+                        .catch(function (error) {
+                            console.error('Error adding product to cart:', error);
+                            // Handle error if needed
+                        });
+                },
+                prefill: {
+                    name: userInfo[0].fullName, // Pre-fill customer's name
+                    email: userInfo[0].emailAddress, // Pre-fill customer's email
+                    contact: userInfo[0].phoneNo // Pre-fill customer's contact number
+                },
+                theme: {
+                    color: '#3399cc' // Customize color
+                }
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.open();
+
+
+        })
+}
 
 
 
@@ -50,23 +93,21 @@ function RazorPayment(product, user) {
     console.log(userInfo[0].phoneNo)
     // Create an order on the server
     const totalAmt = document.getElementById('toTalAmount').innerText
-    axios.post('/create-payment', { amount : totalAmt })
+    axios.post('/create-payment', { amount: totalAmt })
         .then(function (response) {
             // Handle success response if needed
             const responseData = response.data;
             console.log(responseData.amount)
             // Initialize Razorpay checkout
             const options = {
-                key: 'rzp_test_TrCYwkpURRftvO', // Replace with your Razorpay public key
+                key: 'rzp_test_TrCYwkpURRftvO',
                 amount: responseData.amount,
                 currency: 'INR',
                 name: productDetails.ProductName,
                 description: 'Payment for your service',
                 order_id: responseData.id,
                 handler: function (response) {
-                    // alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
-                    // You can redirect or perform other actions here after successful payment
-                    // verifyPayment(response,responseData)
+
                     confirmation.style.display = 'none'
                     let blur = document.getElementById('blur');
                     blur.classList.toggle('active');
@@ -80,7 +121,7 @@ function RazorPayment(product, user) {
                     const addressID = userInfo.map((val) => val._id)
                     console.log(userInfo, 'addressID')
                     const paymentMethod = Selectpayment.checked ? 'Cash On Delivery' : 'Online Payment'
-                    axios.post('/checkOut?task=RazorPay', { amount: totalAmt,AppliedCode, ProductData: product, paymentMethod: paymentMethod, addressID , couponDiscount}) // Sending productID as data
+                    axios.post('/checkOut?task=RazorPay', { amount: totalAmt, AppliedCode, ProductData: product, paymentMethod: paymentMethod, addressID, couponDiscount }) // Sending productID as data
                         .then(function (response) {
                             // Handle success response if needed
                         })
@@ -118,10 +159,15 @@ function verifyPayment(payment, order) {
 }
 
 function messageBox() {
-    const confirmation = confirm('Please Select Your Delivery Address Or add a new address');
-    if (!confirmation) {
-        event.preventDefault(); // Prevent form submission
-    }
+    Swal.fire({
+        icon: 'info',
+        title: '<span style="font-size:9pt;color: red">Please ensure to provide your current address for accurate delivery.</span>',
+        timer: 4000, // Duration in milliseconds
+        toast: true,
+        position: 'top', // Toast position
+        showConfirmButton: false
+    });
+
 }
 
 if (Selectpayment.checked) {
@@ -145,7 +191,7 @@ function ConfirmOrder(ProductData, userAddress) {
     const paymentMethod = document.getElementById('Selectpayment').value
     if (wallet.checked) {
         console.log('sasi')
-        axios.post('/checkOut?task=walletPayment', { ProductData, paymentMethod: paymentMethod, addressID: addressID ,total}) // Sending productID as data
+        axios.post('/checkOut?task=walletPayment', { ProductData, paymentMethod: paymentMethod, addressID: addressID, total }) // Sending productID as data
             .then(function (response) {
                 // Handle success response if needed
             })
@@ -155,7 +201,7 @@ function ConfirmOrder(ProductData, userAddress) {
             });
     } else {
         const totalAmt = document.getElementById('toTalAmount').innerText
-        axios.post('/checkOut?task=saveOrderDetails', {amount : totalAmt,couponDiscount, ProductData: ProductData, paymentMethod: paymentMethod, addressID: addressID }) // Sending productID as data
+        axios.post('/checkOut?task=saveOrderDetails', { amount: totalAmt, couponDiscount, ProductData: ProductData, paymentMethod: paymentMethod, addressID: addressID }) // Sending productID as data
             .then(function (response) {
                 // Handle success response if needed
             })
@@ -184,7 +230,11 @@ document.getElementById('Selectpayment').addEventListener('click', function () {
     document.getElementById('COD').style.display = 'flex'
     document.getElementById('onlinePaymentBTN').style.display = 'none'
 })
-
+document.getElementById('wallet').addEventListener('click', function () {
+    document.getElementById('COD').style.display = 'block'
+    document.getElementById('COD').style.display = 'flex'
+    document.getElementById('onlinePaymentBTN').style.display = 'none'
+})
 
 
 
@@ -202,17 +252,18 @@ document.getElementById('btnOkey').addEventListener('click', function () {
 
     location.href('/checkOut')
 })
-
+localStorage.setItem('walletAmt', 0);
+document.getElementById('walletAmount').innerHTML = localStorage.getItem('walletAmt');
 function successMessage() {
 
-    if (Selectpayment.checked) {
+    if (Selectpayment.checked && Selectpayment.value === 'Cash On Delivery') {
         console.log('i am here....')
         let blur = document.getElementById('blur');
         blur.classList.toggle('active');
 
         let popup = document.getElementById('SuccessDiv');
         popup.classList.toggle('active');
-    } else if (wallet.checked) {
+    } else if (wallet.checked || wallet.value === 'Wallet') {
         axios.get('/checkOut?task=checkWallet') // Sending productID as data
             .then(function (response) {
 
@@ -228,29 +279,32 @@ function successMessage() {
 
                         let popup = document.getElementById('SuccessDiv');
                         popup.classList.toggle('active');
+
                     } else {
-                        let blur = document.getElementById('blur');
-                        blur.classList.toggle('active');
-
-                        let popup = document.getElementById('SuccessDiv');
-                        popup.classList.toggle('active');
-                        popup.style.height = '200px'
-                        document.querySelector('.confirmation').style.display = 'none'
-                        document.querySelector('.failedRow').style.display = 'block'
-                        document.querySelector('.failedRow').style.display = 'flex'
-
+                        location.href = '#open-modal'
+                        let amount = response.data.balance !== undefined ? response.data.balance : 0;
+                        localStorage.removeItem('walletAmt');
+                        // Set new data associated with the same key
+                        localStorage.setItem('walletAmt', amount);
+                        document.getElementById('walletAmount').innerHTML = localStorage.getItem('walletAmt')
+                        let balanceAmount = parseFloat(document.getElementById('toTalAmount').innerText) - parseFloat(amount)
+                        localStorage.removeItem('balanceAmt');
+                        localStorage.setItem('balanceAmt', balanceAmount)
+                        document.getElementById('AddAmount').value = localStorage.getItem('balanceAmt');
                     }
                 } else {
-                    console.log('log')
-                    let blur = document.getElementById('blur');
-                    blur.classList.toggle('active');
-
-                    let popup = document.getElementById('SuccessDiv');
-                    popup.classList.toggle('active');
-                    popup.style.height = '200px'
-                    document.querySelector('.confirmation').style.display = 'none'
-                    document.querySelector('.failedRow').style.display = 'block'
-                    document.querySelector('.failedRow').style.display = 'flex'
+                    location.href = '#open-modal'
+                    console.log('response.data :', response.data)
+                    let amount = response.data !== null ? response.data.balance : 0;
+                    localStorage.removeItem('walletAmt');
+                    // Set new data associated with the same key
+                    localStorage.setItem('walletAmt', amount);
+                    document.getElementById('walletAmount').innerHTML = localStorage.getItem('walletAmt')
+                    let balanceAmount = parseFloat(document.getElementById('toTalAmount').innerText) - parseFloat(amount)
+                    console.log('balanceAmount', balanceAmount)
+                    localStorage.removeItem('balanceAmt');
+                    localStorage.setItem('balanceAmt', balanceAmount)
+                    document.getElementById('AddAmount').value = localStorage.getItem('balanceAmt');
                 }
 
             })
@@ -262,11 +316,15 @@ function successMessage() {
     }
     else {
 
-        const confirmation = confirm('Please Select Your Payment Method');
-        if (!confirmation) {
-            document.querySelector('.selectPayment h5').style.color = 'red'
-            event.preventDefault(); // Prevent form submission
-        }
+        Swal.fire({
+            icon: 'info',
+            title: '<span style="font-size:9pt;color: red">Please Select Your Payment Method!</span>',
+            timer: 4000, // Duration in milliseconds
+            toast: true,
+            position: 'top', // Toast position
+            showConfirmButton: false
+        });
+
     }
 
 
@@ -280,20 +338,20 @@ const toTalAmount = document.getElementById('toTalAmount')
 let sum = 0;
 
 const Qty = document.querySelectorAll('.Qty')
-const dec = document.querySelectorAll('.dec') 
-for(let i =0;i<Qty.length;i++){
-    if(Qty[i].value == 1){
+const dec = document.querySelectorAll('.dec')
+for (let i = 0; i < Qty.length; i++) {
+    if (Qty[i].value == 1) {
         dec[i].disabled = true
     }
 }
 
-function quantityIncDec(index,id, Products, type) {
+function quantityIncDec(index, id, Products, type) {
     console.log('quantityIncDec')
     const showQty = document.getElementById(`showQty${index}`)
     const totalInput = document.getElementById(`totalPrice${index}`)
     const discountAmt = document.getElementById(`discount${index}`)
     let product = JSON.parse(Products)
-    console.log('product ',product)
+    console.log('product ', product)
     let productDetails = product.filter((val) => val._id === id)
 
 
@@ -301,25 +359,25 @@ function quantityIncDec(index,id, Products, type) {
     if (type === 'increment') {
         console.log('increment')
         let quantity = parseFloat(showQty.value)
-       
+
         let addQty = quantity + 1
-         console.log(quantity,addQty)
-        axios.put('/checkOut?task=incQuantity',{id,type,newQty:addQty})
-        .then(function (response) {
-            console.log('Product added to cart successfully', response);
-            // Handle success response if needed 
-            if(response.data ==='finished'){
-                // location.href = '/shoppingcart'
-                document.getElementById(`increment${index}`).disabled = true;
-            }else{
-                location.href = '/checkOut'
-            }
-            
-        })
-        .catch(function (error) {
-            console.error('Error adding product to cart:', error);
-            // Handle error if needed
-        });
+        console.log(quantity, addQty)
+        axios.put('/checkOut?task=incQuantity', { id, type, newQty: addQty })
+            .then(function (response) {
+                console.log('Product added to cart successfully', response);
+                // Handle success response if needed 
+                if (response.data === 'finished') {
+                    // location.href = '/shoppingcart'
+                    document.getElementById(`increment${index}`).disabled = true;
+                } else {
+                    location.href = '/checkOut'
+                }
+
+            })
+            .catch(function (error) {
+                console.error('Error adding product to cart:', error);
+                // Handle error if needed
+            });
 
 
     }
@@ -327,16 +385,16 @@ function quantityIncDec(index,id, Products, type) {
         let quantity = parseFloat(showQty.value)
         let addQty = quantity - 1
 
-        axios.put('/checkOut?task=incQuantity',{id,type,newQty:addQty})
-        .then(function (response) {
-            console.log('Product added to cart successfully', response);
-            // Handle success response if needed 
-            location.href('/checkOut"')
-        })
-        .catch(function (error) {
-            console.error('Error adding product to cart:', error);
-            // Handle error if needed
-        });
+        axios.put('/checkOut?task=incQuantity', { id, type, newQty: addQty })
+            .then(function (response) {
+                console.log('Product added to cart successfully', response);
+                // Handle success response if needed 
+                location.href('/checkOut"')
+            })
+            .catch(function (error) {
+                console.error('Error adding product to cart:', error);
+                // Handle error if needed
+            });
 
     }
 }

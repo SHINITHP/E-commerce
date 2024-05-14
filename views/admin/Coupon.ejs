@@ -109,18 +109,18 @@
                                                 <div class="row row3">
                                                         <div class="col-7 col7">
                                                             <div class=" sort-UsageRow">
-                                                                <a href="" id="all" style="color:blue;">All</a>
-                                                                <span><a href=""  id="active"  style="color:green;">Active</a></span>
-                                                                <span><a href=""  id="Expired" style="color:red;">Expired</a></span>
+                                                                <a href="/adminLogin/coupon?task=All" id="all" style="color:blue;">All</a>
+                                                                <span><a href="/adminLogin/coupon?task=Active"  id="active"  style="color:green;">Active</a></span>
+                                                                <span><a href="/adminLogin/coupon?task=Expired"  id="Expired" style="color:red;">Expired</a></span>
                                 
                                                             </div>
                                                         </div>
                                                         <div class="col-5 sort-AddedRow">
                                                             <div class="dateBox">
-                                                                <input type="date" class="dateInput" id="startDate">
+                                                                <input type="date" onchange="customDateFilter()" class="dateInput" id="startDate">
                                                             </div>
                                                             <div class="dateBox2">
-                                                                <input type="date" class="dateInput" id="endDate">
+                                                                <input type="date" onchange="customDateFilter()" class="dateInput" id="endDate">
                                                             </div>
                                                         </div>
                                                 </div>

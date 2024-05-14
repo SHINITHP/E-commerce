@@ -20,28 +20,20 @@ router.route('/register').get(registerPage).post(sentOTP)//user registration
 router.route('/enterOtp').get(userAuth,enterOtp).post(createUser)//enterOtp
 router.route('/login').get(loginAuth,loginPage).post(userLogin)//loginpage
 router.route('/google').get(passport.authenticate('google', { scope: ['profile', 'email'] }))
-router.route('/google/redirect').get(passport.authenticate('google'), (req, res) => {
-    const token = jwt.sign(
-        { user: req.user },
-        process.env.JWT_SECRET || '',
-        { expiresIn: "50h" },
-    );
-    res.cookie('jwtUser', token);
-    res.redirect('/')
-})
+router.route('/google/redirect').get(passport.authenticate('google'), google)
 router.route('/shoppingcart').get(userAuth, shoppingCart).post(orderDetails).patch(updateCart).delete(removeCartProduct)//shoppingcart 
 router.route('/sendEmailOtp').get(sendEmailOtp).post(postsendEmailOtp)//enter email page to send otp for forgotpassword
 router.route('/forgotEnterOtp').get(forgotEnterOtp).post(postForgotEnterOtp)// Enter otp for forgotpassword
 router.route('/resetPassword').get(resetPassword).patch(createPassword)// resetpassword page
 router.route('/resendOtp').post(resendOtp)//resend otp 
-router.route('/productOverview').get(productOverview).post(overviewFilter).delete(overviewFilter)//productOverview 
+router.route('/productOverview').get(productOverview).post(userAuth,overviewFilter).delete(overviewFilter)//productOverview 
 router.route('/allProducts').get(landingPage).post(priceFilter)//allProducts
 router.route('/filterProducts').get(filterProducts)
 router.route('/filterCategory').get(landingPage)//listCategory
 router.route('/Profile').get(userAuth, profile).post(profileTasks).patch(updateProfile)
 router.route('/checkOut').get(userAuth, checkOut).post(checkOutTasks).put(updateCheckout)
 router.route('/logout').get(logout)//logout
-router.route('/profileMenu').get(userAuth,profileMenu).post(saveUserAddress).put(saveUserAddress).delete(DeleteData)
-router.route('/create-payment').post(onlinPayment)
+router.route('/profileMenu').get(userAuth,profileMenu).post(userAuth,saveUserAddress).put(saveUserAddress).delete(DeleteData)
+router.route('/create-payment').post(userAuth,onlinPayment)
 router.route('/verify-Payment').post(verifyPayment)
 module.exports = router

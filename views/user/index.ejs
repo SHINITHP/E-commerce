@@ -167,7 +167,7 @@
                                                     <p>Explore our new trends and discover the amazing products here...
                                                     </p>
                                                     <div class="main-border-button">
-                                                        <a href="filterCategory?cat=Womens&page=1">Discover More</a>
+                                                        <a href="allProducts?task=filterCategory&cat=Womens&page=1">Discover More</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -188,7 +188,7 @@
                                                     <p>Explore our new trends and discover the amazing products here...
                                                     </p>
                                                     <div class="main-border-button">
-                                                        <a href="filterCategory?cat=Mens&page=1">Discover More</a>
+                                                        <a href="allProducts?task=filterCategory&cat=Mens&page=1">Discover More</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -209,7 +209,7 @@
                                                     <p>Explore our new trends and discover the amazing products here...
                                                     </p>
                                                     <div class="main-border-button">
-                                                        <a href="filterCategory?cat=Kids&page=1">Discover More</a>
+                                                        <a href="allProducts?task=filterCategory&cat=Kids&page=1">Discover More</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -295,8 +295,8 @@
                                                 
                                                     <li id="removeWishlisted<%=index%>">
                                                         <a id="RemoveWishlist<%=index%>" data-index="<%=index%>" onclick="Wishlist(this,'<%=item._id%>')">
-                                                            <i style="color: red;<%= isWishlisted ? '' : 'display: none;' %>" class="fa fa-heart remove"></i>
-                                                            <i class="fa fa-heart add" style="<%= isWishlisted ? 'display: none;' : '' %>"></i>
+                                                            <i style="color: red;cursor: pointer;<%= isWishlisted ? '' : 'display: none;' %>" class="fa fa-heart remove"></i>
+                                                            <i class="fa fa-heart add" style="cursor: pointer;<%= isWishlisted ? 'display: none;' : '' %>"></i>
                                                         </a>
                                                     </li>
                                                     
@@ -384,8 +384,8 @@
                                               
                                                     <li id="removeWishlisted<%=index%>">
                                                         <a id="RemoveWishlist<%=index%>" data-index="<%=index%>" onclick="Wishlist(this,'<%=item._id%>')">
-                                                            <i style="color: red;<%= isWishlisted ? '' : 'display: none;' %>" class="fa fa-heart remove"></i>
-                                                            <i class="fa fa-heart add" style="<%= isWishlisted ? 'display: none;' : '' %>"></i>
+                                                            <i style="cursor: pointer;color: red;<%= isWishlisted ? '' : 'display: none;' %>" class="fa fa-heart remove"></i>
+                                                            <i class="fa fa-heart add" style="cursor: pointer;<%= isWishlisted ? 'display: none;' : '' %>"></i>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -467,8 +467,8 @@
                                                
                                                     <li id="removeWishlisted<%=index%>">
                                                         <a id="RemoveWishlist<%=index%>" data-index="<%=index%>" onclick="Wishlist(this,'<%=item._id%>')">
-                                                            <i style="color: red;<%= isWishlisted ? '' : 'display: none;' %>" class="fa fa-heart remove"></i>
-                                                            <i class="fa fa-heart add" style="<%= isWishlisted ? 'display: none;' : '' %>"></i>
+                                                            <i style="color: red;cursor: pointer;<%= isWishlisted ? '' : 'display: none;' %>" class="fa fa-heart remove"></i>
+                                                            <i class="fa fa-heart add" style="cursor: pointer;<%= isWishlisted ? 'display: none;' : '' %>"></i>
                                                         </a>
                                                     </li>
                                                 </ul>
