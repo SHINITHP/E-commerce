@@ -1,38 +1,243 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/assets/css/admin/addProducts.css">
-</head>
-<body style="width: 100%; height: 100%;">
-    
-<div  id="popup active" style="background-color: tan;width: 50%;">
-    <p style="">Crop Your Image Here</p>
+   <!-- Navbar -->
+   <%- include('../../views/admin/adminNavbar.ejs') %>
+   <!-- Navbar -->
+   <br>
 
-    <div class="row imageRow" style="background-color: teal;display: flex;">
-        <div class="col-6 Showimage imgDiv" style="background-color: azure;">
-            <!-- <img src="" alt="" id="image" > -->
-        </div>
-        <div class="col-6 Showimage" style="width: 40%;background-color: aqua;display: flex;flex-wrap: wrap;">
-            <div id="Croppedimage" class="preview" style="background-color: red;"></div>
-            <div id="Croppedimage" class="preview" style="background-color: red;"></div>
-            <div id="Croppedimage" class="preview" style="background-color: red;"></div>
-            <div id="Croppedimage" class="preview" style="background-color: red;"></div>
-            <div id="Croppedimage" class="preview" style="background-color: red;"></div>
-            <div id="Croppedimage" class="preview" style="background-color: red;"></div>
-        </div>
-    </div>
-    <div class="row btnRow" style="background-color: blueviolet;display: flex;justify-content: center; margin-bottom: 20px;">
-        <a href="addProducts">
-            <button class="Cancel"><span><i class="fa-solid fa-xmark"
-                        style="color: #ffffff;"></i></span>Cancel</button>
-        </a>
-        <button type="button" id="cropBtn" class="crop"><span><i class="fa-solid fa-crop" style="color: #ffffff;"></i></span>Crop Image</button>
 
-    </div>
-</div>
-</body>
-</html>
+   <div class="container-fluid conF-2">
+       <div class="row1">
 
+           <div class="con-1 ">
+               <div class="box-1">
+                   <a href="" class="AdminLogo"><img src="/assets/images/admin.png"
+                                   class="adminIcon" alt=""> <span
+                                   class="adminName">Admin</span></a>
+           </div>
+           <a href="adminDashboard">
+                   <button class="btns btnDashboard "><img class="img"
+                                   src="/assets/images/grid.png" alt=""><span
+                                   class="btnvalue">Dashboard</span></button>
+           </a>
+           <a href="ProductList">
+                   <button class="btns btnProducts btnColor"><img class="img"
+                                   src="/assets/images/grid.png" alt=""><span
+                                   class="btnvalue">Products</span></button>
+           </a>
+           <a href="Category">
+           <button class="btns btnCategory "><img class="img" src="/assets/images/grid.png"
+                           alt=""><span class="btnvalue"><span>Category</span></button>
+           </a>
+           <a href="orderHistory">
+           <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png"
+                           alt=""><span class="btnvalue">Order History</span></button>
+           </a>
+         <a href="coupon">
+             <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png"
+                           alt=""><span class="btnvalue">Coupon</span></button>
+         </a>
+         <a href="salesReport">
+           <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png"
+                           alt=""><span class="btnvalue">Sales Report</span></button>
+         </a>
+           
+           <a href="CustomerDetails">
+                   <button class="btns btnUser"><img class="img"
+                                   src="/assets/images/grid.png" alt=""><span
+                                   class="btnvalue">User Report</span> </button>
+           </a>
+           <a href="offers">
+                   <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png"
+                           alt=""><span class="btnvalue">Offers</span></button>
+           </a>
+         
+           <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png"
+                           alt=""><span class="btnvalue">Wallet</span></button>
+           </div>
+
+           <div class="con-2">
+               <div class="row row2">
+                   <div class="col-3 cols">
+                       <h3>Product Details</h3>
+                   </div>
+                   <div class="col-5 cols">
+                       <div class="col-12 col1">
+                           <form action="/adminLogin/ProductList/search" method="post">
+                               <input type="text" class="searchInput" name="search" required="true"
+                                   id="exampleFormControlInput1" placeholder="Search ">
+                               <span> <button class="btnSearch" type="submit"><a><i
+                                               class="fa-solid fa-magnifying-glass searchBtn"
+                                               style="color: #8b8e99;"></i></a> </button></span>
+                           </form>
+                       </div>
+                   </div>
+                   <div class="col-4 cols">
+                       <a href="/Export"><button class="btnExport"><span><i class="fa-solid fa-download"
+                                       style="color: #ffffff;"></i></span>Export Info</button></a>
+                       <span> <a href="/adminLogin/ProductList/addProducts"><button class="btnAddProducts"><span><i
+                                           class="fa-regular fa-plus" style="color: #ffffff;"></i></span>Add
+                                   products</button></span></a>
+                   </div>
+               </div>
+
+               <div class="row MessageRow ">
+                   <p id="ErrorMessage">
+                       <%= message %>
+                   </p>
+               </div>
+
+               <div class="row row3">
+
+                   <table class="table table1">
+                       <thead class="thead tableHead">
+                           <tr>
+                               <th scope="col" style="width:30px">SI</th>
+                               <th scope="col">Products</th>
+                               <th scope="col">Category</th>
+                               <th scope="col">Stock</th>
+                               <th scope="col">PRate</th>
+                               <th scope="col">SRate</th>
+                               <th scope="col">Description</th>
+                               <th scope="col">Inventory</th>
+                               <th scope="col">Added</th>
+                               <th scope="col">Action</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           <% productDetails.forEach((data,index)=> { %>
+                               <tr class="tableRow">
+                                   <th scope="row" style="width:30px">
+                                       <%=index + 1%>
+                                   </th>
+                                   <td>
+                                       <img src="<%= data.files[0].url %>"
+                                           style="border: 1px solid rgb(80, 80, 80);" class="imageBox" alt="">
+
+                                       <h6>
+                                           <%=data.ProductName%>
+                                       </h6>
+
+                                   </td>
+
+                                   <td>
+                                       <%=data.CategoryName%>
+                                   </td>
+                                   <td>
+                                       <%=data.StockQuantity%>
+                                   </td>
+                                   <td>
+                                       <%=data.PurchaseRate%>
+                                   </td>
+                                   <td>
+                                       <%=data.SalesRate%>
+                                   </td>
+                                   <td style="width: 150px;">
+                                       <%=data.ProductDescription%>
+                                   </td>
+                                   <td id="Inventory">
+                                       <%=data.Inventory%>
+                                   </td>
+                                   <td>
+                                       <%= data.Added.toLocaleDateString() %>
+                                   </td>
+                                   <td class="icon-cell"
+                                       style="display:flex; min-height:130px;justify-content:center;align-items:center;">
+
+                                       <a href="/adminLogin/editProducts?id=<%= data._id %>"><i
+                                               class="fa-solid fa-pen edit" style="color: #5e5e5e;"></i></a>
+                                       <span class="listed">
+                                           <form class="actionForm" method="post" id="ListedForm"
+                                               action="ProductList?ID=<%= data._id %>">
+                                               <% if(data.Inventory==="Listed" ) {%>
+                                                   <button class="iconbtns">
+                                                       <a id="activeIcon" onclick="AlertBox('activeIcon')">
+                                                           <i class="fa-solid fa-eye" style="color: #5e5e5e;"></i>
+                                                       </a>
+                                                   </button>
+
+                                                   <% } else if(data.Inventory==="Unlisted" ) {%>
+                                                       <button class="iconbtns">
+                                                           <a id="blockedIcon" onclick="AlertBox('blockedIcon')">
+                                                               <i class="fa-solid fa-eye-slash"
+                                                                   style="color: #5e5e5e;"></i>
+                                                           </a>
+                                                       </button>
+
+                                                       <% } %>
+                                           </form>
+                                       </span>
+                                       <form action="deleteInventory?delete=Products&id=<%= data._id %>&_method=DELETE" method="post">
+                                           <span class="delete"><button class="iconbtns" type="submit" id="dltBtn" onclick="AlertBox('dltBtn')"><i class="fa-solid fa-trash "
+                                                       style="color: #5e5e5e;"></i></button></span>
+                                           </span>
+                                       </form>
+
+
+
+                                   </td>
+
+                               </tr>
+                               <% }) %>
+                       </tbody>
+
+                   </table>
+
+               </div>
+
+
+           </div>
+
+
+
+
+       </div>
+   </div>
+
+   <script>
+
+       const errorMessageElement = document.getElementById('ErrorMessage');
+
+       function hideErrorMessage() {
+           errorMessageElement.style.display = 'none';
+       }
+
+       setTimeout(hideErrorMessage, 5000);
+
+       function AlertBox(value){
+           const myForm = document.getElementById(value);
+
+           if(value == 'activeIcon'){
+               const confirmation = confirm('Are you sure to Unlist the Product?');
+               if (!confirmation) {
+                   event.preventDefault(); // Prevent form submission
+               }
+           }else if(value == 'blockedIcon'){
+               const confirmation = confirm('Are you sure to List the product?');
+               if (!confirmation) {
+                   event.preventDefault(); // Prevent form submission
+               }
+              
+           }else if(value == 'dltBtn'){
+               const confirmation = confirm('Are you sure to Delete the product?');
+               if (!confirmation) {
+                   event.preventDefault(); // Prevent form submission
+               }
+           }
+
+       }
+
+  
+      
+
+
+
+       const statusId = document.getElementById('Inventory');
+
+       if (statusId.textContent.trim() === 'Listed') {
+           statusId.style.color = 'green';
+       }
+       else if (statusId.textContent.trim() === 'Unlisted') {
+           statusId.style.color = 'red';
+       }
+
+
+   </script>

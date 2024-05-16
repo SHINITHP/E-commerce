@@ -46,7 +46,7 @@
         <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
-
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
         <title>Document</title>
     </head>
 
@@ -172,7 +172,7 @@
                                     </span>
                                 </li>
                             </a>
-                            <a href="profileMenu?menu=Wallet">
+                            <a href="profileMenu?menu=Wallet&page=1">
                                 <li style="background-color: #afafaf;"><i class="fa-solid fa-wallet menuIcon"
                                         style="color: #000000;"></i><span class="spanText">Wallet</span>
                                     <span>
@@ -196,8 +196,8 @@
                         <div class="row" style="display: flex;justify-content: space-between;align-items: center;">
                             <h3 style="padding-left: 20px;">My Wallet</h3>
                             <a href="#open-modal"><button class="form-control" id="AddToWalletBtn"
-                                style="background-color: black;color:white;width: 140px;height: 35px;margin-right: 30px;font-size: 10pt;font-weight: bold;border-radius: 0;margin-top: 10px;">Add
-                                To Wallet</button></a>
+                                    style="background-color: black;color:white;width: 140px;height: 35px;margin-right: 30px;font-size: 10pt;font-weight: bold;border-radius: 0;margin-top: 10px;">Add
+                                    To Wallet</button></a>
                         </div>
 
                         <br>
@@ -332,7 +332,7 @@
 
             <div id="open-modal" class="modal-window">
                 <div>
-                    <a href="#" title="Close" class="modal-close">Close</a>
+                    <a href="" title="Close" class="modal-close">Close</a>
 
                     <div class="row"
                         style="display: flex;flex-direction: column;justify-content: center;align-items: center;padding: 20px;padding-bottom: 0;">
@@ -343,10 +343,12 @@
                             <img src="/assets/images/wallet.png" alt="" style="width: 30px;height: 30px;">
                             <b style="margin-left: 8px;font-size: 12pt;">₹
                                 <% if(balance> 0 ){ %>
-                                    <span id="walletAmount"><%=balance%></span>
-                                <% } else { %>
+                                    <span id="walletAmount">
+                                        <%=balance%>
+                                    </span>
+                                    <% } else { %>
                                         <span id="walletAmount"> 0 </span>
-                                <% } %>
+                                        <% } %>
                             </b>
                         </div>
                     </div>
@@ -365,13 +367,29 @@
                     </div>
                 </div>
             </div>
-
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
             <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
             <script>
 
 
-
+                const urlParams = new URLSearchParams(window.location.search);
+                const success = urlParams.get('success');
+                
+                if (success === 'true') {
+                    // Display the success toast
+                    Swal.fire({
+                        icon: 'success',
+                        text: 'Successfully Added',
+                        timer: 5000,
+                        toast: true,
+                        position: 'top',
+                        showConfirmButton: false
+                    });
+                    urlParams.delete('success');
+                    const newUrl = window.location.pathname + '?' + urlParams.toString(); // Construct new URL
+                    history.replaceState(null, '', newUrl);
+                }
 
                 function AddMoneyTOWallet(user) {
                     let userInfo = JSON.parse(user)
@@ -394,7 +412,19 @@
                                     console.log(userInfo, 'addressID')
                                     axios.post('/checkOut?task=AddToWallet', { AddAmount }) // Sending productID as data
                                         .then(function (response) {
-                                            // Handle success response if needed
+
+                                            location.href = 'profileMenu?menu=Wallet&page=1&success=true';
+
+                                            setTimeout(function () {
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    text: 'Successfully Added',
+                                                    timer: 4000,
+                                                    toast: true,
+                                                    position: 'top',
+                                                    showConfirmButton: false
+                                                });
+                                            }, 1000);
                                         })
                                         .catch(function (error) {
                                             console.error('Error adding product to cart:', error);

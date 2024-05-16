@@ -3,83 +3,179 @@
 
 <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="/assets/css/user/bootstrap.min.css">
+        <link rel="stylesheet"
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet"
+                href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/assets/css/admin/newDashboard.css">
 
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
-
-        <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
-
-        <link rel="stylesheet" href="/assets/css/admin/dashboard.css">
-
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gentelella/1.3.0/css/custom.css"> -->
 
 
 
-        <title>Admin Dashboard</title>
+        <title>Document</title>
 </head>
 
 <body>
+        <div class="container-fluid mainConatainer" style="display: flex;">
 
-        <!-- Navbar -->
-        <%- include('../../views/admin/adminNavbar.ejs') %>
-                <!-- Navbar -->
-                <br>
-
-
-
-                <div class="container-fluid conF-2">
-                        <div class="row1">
-
-                                <div class="con-1 ">
-                                        <div class="box-1">
-                                                <a href="" class="AdminLogo"><img src="/assets/images/admin.png"
-                                                                class="adminIcon" alt=""> <span
-                                                                class="adminName">Admin</span></a>
-                                        </div>
-                                        <a href="adminDashboard">
-                                                <button class="btns btnDashboard btnColor"><img class="img"
-                                                                src="/assets/images/grid.png" alt=""><span
-                                                                class="btnvalue">Dashboard</span></button>
-                                        </a>
-                                        <a href="ProductList">
-                                                <button class="btns btnProducts"><img class="img"
-                                                                src="/assets/images/grid.png" alt=""><span
-                                                                class="btnvalue">Products</span></button>
-                                        </a>
-                                        <a href="Category">
-                                        <button class="btns btnCategory"><img class="img" src="/assets/images/grid.png"
-                                                        alt=""><span class="btnvalue"><span>Category</span></button>
-                                        </a>
-                                        <a href="orderHistory">
-                                        <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png"
-                                                        alt=""><span class="btnvalue">Order History</span></button>
-                                        </a>
-                                      <a href="coupon">
-                                          <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png"
-                                                        alt=""><span class="btnvalue">Coupon</span></button>
-                                      </a>
-                                      <a href="salesReport">
-                                        <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png"
-                                                        alt=""><span class="btnvalue">Sales Report</span></button>
-                                      </a>
-                                        
-                                        <a href="CustomerDetails">
-                                                <button class="btns btnUser"><img class="img"
-                                                                src="/assets/images/grid.png" alt=""><span
-                                                                class="btnvalue">User Report</span> </button>
-                                        </a>
-                                        <a href="offers">
-                                                <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png"
-                                                        alt=""><span class="btnvalue">Offers</span></button>
-                                        </a>
-                                      
-                                        <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png"
-                                                        alt=""><span class="btnvalue">Wallet</span></button>
-                                </div>
-                                
-                                <div class="con-2"></div>
+                <div class="col-0 left-Menu-Bar-active" style="display: none;">
+                        <div class="row"
+                                style="display: flex;flex-direction: column;justify-content: center;align-items: center;">
+                                <img class="adminPanel" src="/assets/images/admin-panel2.png" style="margin-left: 0;"
+                                        alt="">
+                                <br><br>
+                                <a class="active-Icons active" onclick="btnClick(this)" href="adminDashboard"><i
+                                                class="fa fa-home menuBtn" style="font-size: 30px;"></i></a>
+                                <a class="active-Icons" onclick="btnClick(this)" href="ProductList"><img
+                                                src="/assets/images/productIcon.png" alt=""></a>
+                                <a class="active-Icons" onclick="btnClick(this)" href="Category"><img
+                                                src="/assets/images/category.png" alt=""></a>
+                                <a class="active-Icons" onclick="btnClick(this)" href="orderHistory"><img
+                                                src="/assets/images/orderHistory.png" alt=""></a>
+                                <a class="active-Icons" onclick="btnClick(this)" href="coupon"><img
+                                                src="/assets/images/couponIcon.png" alt=""></a>
+                                <a class="active-Icons" onclick="btnClick(this)" href="salesReport"><img
+                                                src="/assets/images/sales.png" style="width: 30px;height: 30px;"
+                                                alt=""></a>
+                                <a class="active-Icons" onclick="btnClick(this)" href="CustomerDetails"><img
+                                                src="/assets/images/userRport.png" alt=""></a>
+                                <a class="active-Icons" onclick="btnClick(this)" href="offers"><img
+                                                src="/assets/images/coupon.png" style="width: 30px;height: 30px;"
+                                                alt=""></a>
                         </div>
+                </div>
+
+                <div class="left-Menu-Bar">
+                        <div class="row">
+                                <img class="adminPanel" src="/assets/images/admin-panel2.png" alt="">
+                                <span>Admin</span>
+                        </div>
+                        <div class="row">
+                                <br><br>
+                                <div class="menu_section">
+
+                                        <ul class="nav side-menu">
+                                                <li class="side-menu-li active" onclick="menuBtn(this)">
+                                                        <a href="adminDashboard" class="side-menu-a-tag">
+                                                                <i class="fa fa-home menuBtn"><span>DashBoard</span></i>
+                                                                <span class="fa fa-chevron-right"></span>
+                                                        </a>
+                                                </li>
+                                                <li class="side-menu-li" onclick="menuBtn(this)">
+                                                        <a href="ProductList" class="side-menu-a-tag">
+                                                                <i class="menuBtn"><img
+                                                                                src="/assets/images/productIcon.png"
+                                                                                style="width: 19px;height: 19px;"
+                                                                                alt="">
+                                                                        <span
+                                                                                style="font-family: Helvetica Neue, Roboto, Arial, Droid Sans, sans-serif;padding-left: 5px;">Products</span></i>
+                                                                <span class="fa fa-chevron-right"></span>
+                                                        </a>
+                                                </li>
+                                                <li class="side-menu-li" onclick="menuBtn(this)">
+                                                        <a href="Category" class="side-menu-a-tag">
+                                                                <i class="menuBtn"><img
+                                                                                src="/assets/images/category.png"
+                                                                                style="width: 19px;height: 23px;"
+                                                                                alt="">
+                                                                        <span
+                                                                                style="font-family: Helvetica Neue, Roboto, Arial, Droid Sans, sans-serif;padding-left: 5px;">Category</span></i>
+                                                                <span class="fa fa-chevron-right"></span>
+
+                                                        </a>
+                                                </li>
+                                                <li class="side-menu-li" onclick="menuBtn(this)">
+                                                        <a href="orderHistory" class="side-menu-a-tag">
+                                                                <i class="menuBtn"><img
+                                                                                src="/assets/images/orderHistory.png"
+                                                                                style="width: 19px;height: 19px;"
+                                                                                alt="">
+                                                                        <span
+                                                                                style="font-family: Helvetica Neue, Roboto, Arial, Droid Sans, sans-serif;padding-left: 5px;">Order
+                                                                                History</span></i>
+                                                                <span class="fa fa-chevron-right"></span>
+                                                        </a>
+                                                </li>
+                                                <li class="side-menu-li" onclick="menuBtn(this)">
+                                                        <a href="coupon" class="side-menu-a-tag">
+                                                                <i class="menuBtn"><img
+                                                                                src="/assets/images/couponIcon.png"
+                                                                                style="width: 22px;height: 22px;"
+                                                                                alt="">
+                                                                        <span
+                                                                                style="font-family: Helvetica Neue, Roboto, Arial, Droid Sans, sans-serif;padding-left: 5px;">Coupon</span></i>
+                                                                <span class="fa fa-chevron-right"></span>
+                                                        </a>
+                                                </li>
+                                                <li class="side-menu-li" onclick="menuBtn(this)">
+                                                        <a href="salesReport" class="side-menu-a-tag">
+                                                                <i class="menuBtn"><img src="/assets/images/sales.png"
+                                                                                style="width: 22px;height: 22px;"
+                                                                                alt="">
+                                                                        <span
+                                                                                style="font-family: Helvetica Neue, Roboto, Arial, Droid Sans, sans-serif;padding-left: 5px;">Sales
+                                                                                Report</span></i>
+                                                                <span class="fa fa-chevron-right"></span>
+                                                        </a>
+                                                </li>
+                                                <li class="side-menu-li" onclick="menuBtn(this)">
+                                                        <a href="CustomerDetails" class="side-menu-a-tag">
+                                                                <i class="menuBtn"><img
+                                                                                src="/assets/images/userRport.png"
+                                                                                style="width: 19px;height: 19px;"
+                                                                                alt="">
+                                                                        <span
+                                                                                style="font-family: Helvetica Neue, Roboto, Arial, Droid Sans, sans-serif;padding-left: 5px;">User
+                                                                                Report</span></i>
+                                                                <span class="fa fa-chevron-right"></span>
+                                                        </a>
+                                                </li>
+                                                <li class="side-menu-li" onclick="menuBtn(this)">
+                                                        <a href="offers" class="side-menu-a-tag">
+                                                                <i class="menuBtn"><img src="/assets/images/coupon.png"
+                                                                                style="width: 22px;height: 22px;"
+                                                                                alt="">
+                                                                        <span
+                                                                                style="font-family: Helvetica Neue, Roboto, Arial, Droid Sans, sans-serif;padding-left: 5px;">Offers</span></i>
+                                                                <span class="fa fa-chevron-right"></span>
+                                                        </a>
+                                                </li>
+                                        </ul>
+                                </div>
+
+                        </div>
+                </div>
+                <div class="right-Menu-Bar">
+                        <div class="row NavbarRow">
+                                <div class="menuIcon"><a id="MenuBtn"><i class="fa fa-bars"></i></a></div>
+                                <div class="other-Settings">
+                                        <a class="msgIcon" href=""><i class="fa fa-envelope-o"></i> <span
+                                                        class="badge bg-green">6</span></a>
+                                        <a href="" class="profileName">
+                                                <b>hexashop@gmail.com</b><span class="fa fa-chevron-down"></span>
+                                        </a>
+                                </div>
+                        </div>
+                        <!-- <div class="row log-DropDown">
+                                        <div class="logoutTab">
+
+                                        </div>
+                                </div> -->
+                        <div class="row" style="background-color: bisque;height: 400px;"></div>
+                </div>
+
+        </div>
+
+
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="/assets/js/dashboard.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 
 </html>

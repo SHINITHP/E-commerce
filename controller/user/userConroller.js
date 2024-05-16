@@ -591,18 +591,25 @@ const profileMenu = async (req, res) => {
             })
           }
         })
-
-      // if (walletDetails.length > 0) {
-      //   const lastdetails = await walletSchema.findOne({ userID: userID }).sort({ added: -1 });
-      //   console.log(walletDetails)
-      //   res.render('user/wallet', { walletDetails, balance: lastdetails.balance })
-      // }
-      // else {
-      //   res.render('user/wallet', { walletDetails, balance: '' })
-      // }
-
     } else if (req.query.menu === 'coupon') {
       res.render('user/coupon')
+    }else if(req.query.menu === 'trackOrder'){
+      try {
+        const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+        const userID = getUserId(token);
+        const id = req.query.id;
+        const data = await orderSchema.findById(id)
+        .populate('addressID')
+        .populate('productID')
+
+        const trackDetails = data ? [data] : [];
+
+        console.log('trackDetails : ',trackDetails)
+        res.render('user/trackOrder',{ trackDetails })
+      } catch (error) {
+       console.log(error) 
+      }
+      
     }
   }
 }
@@ -933,7 +940,7 @@ const orderDetails = async (req, res) => {
             res.json({ message: 'error' })
           } else {
             await orderDetailsModel.deleteMany({ userID: userID });
-            
+
             await orderDetailsModel.create({
               userID: cartval.userID,
               productID: cartval.productID._id,

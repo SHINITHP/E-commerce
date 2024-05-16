@@ -215,9 +215,7 @@
                                         </ul>
                                     </div>
                                     <div class="col-4 rowcol6-3">
-                                        <button class="btn" id="remove"
-                                            onclick="TrackOrder('<%=item._id%>','<%= JSON.stringify(orderDetails) %>')">Track
-                                            Order</button>
+                                        <a href="profileMenu?menu=trackOrder&id=<%=item._id%>"><button class="btn" id="remove">TrackOrder</button></a>
 
                                     </div>
                                 </div>
@@ -296,6 +294,7 @@
                                 <li class="step active" id="CancellineFour">
                                     <div><i class="fas fa-birthday-cake"></i></div>order Cancelled
                                 </li>
+                                
                             </ul>
                             <h5 class="Cancel text-center">Order successfully Cancelled</h5>
                         </div>
