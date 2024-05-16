@@ -27,8 +27,8 @@ function cropImage() {
 
     if (input.files && input.files[0]) {
 
-        blur.classList.toggle('active');
-        popup.classList.toggle('active');
+        blur.classList.toggle('active-Blur');
+        popup.classList.toggle('active-popup');
 
         for (let i = 0; i < input.files.length; i++) {
             const reader = new FileReader();
@@ -130,8 +130,8 @@ function cropImage() {
             imgInput.appendChild(imgLabel);
         });
 
-        blur.classList.remove('active');
-        popup.classList.remove('active');
+        blur.classList.remove('active-Blur');
+        popup.classList.remove('active-popup');
 
 
 

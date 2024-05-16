@@ -94,8 +94,6 @@
 
 /* add-category */
 .row2 {
-  border-left: 10px solid #ffffff;
-  border-right: 10px solid #ffffff;
   height: 100px;
   display: flex;
   justify-content: space-between;
@@ -432,4 +430,9 @@ h3 {
   width: 60px;
   
   background-color: #bbb5ff;
+}
+.row2 .col-3{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }

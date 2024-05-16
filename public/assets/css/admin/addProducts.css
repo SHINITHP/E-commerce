@@ -153,11 +153,22 @@ a {
 }
 
 .row2 {
-  border-left: 10px solid #ffffff;
-  border-right: 10px solid #ffffff;
+  /* border-left: 10px solid #ffffff;
+  border-right: 10px solid #ffffff; */
   height: 100px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
+}
+
+.h1,
+.h2,
+.h3,
+h1,
+h2,
+h3 {
+  margin: 0;
+  padding: 0;
 }
 
 .col1 {
@@ -178,7 +189,6 @@ a {
 .col1 h3 {
   text-shadow: 2px 2px #c9c9c9;
   font-weight: 500;
-  padding-left: 60px;
 }
 
 .btnCancel {
@@ -255,7 +265,10 @@ a {
 
 .frmRow3 {
   width: 100%;
-  /* border: 1px solid; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .generalRow {
@@ -387,9 +400,7 @@ a {
 }
 
 .col11-2 {
-  margin-top: 10px;
   min-height: 320px;
-  background-color: white;
   border-radius: 15px;
   display: flex;
   flex-direction: column;
@@ -647,14 +658,10 @@ a {
 
 
 .outerDiv {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   transition: 0.5s;
 }
 
-.outerDiv#blur.active {
+.outerDiv#blur.active-Blur {
   filter: blur(15px);
 }
 
@@ -681,7 +688,7 @@ a {
   font-size: 20pt;
 }
 
-#popup.active {
+#popup.active-popup {
   visibility: visible;
   opacity: 1;
   transition: 0.05s ease;
@@ -955,4 +962,42 @@ input[type="file"]::file-selector-button:active {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.form-container {
+  margin-top: 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.AddProduct-Form {
+  border-radius: 15px;
+  padding: 0;
+  width: 97%;
+  /* background-color: gold; */
+  min-height: 750px;
+  border: 1px solid rgb(205, 205, 205);
+}
+
+.Image-Form {
+  border-radius: 15px;
+  padding: 0;
+  width: 97%;
+  border: 1px solid rgb(205, 205, 205);
+  margin-top: 20px;
+  min-height: 300px;
+}
+
+.generalInfo {
+  padding-left: 30px;
+  font-size: 14pt;
+}
+
+.col11-2 h5 {
+  padding: 10px;
+  padding-left: 20px;
+  font-size: 13pt;
 }

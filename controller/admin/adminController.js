@@ -604,11 +604,13 @@ const postEditProduct = async (req, res) => {
             const urls = []
 
             console.log(imageData.length, 'imageData.length :', imageData)
-            if (imageData.length === 0) {
+            if (imageData.length > 0) {
                 console.log('hi iam in the if ')
                 for (const imageUrl of imageData) {
+                    console.log('hi iam in the if ')
                     try {
                         const newPath = await uploader(imageUrl);
+                        console.log(newPath,' : new path')
                         urls.push(newPath);
                     } catch (error) {
                         console.log(error)
@@ -616,7 +618,7 @@ const postEditProduct = async (req, res) => {
                 }
 
             }
-            if (urls.length === 0) {
+            if (urls.length > 0) {
                 console.log('i bro i am in urls', urls.length, urls)
                 urls.forEach((val) => imgData.push(val))
             }

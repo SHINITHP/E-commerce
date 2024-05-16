@@ -41,9 +41,9 @@ app.use('/adminLogin',adminRoutes)
 // })
 
 
-// app.get('/', (req, res) => {
-//   res.render('admin/sample')
-// })
+app.get('/sample', (req, res) => {
+  res.render('admin/sample')
+})
 
 const port = process.env.port||8000
 app.listen(port,(err)=>{

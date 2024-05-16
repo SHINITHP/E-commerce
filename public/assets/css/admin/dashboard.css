@@ -148,9 +148,9 @@ a {
     height: 100px;
 }
 
-.box {
+/* .box {
     border-right: 1px solid;
-}
+} */
 
 .btns:hover,
 .btns:focus {
@@ -158,13 +158,11 @@ a {
 }
 
 .row2 {
-    border-left: 10px solid #ffffff;
-    border-right: 10px solid #ffffff;
     height: 100px;
 }
 
 .cols {
-    padding-right: 23px;
+    padding-right: 0px;
     height: 100px;
     display: flex;
     justify-content: end;
@@ -172,7 +170,7 @@ a {
     font-family: Poppins;
 }
 
-.cols h3 {
+.col-3 h3 {
     text-shadow: 2px 2px #c7c7c7;
     font-weight: 500;
 }
@@ -306,7 +304,7 @@ a {
 }
 
 .listed {
-    padding-left: 6px;
+    padding-left: 15px;
 }
 
 .unlisted {
@@ -385,4 +383,49 @@ h1 {
 canvas {
     width: 100%;
     height: 400px;
+}
+.btnSearch {
+    width: 30px;
+    background-color: transparent;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    border: none;
+    margin-top: 7px;
+}
+
+.cat-Heading-Row{
+    display: flex;
+    padding: 0;
+}
+.cat-Heading{
+    border-top: 1px solid rgb(112, 112, 112);
+    border-bottom: 1px solid rgb(112, 112, 112);
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+}
+.cat-Listing-Row{
+    display: flex;
+    padding: 0;
+}
+.cat-Listing{
+    border-bottom: 1px solid rgb(112, 112, 112);
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+}
+.product-Image{
+    width: 70px;
+    height: 70px;
 }

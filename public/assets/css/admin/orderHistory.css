@@ -1,8 +1,8 @@
 .filterRow {
     /* background-color: thistle; */
     height: 50px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .filterBox {
@@ -10,7 +10,7 @@
     background-color: white;
     width: 460px;
     display: flex;
-    height: 40px;
+    height: 35px;
     align-items: center;
     justify-content: center;
     border-radius: 9px;
@@ -59,9 +59,9 @@
 }
 
 .dateBox {
-    width: 170px;
+    width: 160px;
     border-radius: 7px;
-    height: 40px;
+    height: 35px;
     background-color: white;
     border: 1px solid rgb(216, 216, 216);
     display: flex;
@@ -70,9 +70,9 @@
 }
 
 .dateBox2 {
-    width: 170px;
+    width: 160px;
     border-radius: 7px;
-    height: 40px;
+    height: 35px;
     background-color: white;
     border: 1px solid rgb(216, 216, 216);
     display: flex;
@@ -99,30 +99,28 @@
 }
 
 .Pro-Row {
-    min-height: 70px;
+    min-height: 50px;
     display: flex;
     padding: 0;
-    margin-left: 19px;
-    margin-right: 19px;
+    border-top: 1px solid rgb(112, 112, 112);
     background-color: white;
     /* padding-left: 15px; */
-    border: 1px solid rgb(193, 193, 193);
+    border-bottom: 1px solid rgb(112, 112, 112);
 
 }
 
 .Pro-Details-Row {
-    margin-top: 5px;
     display: flex;
     padding: 0;
-    margin-left: 19px;
-    margin-right: 19px;
+    margin: 0;
     background-color: white;
+    min-height: 80px;
     /* padding-left: 15px; */
-    border: 1px solid rgb(193, 193, 193);
+    border-bottom: 1px solid rgb(112, 112, 112);
 }
 
 .SI {
-    width: 80px;
+    width: 6%;
     min-height: 50px;
     display: flex;
     align-items: center;
@@ -130,15 +128,17 @@
     font-size: 11pt;
     padding: 0;
     font-family: Poppins;
-    font-weight: 600;
+    font-weight: bolder;
 }
-
+.product-Image{
+    height: 70px;
+}
 .Pro-Name {
-    width: 17.417vw;
+    width: 20%;
     min-height: 50px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     font-size: 11pt;
     padding: 0;
     font-family: Poppins;
@@ -156,7 +156,7 @@
 }
 
 .headBox {
-    width: 9.713vw;
+    width: 12.33%;
     min-height: 50px;
     display: flex;
     align-items: center;
@@ -196,13 +196,10 @@
 
 .outerDiv {
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     transition: 0.5s;
 }
 
-.outerDiv#blur.active {
+.outerDiv#blur.active-blur {
     filter: blur(15px);
 }
 
@@ -226,7 +223,7 @@
     align-items: center;
 }
 
-.popup.active {
+.popup.active-popup {
     visibility: visible;
     opacity: 1;
     transition: 0.05s ease;
@@ -247,6 +244,7 @@
     text-align: center;
     margin-top: 7px;
 }
+
 .btn {
     margin-top: 25px;
     background-color: black;
@@ -258,9 +256,18 @@
     height: 36px;
     /* border-radius: 25px; */
 }
-.btn:hover{
+
+.btn:hover {
     color: white;
 }
-.btnSubmit{
+
+.btnSubmit {
     margin-left: 10px;
+}
+
+.col-3 h3 {
+    
+    text-shadow: 2px 2px #c7c7c7;
+    font-weight: 500;
+    font-family: "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif;
 }

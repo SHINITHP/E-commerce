@@ -1,243 +1,321 @@
-   <!-- Navbar -->
-   <%- include('../../views/admin/adminNavbar.ejs') %>
-   <!-- Navbar -->
-   <br>
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-   <div class="container-fluid conF-2">
-       <div class="row1">
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
 
-           <div class="con-1 ">
-               <div class="box-1">
-                   <a href="" class="AdminLogo"><img src="/assets/images/admin.png"
-                                   class="adminIcon" alt=""> <span
-                                   class="adminName">Admin</span></a>
-           </div>
-           <a href="adminDashboard">
-                   <button class="btns btnDashboard "><img class="img"
-                                   src="/assets/images/grid.png" alt=""><span
-                                   class="btnvalue">Dashboard</span></button>
-           </a>
-           <a href="ProductList">
-                   <button class="btns btnProducts btnColor"><img class="img"
-                                   src="/assets/images/grid.png" alt=""><span
-                                   class="btnvalue">Products</span></button>
-           </a>
-           <a href="Category">
-           <button class="btns btnCategory "><img class="img" src="/assets/images/grid.png"
-                           alt=""><span class="btnvalue"><span>Category</span></button>
-           </a>
-           <a href="orderHistory">
-           <button class="btns btnOrder"><img class="img" src="/assets/images/grid.png"
-                           alt=""><span class="btnvalue">Order History</span></button>
-           </a>
-         <a href="coupon">
-             <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png"
-                           alt=""><span class="btnvalue">Coupon</span></button>
-         </a>
-         <a href="salesReport">
-           <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png"
-                           alt=""><span class="btnvalue">Sales Report</span></button>
-         </a>
-           
-           <a href="CustomerDetails">
-                   <button class="btns btnUser"><img class="img"
-                                   src="/assets/images/grid.png" alt=""><span
-                                   class="btnvalue">User Report</span> </button>
-           </a>
-           <a href="offers">
-                   <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png"
-                           alt=""><span class="btnvalue">Offers</span></button>
-           </a>
-         
-           <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png"
-                           alt=""><span class="btnvalue">Wallet</span></button>
-           </div>
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 
-           <div class="con-2">
-               <div class="row row2">
-                   <div class="col-3 cols">
-                       <h3>Product Details</h3>
-                   </div>
-                   <div class="col-5 cols">
-                       <div class="col-12 col1">
-                           <form action="/adminLogin/ProductList/search" method="post">
-                               <input type="text" class="searchInput" name="search" required="true"
-                                   id="exampleFormControlInput1" placeholder="Search ">
-                               <span> <button class="btnSearch" type="submit"><a><i
-                                               class="fa-solid fa-magnifying-glass searchBtn"
-                                               style="color: #8b8e99;"></i></a> </button></span>
-                           </form>
-                       </div>
-                   </div>
-                   <div class="col-4 cols">
-                       <a href="/Export"><button class="btnExport"><span><i class="fa-solid fa-download"
-                                       style="color: #ffffff;"></i></span>Export Info</button></a>
-                       <span> <a href="/adminLogin/ProductList/addProducts"><button class="btnAddProducts"><span><i
-                                           class="fa-regular fa-plus" style="color: #ffffff;"></i></span>Add
-                                   products</button></span></a>
-                   </div>
-               </div>
+    <link rel="stylesheet" href="/assets/css/admin/dashboard.css">
 
-               <div class="row MessageRow ">
-                   <p id="ErrorMessage">
-                       <%= message %>
-                   </p>
-               </div>
+    <link rel="stylesheet" href="/assets/css/admin/productList.css">
 
-               <div class="row row3">
+    <link rel="stylesheet" href="/assets/css/admin/orderHistory.css">
 
-                   <table class="table table1">
-                       <thead class="thead tableHead">
-                           <tr>
-                               <th scope="col" style="width:30px">SI</th>
-                               <th scope="col">Products</th>
-                               <th scope="col">Category</th>
-                               <th scope="col">Stock</th>
-                               <th scope="col">PRate</th>
-                               <th scope="col">SRate</th>
-                               <th scope="col">Description</th>
-                               <th scope="col">Inventory</th>
-                               <th scope="col">Added</th>
-                               <th scope="col">Action</th>
-                           </tr>
-                       </thead>
-                       <tbody>
-                           <% productDetails.forEach((data,index)=> { %>
-                               <tr class="tableRow">
-                                   <th scope="row" style="width:30px">
-                                       <%=index + 1%>
-                                   </th>
-                                   <td>
-                                       <img src="<%= data.files[0].url %>"
-                                           style="border: 1px solid rgb(80, 80, 80);" class="imageBox" alt="">
-
-                                       <h6>
-                                           <%=data.ProductName%>
-                                       </h6>
-
-                                   </td>
-
-                                   <td>
-                                       <%=data.CategoryName%>
-                                   </td>
-                                   <td>
-                                       <%=data.StockQuantity%>
-                                   </td>
-                                   <td>
-                                       <%=data.PurchaseRate%>
-                                   </td>
-                                   <td>
-                                       <%=data.SalesRate%>
-                                   </td>
-                                   <td style="width: 150px;">
-                                       <%=data.ProductDescription%>
-                                   </td>
-                                   <td id="Inventory">
-                                       <%=data.Inventory%>
-                                   </td>
-                                   <td>
-                                       <%= data.Added.toLocaleDateString() %>
-                                   </td>
-                                   <td class="icon-cell"
-                                       style="display:flex; min-height:130px;justify-content:center;align-items:center;">
-
-                                       <a href="/adminLogin/editProducts?id=<%= data._id %>"><i
-                                               class="fa-solid fa-pen edit" style="color: #5e5e5e;"></i></a>
-                                       <span class="listed">
-                                           <form class="actionForm" method="post" id="ListedForm"
-                                               action="ProductList?ID=<%= data._id %>">
-                                               <% if(data.Inventory==="Listed" ) {%>
-                                                   <button class="iconbtns">
-                                                       <a id="activeIcon" onclick="AlertBox('activeIcon')">
-                                                           <i class="fa-solid fa-eye" style="color: #5e5e5e;"></i>
-                                                       </a>
-                                                   </button>
-
-                                                   <% } else if(data.Inventory==="Unlisted" ) {%>
-                                                       <button class="iconbtns">
-                                                           <a id="blockedIcon" onclick="AlertBox('blockedIcon')">
-                                                               <i class="fa-solid fa-eye-slash"
-                                                                   style="color: #5e5e5e;"></i>
-                                                           </a>
-                                                       </button>
-
-                                                       <% } %>
-                                           </form>
-                                       </span>
-                                       <form action="deleteInventory?delete=Products&id=<%= data._id %>&_method=DELETE" method="post">
-                                           <span class="delete"><button class="iconbtns" type="submit" id="dltBtn" onclick="AlertBox('dltBtn')"><i class="fa-solid fa-trash "
-                                                       style="color: #5e5e5e;"></i></button></span>
-                                           </span>
-                                       </form>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
 
 
-                                   </td>
+    <title>Category</title>
+</head>
 
-                               </tr>
-                               <% }) %>
-                       </tbody>
+<body>
 
-                   </table>
+    <!-- Navbar -->
+    <%- include('../../views/admin/adminNavbar.ejs') %>
+        <!-- Navbar -->
+        <br>
 
-               </div>
+        <div class="container-fluid conF-2 outerDiv" id="blur" style="padding: 0px;">
+            <div class="row1">
+
+                <div class="con-1 ">
+                    <div class="box-1">
+                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png" class="adminIcon" alt=""> <span
+                                class="adminName">Admin</span></a>
+                    </div>
+                    <a href="adminDashboard">
+                        <button class="btns btnDashboard "><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Dashboard</span></button>
+                    </a>
+                    <a href="ProductList">
+                        <button class="btns btnProducts "><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Products</span></button>
+                    </a>
+                    <a href="Category">
+                        <button class="btns btnCategory "><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue"><span>Category</span></button>
+                    </a>
+                    <a href="orderHistory">
+                        <button class="btns btnOrder btnColor"><img class="img" src="/assets/images/grid.png"
+                                alt=""><span class="btnvalue">Order History</span></button>
+                    </a>
+                    <a href="coupon">
+                        <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Coupon</span></button>
+                    </a>
+                    <a href="salesReport">
+                        <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Sales Report</span></button>
+                    </a>
+
+                    <a href="CustomerDetails">
+                        <button class="btns btnUser"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">User Report</span> </button>
+                    </a>
+                    <a href="offers">
+                        <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png" alt=""><span
+                                class="btnvalue">Offers</span></button>
+                    </a>
+
+                    <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png" alt=""><span
+                            class="btnvalue">Wallet</span></button>
+                </div>
+
+                <div class="con-2">
+                    <div class="row row2">
+                        <div class="col-3 cols">
+                            <h3>Order Details</h3>
+                        </div>
+                    </div>
+
+                    <div class="row filterRow">
+                        <div class="col-7 filter-col7">
+                            <div class="filterBox">
+                                <a href="/adminLogin/orderHistory?task=all" style="color: blue;" id="all">All Status</a>
+                                <span><a href="/adminLogin/orderHistory?task=OrderPlaced" style="color: rgb(108, 243, 17);" id="Processing">Order
+                                        Placed</a></span>
+                                <span><a href="/adminLogin/orderHistory?task=Delivered" style="color: green;"
+                                        id="Delivered">Delivered</a></span>
+                                <span><a href="/adminLogin/orderHistory?task=Cancelled" style="color: red;"
+                                        id="Cancelled">Cancelled</a></span>
+                            </div>
+                        </div>
+                        <div class="col-5 filter-col5">
+                            <div class="dateBox">
+                                <input type="date" onchange="customDateFilter()" class="dateInput" id="startDate">
+                            </div>
+                            <div class="dateBox2">
+                                <input type="date" onchange="customDateFilter()" class="dateInput" id="endDate">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row Pro-Row">
+                        <div class="SI">
+                            SI-No
+                        </div>
+                        <div class="Pro-Name" style="display: flex;justify-content: center;align-items: center;">
+                            <h5>Product Name</h5>
+                        </div>
+                        <div class="headBox">
+                            <h5>Customer No</h5>
+                        </div>
+                        <div class="headBox">
+                            <h5>Amount</h5>
+                        </div>
+                        <div class="headBox">
+                            <h5>Order Date</h5>
+                        </div>
+                        <div class="headBox">
+                            <h5>Payment</h5>
+                        </div>
+                        <div class="headBox">
+                            <h5>Status</h5>
+                        </div>
+                        <div class="action">
+                            <h5>Action</h5>
+                        </div>
+                    </div>
+                    <% let Status %>
+                        <% orderDetails.forEach((items,index)=> { %>
+                            <% Status=items.Status %>
+                                <div class="row Pro-Details-Row">
+                                    <div class="SI">
+                                        <%=index + 1 %>
+                                    </div>
+                                    <div class="Pro-Name">
+                                        <h5>
+                                            <%=items.productID.ProductName %>
+                                        </h5>
+                                    </div>
+                                    <div class="headBox">
+                                        <h5>
+                                            <%=items.userID.phoneNo %>
+                                        </h5>
+                                    </div>
+                                    <div class="headBox">
+                                        <h5>
+                                            <%=items.Amount%>
+                                        </h5>
+                                    </div>
+                                    <div class="headBox">
+                                        <h5>
+                                            <%=items.OrderDate.toLocaleDateString()%>
+                                        </h5>
+                                    </div>
+                                    <div class="headBox">
+                                        <h5>
+                                            <%=items.PaymentMethod%>
+                                        </h5>
+                                    </div>
+                                    <div class="headBox">
+                                        <h5>
+                                            <%=items.Status%>
+                                        </h5>
+                                    </div>
+                                    <div class="action">
+                                        <% if(items.Status !='Order Cancelled' && items.Status !='Order Returned' ) { %>
+                                            <a id="editIcon"
+                                                onclick="changeOrderStatus('<%=items.Status%>','<%=items._id%>')"
+                                                style="cursor: pointer;"><img src="/assets/images/edit.png" alt=""
+                                                    style="width: 25px;height: 25px;"></a>
+                                            <% } else { %>
+                                                <a id="" style="cursor: pointer;"><img src="/assets/images/edit.png"
+                                                        alt="" style="width: 25px;height: 25px;"></a>
+                                                <% } %>
+                                    </div>
+                                </div>
+                                <% }) %>
+                </div>
+            </div>
+        </div>
+
+        <div class="popup">
+            <img src="/assets/images/ordering.png"
+                style="height: 80px;width: 130px; margin-bottom: 10px;padding-right: 29px;" alt="">
+            <h2>Change Order Status</h2>
+            <p>Before proceeding, could you confirm your intention to change the order status</p>
+            <select name="orderStatus" id="orderstatusDropDown" class="dropbtn" style="width: 300px;">
+                <option value="Order Placed">Order Placed</option>
+                <option value="Order Confirmed">Order Confirmed</option>
+                <option value="Out For Delivery">Out For Delivery</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancel Order">Cancel Order</option>
+            </select>
+            <div class="row">
+                <a href=""><input type="button" class="btn" id="btnCancel" value="Cancel"></a>
+                <a href=""><input type="button" class="btn btnSubmit" onclick="changeStatus()" value="Submit"></a>
+            </div>
+        </div>
 
 
-           </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+
+
+            function customDateFilter() {
+                const startDate = document.getElementById('startDate').value
+                const endDate = document.getElementById('endDate').value
+                if (startDate && endDate) {
+                    location.href = `/adminLogin/orderHistory?task=customDate&startDate=${startDate}&endDate=${endDate}`
+                }
+            }
+
+            let orderID;
+
+            function changeStatus() {
+                let selectElement = document.getElementById('orderstatusDropDown')
+
+                const orderStatus = selectElement.value;
+
+                axios.patch('/adminLogin/orderHistory?task=updateStatus&_method=PATCH', { orderID: orderID, orderStatus: orderStatus })// Sending productID as data
+                    .then(function (response) {
+                        // Handle success response if needed
+                    })
+                    .catch(function (error) {
+                        console.error('Error adding product to cart:', error);
+                        // Handle error if needed
+                    });
+
+            }
+
+            function changeOrderStatus(Status, id) {
+                console.log(id)
+                orderID = id;
+                let blur = document.getElementById('blur');
+                blur.classList.toggle('active');
+
+                let popup = document.querySelector('.popup');
+                popup.classList.toggle('active');
+
+                let body = document.querySelector('body');
+
+                // Add a class to the body to stop scrolling
+                body.classList.add('stop-scrolling');
+
+                let selectElement = document.getElementById('orderstatusDropDown');
+
+                // Loop through each option and check if its value matches the Status
+                for (let i = 0; i < selectElement.options.length; i++) {
+                    console.log('i am here');
+                    if (selectElement.options[i].value === Status) {
+                        // Set the selected attribute if the option's value matches the Status
+                        selectElement.options[i].selected = true;
+                    }
+                }
+            }
 
 
 
+            document.getElementById('btnCancel').addEventListener('click', function () {
+                let blur = document.getElementById('blur');
+                blur.classList.remove('active');
 
-       </div>
-   </div>
+                let popup = document.querySelector('.popup');
+                popup.classList.remove('active');
 
-   <script>
+                let body = document.querySelector('body');
 
-       const errorMessageElement = document.getElementById('ErrorMessage');
+                // Add a class to the body to stop scrolling
+                body.classList.remove('stop-scrolling');
 
-       function hideErrorMessage() {
-           errorMessageElement.style.display = 'none';
-       }
+            })
 
-       setTimeout(hideErrorMessage, 5000);
+            $(function () {
+                var selectedClass = "";
+                $("p").click(function () {
+                    selectedClass = $(this).attr("data-rel");
+                    $("#portfolio").fadeTo(50, 0.1);
+                    $("#portfolio div").not("." + selectedClass).fadeOut();
+                    setTimeout(function () {
+                        $("." + selectedClass).fadeIn();
+                        $("#portfolio").fadeTo(50, 1);
+                    }, 500);
 
-       function AlertBox(value){
-           const myForm = document.getElementById(value);
-
-           if(value == 'activeIcon'){
-               const confirmation = confirm('Are you sure to Unlist the Product?');
-               if (!confirmation) {
-                   event.preventDefault(); // Prevent form submission
-               }
-           }else if(value == 'blockedIcon'){
-               const confirmation = confirm('Are you sure to List the product?');
-               if (!confirmation) {
-                   event.preventDefault(); // Prevent form submission
-               }
-              
-           }else if(value == 'dltBtn'){
-               const confirmation = confirm('Are you sure to Delete the product?');
-               if (!confirmation) {
-                   event.preventDefault(); // Prevent form submission
-               }
-           }
-
-       }
-
-  
-      
+                });
+            });
+        </script>
 
 
+        <!-- jQuery -->
+        <!-- <script src="/assets/js/jquery-2.1.0.min.js"></script> -->
 
-       const statusId = document.getElementById('Inventory');
+        <!-- Bootstra/p -->
+        <!-- <script src="/assets/js/popper.js"></script>
+        <script src="/assets/js/bootstrap.min.js"></script> -->
 
-       if (statusId.textContent.trim() === 'Listed') {
-           statusId.style.color = 'green';
-       }
-       else if (statusId.textContent.trim() === 'Unlisted') {
-           statusId.style.color = 'red';
-       }
+        <!-- Plugins /-->
+        <!-- <script src="/assets/js/owl-carousel.js"></script>
+        <script src="/assets/js/accordions.js"></script>
+        <script src="/assets/js/datepicker.js"></script>
+        <script src="/assets/js/scrollreveal.min.js"></script>
+        <script src="/assets/js/waypoints.min.js"></script>
+        <script src="/assets/js/jquery.counterup.min.js"></script>
+        <script src="/assets/js/imgfix.min.js"></script>
+        <script src="/assets/js/slick.js"></script>
+        <script src="/assets/js/lightbox.js"></script>
+        <script src="/assets/js/isotope.js"></script> -->
+
+        <!-- Global Init -->
+        <!-- <script src="assets/js/custom.js"></script> -->
 
 
-   </script>
+</body>
+
+</html>
