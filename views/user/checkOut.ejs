@@ -189,7 +189,7 @@
 
                 </div>
                 <div class="col-4">
-                    <div class="col-11" style="height: 500px;border: 1px solid rgb(189, 189, 189);">
+                    <div class="col-11" style="min-height: 550px;border: 1px solid rgb(189, 189, 189);">
                         <div class="row priceDetailsRow">
                             PRICE DETAILS
                         </div>
@@ -201,6 +201,7 @@
                                     <div class="col-8 priceDetails-Left">
                                         <p>Price( <%= count %> items)</p>
                                         <p>Discount</p>
+                                        <p>Delivery Charge</p>
                                         <p>------------------------</p>
                                         <p>Total Price</p>
                                     </div>
@@ -213,6 +214,7 @@
 
                                                 <%=totalDiscount%>
                                             </span></p>
+                                            <p>₹<span id="deliveryCharge">40</span></p>    
                                         <p style="padding-right: 27px;">----------</p>
                                         <p>₹<span id="toTalAmount"></span></p>
                                     </div>
@@ -238,7 +240,7 @@
                                     </label>
                                     <% if(userInfo.length> 0 ) { %>
                                         <label style=" display: flex;align-items: center;justify-content: center;"
-                                            id="COD"><a class="primary-btn PlaceOrder" onclick="successMessage()">Place
+                                            id="COD"><a class="primary-btn PlaceOrder" onclick="successMessage('<%= JSON.stringify(cartDetails) %>')">Place
                                                 Order</a></label>
                                         <label
                                             style=" display: flex;align-items: center;justify-content: center;display: none; margin-bottom: 10px;"
@@ -550,7 +552,7 @@
                                         class="paymentRadioBtn" value="Wallet">
                                     <span style="padding-left: 10px;">Wallet</span>
                                 </label>
-                                <% if(userInfo.length> 0 ) { %>
+                                <% if(userInfo.length > 0 ) { %>
                                     <label style=" display: flex;align-items: center;justify-content: center;"
                                         id="COD"><a class="primary-btn PlaceOrder" onclick="successMessage()">Place
                                             Order</a></label>
@@ -585,7 +587,7 @@
                 </div>
 
                 <!-- <p style="margin-top: 10px;">Hey Shinith.P</p> -->
-                <h2>Your Order Is Confirmed</h2>
+                <h2>Are you sure to Confirm</h2>
                 <h6>Shall we go ahead and make this order official!</h6>
                 <h6>Just confirm your order please.</h6>
                 <div class="row btnRow" style="margin: 0;margin-top: 15px;">

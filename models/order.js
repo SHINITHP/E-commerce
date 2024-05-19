@@ -29,6 +29,10 @@ const orderModel = new mongoose.Schema({
         type:String,
         require:true
     },
+    deliveryCharge:{
+        type:Number,
+        default:40
+    },
     PaymentMethod:{
         type:String,
         require:true

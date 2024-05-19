@@ -279,13 +279,16 @@ main {
 }
 
 .analytics {
+   margin-top: 15px;
    display: grid;
    grid-template-columns: repeat(4, 1fr);
    grid-gap: 2.5rem;
    margin-bottom: 3rem;
 }
 
+
 .analytic {
+   
    box-shadow: var(--shadow);
    padding: 1.5rem;
    border-radius: 10px;
@@ -459,13 +462,21 @@ main {
 .ui-datepicker-calendar {
    display: none;
 }
-
+.best-selling-Box{
+   width: 360px;
+}
 
 
 .overlay label {
    display: block;
    height: 100%;
    width: 100%;
+}
+
+
+.top-H4{
+   font-size: 13pt;
+   font-weight: bold;
 }
 
 @media only screen and (max-width: 1224px) {

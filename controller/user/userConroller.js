@@ -505,7 +505,7 @@ const logout = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
   const userID = getUserId(token);
   res.clearCookie('jwtUser');
-  await UserModel.findByIdAndUpdate(userID,{$set:{logged:false}})  // Clear the cookie
+  await UserModel.findByIdAndUpdate(userID, { $set: { logged: false } })  // Clear the cookie
   res.redirect('/')
 }
 
@@ -925,27 +925,36 @@ const overviewFilter = async (req, res) => {
 
 const checkOut = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-  const userID = verifyToken(token); // Verify token and get userID
-  couponApplied = false
+  const userID = getUserId(token) // Verify token and get userID
+  if (req.query.task === 'checkValidOrder') {
+    let cartDetails = req.body.cartDetails;
+    
+    console.log('iam in get checkout')
+    res.json({message:'s'})
+  } else {
+    couponApplied = false
 
-  console.log('couponApplied', couponApplied)
-  try {
-    if (req.query.task == 'checkWallet') {
-      // console.log('checkWallet')
-      const checkWallet = await walletSchema.findOne({ userID: userID }).sort({ added: -1 });
-      res.json(checkWallet)
-    } else {
-      // console.log(userID)
-      const cartDetails = await orderDetailsModel.find({ userID: userID }).populate('productID')
-      const userInfo = await addressModel.find({ userID: userID, selected: true })
-      const addresses = await addressModel.find({ userID: userID })
-      // console.log('cartDetails', cartDetails)
-      res.render('user/checkOut', { cartDetails, userInfo, addresses })
+    console.log('couponApplied', couponApplied)
+    try {
+      if (req.query.task == 'checkWallet') {
+        // console.log('checkWallet')
+        const checkWallet = await walletSchema.findOne({ userID: userID }).sort({ added: -1 });
+        res.json(checkWallet)
+      } else {
+        // console.log(userID)
+        const cartDetails = await orderDetailsModel.find({ userID: userID }).populate('productID')
+        const userInfo = await addressModel.find({ userID: userID, selected: true })
+        const addresses = await addressModel.find({ userID: userID })
+        // console.log('cartDetails', cartDetails)
+        res.render('user/checkOut', { cartDetails, userInfo, addresses })
+      }
+  
+    } catch (error) {
+      console.error("Error fetching cart products:", error);
     }
-
-  } catch (error) {
-    console.error("Error fetching cart products:", error);
   }
+
+  
 }
 
 
@@ -1811,7 +1820,7 @@ const userLogin = (async (req, res) => {
           const Token = createToken(userExist._id)
           console.log(Token)
           res.cookie('jwtUser', Token, { httpOnly: true, maxAge: MaxExpTime * 1000 });
-          await UserModel.findByIdAndUpdate(userExist._id,{$set:{logged:true}})
+          await UserModel.findByIdAndUpdate(userExist._id, { $set: { logged: true } })
           // res.redirect(`/?id=${userExist._id}`)
           res.redirect('/')
           // res.render('user/index',{userId: userExist._id})

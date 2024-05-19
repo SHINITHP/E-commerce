@@ -244,12 +244,51 @@
                                                         
                                                 </div>
                                         </div>
+<br><br>
+                                        <section>
+                                                <h3 class="section-head">Best Selling Products, Categories, and Brands</h3>
+                                                <div class="analytics" style="display: flex;justify-content: center;">
+                                                        <div class="analytic best-selling-Box" >
+                                                                <div class="analytic-icon"><span
+                                                                                class="las la-eye"></span></div>
+                                                                <div class="analytic-info">
+                                                                        <h4 style="font-weight: bold;font-size: 11pt;">TOP CATEGORYS</h4>
+                                                                        <% categories.forEach((val) => { %> 
+                                                                                <p><%=val%></p>
+                                                                        <% }) %>
+                                                                                
+                                                                </div>
+                                                        </div>
+                                                        <div class="analytic best-selling-Box">
+                                                                <div class="analytic-icon"><span
+                                                                                class="las la-clock"></span></div>
+                                                                <div class="analytic-info">
+                                                                        <h4 style="font-weight: bold;font-size: 11pt;">TOP 10 PRODUCTS</h4>
+                                                                        <% topTenProducts.forEach((val) => { %> 
+                                                                                <p><%=val%></p>
+                                                                        <% }) %>
+                                                                </div>
+                                                        </div>
+                                                        <div class="analytic best-selling-Box">
+                                                                <div class="analytic-icon"><span
+                                                                                class="las la-users"></span></div>
+                                                                <div class="analytic-info">
+                                                                        <h4 style="font-weight: bold;font-size: 11pt;">TOP 10 BRAND</h4>
+                                                                        <% topTenBrands.forEach((val) => { %> 
+                                                                                <p><%=val%></p>
+                                                                        <% }) %>
+                                                                        
+                                                                </div>
+                                                        </div>
+                                                       
+                                                </div>
+                                        </section>
                                 </div>
 
 
 
                         </div>
-                        <br><br><br><br>
+                        <br><br><br><br><br>  
                 </div>
 
         </div>

@@ -37,11 +37,11 @@ const createToken = (id) => {
 const adminLogin = (req, res) => {
     res.render('admin/adminLogin', { message: "" })
 }
-const DashboardSales = async (req,res) =>{
+const DashboardSales = async (req, res) => {
     try {
         const salesDetails = await orderSchema.find()
-        .populate('productID')
-        .populate('addressID')
+            .populate('productID')
+            .populate('addressID')
 
         res.json(salesDetails);
     } catch (error) {
@@ -50,7 +50,7 @@ const DashboardSales = async (req,res) =>{
 }
 //adminDashboard get method
 const adminDashboard = async (req, res) => {
- 
+
     try {
         const result = await UserModel.aggregate([
             { $match: { logged: true } },
@@ -60,27 +60,52 @@ const adminDashboard = async (req, res) => {
         const product = await productModel.find();
         const productCount = product.length;
         const salesDetails = await orderSchema.find()
-        .populate('productID')
-        .populate('addressID')
-        let orderCount,totalSales=0;
-        salesDetails.map((val,i) => {
-            orderCount = i+1;
+            .populate('productID')
+            .populate('addressID')
+        let orderCount, totalSales = 0;
+        let categoryCounts = {} ,brandCounts = {} , productCounts = {};
+        salesDetails.map((val, i) => {
+            orderCount = i + 1;
             totalSales += val.Amount;
+
+            const brand = val.productID.BrandName;
+            const category = val.productID.CategoryName;
+            const product = val.productID.ProductName;
+
+            if (categoryCounts[category] || brandCounts[brand] || productCounts[product]) {
+                brandCounts[brand]++;
+                productCounts[product]++;
+                categoryCounts[category]++;
+            } else {
+                categoryCounts[category] = 1;
+                brandCounts[brand] = 1;
+                productCounts[product] = 1;
+            }
+
         })
         
+        const categories = Object.keys(categoryCounts);
+        const topTenProducts =Object.keys(productCounts);
+        const topTenBrands =Object.keys(brandCounts);
 
-        console.log('orderCount :',orderCount,totalSales,productCount,activeUser)
-        res.render('admin/adminDashboard',{
+        categories.sort((a, b) => b[1] - a[1]);
+        // const top10Categories = categoryCountArray.slice(0, 10);
+
+        console.log('orderCount :', categories,topTenBrands,topTenProducts)
+        res.render('admin/adminDashboard', {
             salesDetails,
             orderCount,
             activeUser,
             totalSales,
-            productCount
+            productCount,
+            categories,
+            topTenProducts,
+            topTenBrands
         })
     } catch (error) {
         console.log(error)
     }
-    
+
 }
 
 const offers = async (req, res) => {
@@ -396,7 +421,7 @@ const OrderTasks = async (req, res) => {
 
             await orderModel.findByIdAndUpdate(orderID, { Status: newStatus })
 
-            res.json({message:'success'})
+            res.json({ message: 'success' })
         }
     } catch (error) {
 
@@ -654,7 +679,7 @@ const postEditProduct = async (req, res) => {
                     console.log('hi iam in the if ')
                     try {
                         const newPath = await uploader(imageUrl);
-                        console.log(newPath,' : new path')
+                        console.log(newPath, ' : new path')
                         urls.push(newPath);
                     } catch (error) {
                         console.log(error)
@@ -1113,14 +1138,14 @@ const coupon = async (req, res) => {
         const coupons = await couponSchema.find({})
         res.render('admin/Coupon', { coupons })
     } else if (req.query.task === 'Active') {
-        const coupons = await couponSchema.find({status: 'Listed' })
+        const coupons = await couponSchema.find({ status: 'Listed' })
         res.render('admin/Coupon', { coupons })
     }
     else if (req.query.task === 'Expired') {
         console.log('Unlisted')
-        const coupons = await couponSchema.find({status: 'Unlisted' })
+        const coupons = await couponSchema.find({ status: 'Unlisted' })
         res.render('admin/Coupon', { coupons })
-    }else if (req.query.task === 'customDate'){
+    } else if (req.query.task === 'customDate') {
         const startDate = req.query.startDate
         const endDate = req.query.endDate
 
@@ -1135,7 +1160,7 @@ const coupon = async (req, res) => {
         }).sort({ OrderDate: 1 })
 
         res.render('admin/Coupon', { coupons })
-    }else{
+    } else {
         const coupons = await couponSchema.find({})
         res.render('admin/Coupon', { coupons })
     }
@@ -1171,7 +1196,7 @@ const couponTasks = async (req, res) => {
 
                 await couponSchema.create(data)
 
-                res.json({message:'success'})
+                res.json({ message: 'success' })
             } catch (error) {
                 console.log(error)
             }

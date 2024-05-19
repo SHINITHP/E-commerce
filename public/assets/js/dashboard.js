@@ -28,11 +28,17 @@ document.getElementById('MenuBtn').addEventListener('click',function(){
         leftMenuBarActive.style.display ='none'
         rightMenuBar.style.width = '83vw';
         document.getElementById('graphRow').style.width = '751px';
+        document.querySelectorAll('.best-selling-Box').forEach((val) => {
+            val.style.width = '360px'
+        })
     }else{
         leftMenuBar.style.display ='none'
         leftMenuBarActive.style.display ='block'
         rightMenuBar.style.width = '94vw'
         document.getElementById('graphRow').style.width = '858px';
+        document.querySelectorAll('.best-selling-Box').forEach((val) => {
+            val.style.width = '400px'
+        })
     }
     
 })

@@ -215,7 +215,9 @@ function salesGraph(val, salesDetails) {
                                                 ticks: {
                                                         min: 0,  // Set minimum value for y-axis
                                                         callback: function (value) {  // Format tick values
-                                                                return value;
+                                                                if (Number.isInteger(value)) {
+                                                                        return value;  // Only display integer values
+                                                                    }
                                                         }
                                                 }
                                         }]

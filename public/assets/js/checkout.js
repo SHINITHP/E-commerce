@@ -5,7 +5,7 @@ const Selectpayment = document.getElementById('Selectpayment');
 const onlinePayment = document.getElementById('onlinePayment');
 let couponDiscount = 0;
 
-document.getElementById('toTalAmount').innerHTML = parseFloat(document.getElementById('cartTotal').innerText) - parseFloat(document.getElementById('discountAmt').innerText)
+document.getElementById('toTalAmount').innerHTML = parseFloat(document.getElementById('cartTotal').innerText) - parseFloat(document.getElementById('discountAmt').innerText) + parseFloat(document.getElementById('deliveryCharge').innerText)
 
 let AppliedCode;
 function applyCouuponCode() {
@@ -254,16 +254,46 @@ document.getElementById('btnOkey').addEventListener('click', function () {
 })
 localStorage.setItem('walletAmt', 0);
 document.getElementById('walletAmount').innerHTML = localStorage.getItem('walletAmt');
-function successMessage() {
+
+
+function successMessage(val) {
 
     if (Selectpayment.checked && Selectpayment.value === 'Cash On Delivery') {
-        console.log('i am here....')
-        let blur = document.getElementById('blur');
-        blur.classList.toggle('active');
+      
+        let flag = false;
+        // axios.get('/checkOut?task=checkValidOrder',{cartDetails})
+        // .then(function(response){})
+        // .catch(function(error){})
+        let cartDetails = JSON.parse(val)
+        cartDetails.forEach((val) => {
+         
+            if (val.totalPrice > 1000) {
+                Swal.fire({
+                    icon: 'info',
+                    title: '<span style="font-size:9pt;color: red">Order amount is more than 1000 , please choose another payment method</span>',
+                    timer: 4000, // Duration in milliseconds
+                    toast: true,
+                    position: 'top', // Toast position
+                    showConfirmButton: false
+                });
+            } else {
+               console.log('i am here....')
+                flag = true
+            }
+              
+        })  
 
-        let popup = document.getElementById('SuccessDiv');
-        popup.classList.toggle('active');
-    } else if (wallet.checked || wallet.value === 'Wallet') {
+        if(flag){
+            let blur = document.getElementById('blur');
+            blur.classList.toggle('active');
+    
+            let popup = document.getElementById('SuccessDiv');
+            popup.classList.toggle('active');
+        }
+        
+
+
+    } else if (wallet.checked && wallet.value === 'Wallet') {
         axios.get('/checkOut?task=checkWallet') // Sending productID as data
             .then(function (response) {
 
