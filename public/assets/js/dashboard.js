@@ -27,11 +27,12 @@ document.getElementById('MenuBtn').addEventListener('click',function(){
         leftMenuBar.style.display ='block'
         leftMenuBarActive.style.display ='none'
         rightMenuBar.style.width = '83vw';
+        document.getElementById('graphRow').style.width = '751px';
     }else{
         leftMenuBar.style.display ='none'
         leftMenuBarActive.style.display ='block'
         rightMenuBar.style.width = '94vw'
-        
+        document.getElementById('graphRow').style.width = '858px';
     }
     
 })

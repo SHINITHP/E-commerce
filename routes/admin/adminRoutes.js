@@ -6,7 +6,7 @@ const {
     categoryEdit, updateUser, productSearch, Category, postAddCategory,
     postEditProduct, logout,CustomerFilter,deleteInventory,filterCategory,
     orderHistory,OrderTasks,messageBox,updateRequest,coupon,couponTasks,salesReport,
-    offers,salesFilter,offerTasks,editOffer,DeleteOffer,deletCoupon
+    offers,salesFilter,offerTasks,editOffer,DeleteOffer,deletCoupon,DashboardSales
 } = require('../../controller/admin/adminController.js')
 const upload = require('../../controller/admin/multer.js')
 const adminAuth = require('../../middlewares/adminMiddleware.js')
@@ -14,6 +14,7 @@ const adminAuth = require('../../middlewares/adminMiddleware.js')
 
 router.route('/').get( adminLogin).post(adminLoginPost)//loginpage page
 router.route('/adminDashboard').get(adminAuth,adminDashboard)//dashboard page
+router.route('/adminDashboard/sales').get(adminAuth,DashboardSales)
 router.route('/ProductList').get(adminAuth,productList).post(productListEdit)//productlist page
 router.route('/ProductList/addProducts').get(adminAuth,productList).post(addProductsPost)//addProducts page
 router.route('/editProducts').get(adminAuth, productList).put(postEditProduct).delete(postEditProduct)

@@ -5,7 +5,8 @@ const {
     logout, profile, profileMenu, google, shoppingCart, updateCart, sendEmailOtp, postsendEmailOtp,
     forgotEnterOtp, postForgotEnterOtp, resetPassword, createPassword, saveUserAddress, filterProducts,
     enterOtp, sentOTP, createUser, resendOtp, productOverview, saveImage, overviewFilter, checkOut,
-    checkOutTasks, orderDetails, updateProfile,onlinPayment,verifyPayment,priceFilter,DeleteData,profileTasks
+    checkOutTasks, orderDetails, updateProfile,onlinPayment,verifyPayment,priceFilter,DeleteData,profileTasks,
+    generatePDF
 } = require("../../controller/user/userConroller.js");
 
 const { userAuth } = require('../../middlewares/authMiddleware.js')
@@ -16,6 +17,7 @@ const { loginAuth } = require('../../middlewares/loginMiddleware.js')
 
 
 router.route('/').get(landingPage)//landinglage 
+router.route('/generate-invoice').post(generatePDF)
 router.route('/register').get(registerPage).post(sentOTP)//user registration 
 router.route('/enterOtp').get(userAuth,enterOtp).post(createUser)//enterOtp
 router.route('/login').get(loginAuth,loginPage).post(userLogin)//loginpage

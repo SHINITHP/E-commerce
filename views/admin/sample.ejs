@@ -1,321 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Additional CSS Files -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
-
-    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
-
-    <link rel="stylesheet" href="/assets/css/admin/dashboard.css">
-
-    <link rel="stylesheet" href="/assets/css/admin/productList.css">
-
-    <link rel="stylesheet" href="/assets/css/admin/orderHistory.css">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-
-
-    <title>Category</title>
+    <link rel="stylesheet" href="/assets/css/user/invoice.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
+    <title>Document</title>
 </head>
-
 <body>
-
-    <!-- Navbar -->
-    <%- include('../../views/admin/adminNavbar.ejs') %>
-        <!-- Navbar -->
-        <br>
-
-        <div class="container-fluid conF-2 outerDiv" id="blur" style="padding: 0px;">
-            <div class="row1">
-
-                <div class="con-1 ">
-                    <div class="box-1">
-                        <a href="" class="AdminLogo"><img src="/assets/images/admin.png" class="adminIcon" alt=""> <span
-                                class="adminName">Admin</span></a>
-                    </div>
-                    <a href="adminDashboard">
-                        <button class="btns btnDashboard "><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue">Dashboard</span></button>
-                    </a>
-                    <a href="ProductList">
-                        <button class="btns btnProducts "><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue">Products</span></button>
-                    </a>
-                    <a href="Category">
-                        <button class="btns btnCategory "><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue"><span>Category</span></button>
-                    </a>
-                    <a href="orderHistory">
-                        <button class="btns btnOrder btnColor"><img class="img" src="/assets/images/grid.png"
-                                alt=""><span class="btnvalue">Order History</span></button>
-                    </a>
-                    <a href="coupon">
-                        <button class="btns btnCoupon"><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue">Coupon</span></button>
-                    </a>
-                    <a href="salesReport">
-                        <button class="btns btnSRate"><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue">Sales Report</span></button>
-                    </a>
-
-                    <a href="CustomerDetails">
-                        <button class="btns btnUser"><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue">User Report</span> </button>
-                    </a>
-                    <a href="offers">
-                        <button class="btns btnBanner"><img class="img" src="/assets/images/grid.png" alt=""><span
-                                class="btnvalue">Offers</span></button>
-                    </a>
-
-                    <button class="btns btnWallet"><img class="img" src="/assets/images/grid.png" alt=""><span
-                            class="btnvalue">Wallet</span></button>
-                </div>
-
-                <div class="con-2">
-                    <div class="row row2">
-                        <div class="col-3 cols">
-                            <h3>Order Details</h3>
-                        </div>
-                    </div>
-
-                    <div class="row filterRow">
-                        <div class="col-7 filter-col7">
-                            <div class="filterBox">
-                                <a href="/adminLogin/orderHistory?task=all" style="color: blue;" id="all">All Status</a>
-                                <span><a href="/adminLogin/orderHistory?task=OrderPlaced" style="color: rgb(108, 243, 17);" id="Processing">Order
-                                        Placed</a></span>
-                                <span><a href="/adminLogin/orderHistory?task=Delivered" style="color: green;"
-                                        id="Delivered">Delivered</a></span>
-                                <span><a href="/adminLogin/orderHistory?task=Cancelled" style="color: red;"
-                                        id="Cancelled">Cancelled</a></span>
-                            </div>
-                        </div>
-                        <div class="col-5 filter-col5">
-                            <div class="dateBox">
-                                <input type="date" onchange="customDateFilter()" class="dateInput" id="startDate">
-                            </div>
-                            <div class="dateBox2">
-                                <input type="date" onchange="customDateFilter()" class="dateInput" id="endDate">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row Pro-Row">
-                        <div class="SI">
-                            SI-No
-                        </div>
-                        <div class="Pro-Name" style="display: flex;justify-content: center;align-items: center;">
-                            <h5>Product Name</h5>
-                        </div>
-                        <div class="headBox">
-                            <h5>Customer No</h5>
-                        </div>
-                        <div class="headBox">
-                            <h5>Amount</h5>
-                        </div>
-                        <div class="headBox">
-                            <h5>Order Date</h5>
-                        </div>
-                        <div class="headBox">
-                            <h5>Payment</h5>
-                        </div>
-                        <div class="headBox">
-                            <h5>Status</h5>
-                        </div>
-                        <div class="action">
-                            <h5>Action</h5>
-                        </div>
-                    </div>
-                    <% let Status %>
-                        <% orderDetails.forEach((items,index)=> { %>
-                            <% Status=items.Status %>
-                                <div class="row Pro-Details-Row">
-                                    <div class="SI">
-                                        <%=index + 1 %>
-                                    </div>
-                                    <div class="Pro-Name">
-                                        <h5>
-                                            <%=items.productID.ProductName %>
-                                        </h5>
-                                    </div>
-                                    <div class="headBox">
-                                        <h5>
-                                            <%=items.userID.phoneNo %>
-                                        </h5>
-                                    </div>
-                                    <div class="headBox">
-                                        <h5>
-                                            <%=items.Amount%>
-                                        </h5>
-                                    </div>
-                                    <div class="headBox">
-                                        <h5>
-                                            <%=items.OrderDate.toLocaleDateString()%>
-                                        </h5>
-                                    </div>
-                                    <div class="headBox">
-                                        <h5>
-                                            <%=items.PaymentMethod%>
-                                        </h5>
-                                    </div>
-                                    <div class="headBox">
-                                        <h5>
-                                            <%=items.Status%>
-                                        </h5>
-                                    </div>
-                                    <div class="action">
-                                        <% if(items.Status !='Order Cancelled' && items.Status !='Order Returned' ) { %>
-                                            <a id="editIcon"
-                                                onclick="changeOrderStatus('<%=items.Status%>','<%=items._id%>')"
-                                                style="cursor: pointer;"><img src="/assets/images/edit.png" alt=""
-                                                    style="width: 25px;height: 25px;"></a>
-                                            <% } else { %>
-                                                <a id="" style="cursor: pointer;"><img src="/assets/images/edit.png"
-                                                        alt="" style="width: 25px;height: 25px;"></a>
-                                                <% } %>
-                                    </div>
-                                </div>
-                                <% }) %>
-                </div>
-            </div>
+    <!-- <input type="checkbox" name="" id="menu-toggle">
+<div class="overlay"><label for="menu-toggle">
+  </label></div>
+<div class="sidebar">
+  <div class="sidebar-container">
+    <div class="brand">
+      <h3>
+        <span class="lab la-staylinked"></span>
+        vase
+      </h3>
+    </div>
+    <div class="sidebar-avatar">
+      <div>
+        <img src="https://media-exp1.licdn.com/dms/image/C4D03AQF9R2lxnH4fOw/profile-displayphoto-shrink_800_800/0/1639841285929?e=1654128000&v=beta&t=QvocDiNfivbaAzHjsX9fnl9eFa1ZSo4SBHeH4jZANEk" alt="avatar">
+      </div>
+      <div class="avatar-info">
+        <div class="avatar-text">
+          <h4>maz develop</h4>
+          <small>14-10-69</small>
         </div>
-
-        <div class="popup">
-            <img src="/assets/images/ordering.png"
-                style="height: 80px;width: 130px; margin-bottom: 10px;padding-right: 29px;" alt="">
-            <h2>Change Order Status</h2>
-            <p>Before proceeding, could you confirm your intention to change the order status</p>
-            <select name="orderStatus" id="orderstatusDropDown" class="dropbtn" style="width: 300px;">
-                <option value="Order Placed">Order Placed</option>
-                <option value="Order Confirmed">Order Confirmed</option>
-                <option value="Out For Delivery">Out For Delivery</option>
-                <option value="Delivered">Delivered</option>
-                <option value="Cancel Order">Cancel Order</option>
-            </select>
-            <div class="row">
-                <a href=""><input type="button" class="btn" id="btnCancel" value="Cancel"></a>
-                <a href=""><input type="button" class="btn btnSubmit" onclick="changeStatus()" value="Submit"></a>
-            </div>
+        <span class="las la-angle-double-down"></span>
+      </div>
+    </div>
+    <div class="sidebar-menu">
+      <ul>
+        <li><a href="#" class="active"><span class="las la-adjust"></span><span>Dashboard</span></a></li>
+        <li><a href="#"><span class="las la-video"></span><span>Videos</span></a></li>
+        <li><a href="#"><span class="las la-chart-bar"></span><span>Analytics</span></a></li>
+        <li><a href="#"><span class="las la-calendar"></span><span>Schedule</span></a></li>
+        <li><a href="#"><span class="las la-user"></span><span>Account</span></a></li>
+      </ul>
+    </div>
+    <div class="sidebar-card">
+      <div class="side-card-icon">
+        <span class="lab la-codiepie"></span>
+      </div>
+      <div>
+        <h4>Make AdSense</h4>
+        <p>add ads to your videos to earn money</p>
+      </div>
+      <button class="btn btn-main btn-block">Create now</button>
+    </div>
+  </div>
+</div> -->
+<div class="main-content">
+  <header>
+    <div class="header-wrapper">
+      <label for="menu-toggle">
+        <span class="las la-bars"></span>
+      </label>
+      <div class="header-title">
+        <h1>Analytics</h1>
+        <p>Display analytics about your Channel <span class="las la-chart-line"></span></p>
+      </div>
+    </div>
+    <div class="header-action">
+      <button class="btn btn-main">
+        <span class="las la-video"></span>
+        Upload
+      </button>
+    </div>
+  </header>
+  <main>
+    <section>
+      <h3 class="section-head">Overview</h3>
+      <div class="analytics">
+        <div class="analytic">
+          <div class="analytic-icon"><span class="las la-eye"></span></div>
+          <div class="analytic-info">
+            <h4>Total views</h4>
+            <h1>10.3M</h1>
+          </div>
         </div>
+        <div class="analytic">
+          <div class="analytic-icon"><span class="las la-clock"></span></div>
+          <div class="analytic-info">
+            <h4>Watch time (hrs)</h4>
+            <h1>20.9k <small class="text-danger">5%</small></h1>
+          </div>
+        </div>
+        <div class="analytic">
+          <div class="analytic-icon"><span class="las la-users"></span></div>
+          <div class="analytic-info">
+            <h4>Subscribers</h4>
+            <h1>1.3k <small class="text-success">12%</small></h1>
+          </div>
+        </div>
+        <div class="analytic">
+          <div class="analytic-icon"><span class="las la-heart"></span></div>
+          <div class="analytic-info">
+            <h4>Total likes</h4>
+            <h1>3.4M </h1>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="block-grid">
+    
+        <div class="graph-card">
+          <h3 class="section-head">Graph</h3>
+          <div class="graph-content">
+            <div class="graph-head">
+              <div class="icon-wrapper">
+                <div class="icon"><span class="las la-eye text-main"></span></div>
+                <div class="icon"><span class="las la-clock text-success"></span></div>
+              </div>
+              <div class="graph-select">
+                <select name="" id="">
+                  <option value="">Septamber</option>
+                </select>
+              </div>
+            </div>
+            <div class="graph-board">
+              <canvas id="revenueChart" width="100%"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+<script>
+    Chart.defaults.global.defaultFontFamily = "Poppins";
+let ctx = document.querySelector("#revenueChart");
+ctx.height = 53;
 
+let revChart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: [
+      "Sept 1",
+      "Sept 3",
+      "Sept 6",
+      "Sept 9",
+      "Sept 12",
+      "Sept 15",
+      "Sept 18",
+      "Sept 21",
+      "Sept 24",
+      "Sept 27",
+      "Sept 30"
+    ],
+    datasets: [
+      {
+        label: "Views",
+        borderColor: "green",
+        backgroundColor: "rgba(235, 247, 245, 0.5)",
+        data: [0, 30, 60, 25, 60, 25, 50, 10, 50, 90, 120]
+      },
+      {
+        label: "Watch time",
+        borderColor: "blue",
+        backgroundColor: "rgba(233, 238, 253, 0.5)",
+        data: [0, 60, 25, 100, 20, 75, 30, 55, 20, 60, 20]
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    tooltips: {
+      intersect: false,
+      node: "index"
+    }
+  }
+});
 
-
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script>
-
-
-            function customDateFilter() {
-                const startDate = document.getElementById('startDate').value
-                const endDate = document.getElementById('endDate').value
-                if (startDate && endDate) {
-                    location.href = `/adminLogin/orderHistory?task=customDate&startDate=${startDate}&endDate=${endDate}`
-                }
-            }
-
-            let orderID;
-
-            function changeStatus() {
-                let selectElement = document.getElementById('orderstatusDropDown')
-
-                const orderStatus = selectElement.value;
-
-                axios.patch('/adminLogin/orderHistory?task=updateStatus&_method=PATCH', { orderID: orderID, orderStatus: orderStatus })// Sending productID as data
-                    .then(function (response) {
-                        // Handle success response if needed
-                    })
-                    .catch(function (error) {
-                        console.error('Error adding product to cart:', error);
-                        // Handle error if needed
-                    });
-
-            }
-
-            function changeOrderStatus(Status, id) {
-                console.log(id)
-                orderID = id;
-                let blur = document.getElementById('blur');
-                blur.classList.toggle('active');
-
-                let popup = document.querySelector('.popup');
-                popup.classList.toggle('active');
-
-                let body = document.querySelector('body');
-
-                // Add a class to the body to stop scrolling
-                body.classList.add('stop-scrolling');
-
-                let selectElement = document.getElementById('orderstatusDropDown');
-
-                // Loop through each option and check if its value matches the Status
-                for (let i = 0; i < selectElement.options.length; i++) {
-                    console.log('i am here');
-                    if (selectElement.options[i].value === Status) {
-                        // Set the selected attribute if the option's value matches the Status
-                        selectElement.options[i].selected = true;
-                    }
-                }
-            }
-
-
-
-            document.getElementById('btnCancel').addEventListener('click', function () {
-                let blur = document.getElementById('blur');
-                blur.classList.remove('active');
-
-                let popup = document.querySelector('.popup');
-                popup.classList.remove('active');
-
-                let body = document.querySelector('body');
-
-                // Add a class to the body to stop scrolling
-                body.classList.remove('stop-scrolling');
-
-            })
-
-            $(function () {
-                var selectedClass = "";
-                $("p").click(function () {
-                    selectedClass = $(this).attr("data-rel");
-                    $("#portfolio").fadeTo(50, 0.1);
-                    $("#portfolio div").not("." + selectedClass).fadeOut();
-                    setTimeout(function () {
-                        $("." + selectedClass).fadeIn();
-                        $("#portfolio").fadeTo(50, 1);
-                    }, 500);
-
-                });
-            });
-        </script>
-
-
-        <!-- jQuery -->
-        <!-- <script src="/assets/js/jquery-2.1.0.min.js"></script> -->
-
-        <!-- Bootstra/p -->
-        <!-- <script src="/assets/js/popper.js"></script>
-        <script src="/assets/js/bootstrap.min.js"></script> -->
-
-        <!-- Plugins /-->
-        <!-- <script src="/assets/js/owl-carousel.js"></script>
-        <script src="/assets/js/accordions.js"></script>
-        <script src="/assets/js/datepicker.js"></script>
-        <script src="/assets/js/scrollreveal.min.js"></script>
-        <script src="/assets/js/waypoints.min.js"></script>
-        <script src="/assets/js/jquery.counterup.min.js"></script>
-        <script src="/assets/js/imgfix.min.js"></script>
-        <script src="/assets/js/slick.js"></script>
-        <script src="/assets/js/lightbox.js"></script>
-        <script src="/assets/js/isotope.js"></script> -->
-
-        <!-- Global Init -->
-        <!-- <script src="assets/js/custom.js"></script> -->
+</script>
 
 
 </body>
-
 </html>

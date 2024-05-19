@@ -1,7 +1,5 @@
 
 .row2 {
-    border-left: 10px solid #ffffff;
-    border-right: 10px solid #ffffff;
     height: 100px;
     display: flex;
     justify-content: space-between;
@@ -27,7 +25,6 @@
   .pageHead h3 {
     text-shadow: 2px 2px #c9c9c9;
     font-weight: 500;
-    padding-left: 60px;
   }
   .col3 {
     height: 42px;
@@ -82,7 +79,6 @@
   }
   .CouponcodeInput{
     height: 40px;
-    width: 100%;
     font-size: 9pt;
     background-color: #f6f6f6;
 
@@ -91,10 +87,10 @@
     border-bottom-right-radius: 0;
   } 
   .inputLabel{
-    width: 50%;
+    width: 47.6%;
     font-family: Poppins;
     color: #979797;
-    font-size: 12pt;
+    font-size: 10pt;
   }
   .input{
     height: 40px;
@@ -110,22 +106,35 @@
   }
   .codeLabel{
     /* display: flex; */
-    font-size: 12pt;
+    font-size: 10pt;
     width: 100%;
     font-family: Poppins;
     color: #979797;
+    
   }
   .btngenerate{
-    margin-top: 24px;
     /* width: 100%; */
+    margin-top: 0.4px;
     font-size: 9pt;
     background-color: #f6f6f6;
     font-family: Poppins;
-    height: 40px;
+    height: 39.6px;
     border: none;
     outline: none;
     border: 1px solid #ced4da;
    
+  }
+  .labelText{
+    padding: 0;
+    width: 91.8%;
+    padding-bottom: 2px;
+    text-align: start;
+    margin: 0;
+    font-family: Poppins;
+    font-family: Poppins;
+    color: #979797;
+    font-size: 10pt;
+    font-weight: bold;
   }
   .btngenerate:hover{
     background-color: #dbdbdb;
@@ -142,8 +151,9 @@
   .btnAdd{
     background-color: black;
     color: white;
-    width: 140px;
-    border-radius: 5px;
+    width: 200px;
+    border-radius: 15px;
+
   }
   .btn:hover{
     color: white;
@@ -166,9 +176,9 @@
 }
 .sort-UsageRow{
     padding: 10px;
-    width: 270px;
+    width: 250px;
     margin-left: 10px;
-    height: 40px;
+    height: 35px;
     background-color: white;
     border-radius: 7px;
     display: flex;
@@ -188,9 +198,9 @@
   }
 
   .dateBox{
-    width: 170px;
+    width: 150px;
     border-radius: 7px;
-    height: 40px;
+    height: 35px;
     background-color: white;
     border: 1px solid rgb(216, 216, 216);
     display: flex;
@@ -198,9 +208,9 @@
     align-items: center;
   }
   .dateBox2{
-    width: 170px;
+    width: 150px;
     border-radius: 7px;
-    height: 40px;
+    height: 35px;
     background-color: white;
     border: 1px solid rgb(216, 216, 216);
     display: flex;
@@ -226,8 +236,8 @@
     height: 50px;
     background-color: white;
     font-size: 12pt;
-    font-family: Montserrat, sans-serif;
-    font-weight: 800;
+    font-family: poppins;
+    font-weight: bold;
     border-bottom: 1px solid rgb(169, 169, 169);
   }
   .contentDiv{
@@ -238,8 +248,9 @@
     width: 10.44%;
     min-height: 80px;
     background-color: white;
-    font-size: 12pt;
-    font-family: Montserrat, sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+    font-family: Poppins;
     border-bottom: 1px solid rgb(169, 169, 169);
     overflow: hidden;
 
@@ -269,3 +280,102 @@
   .btnExcel span{
     padding-right: 5px;
   }
+
+
+
+  
+.modal-window {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.25);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s;
+  &:target {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  & > div {
+    width: 500px;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2em;
+    background: white;
+  }
+  header {
+    font-weight: bold;
+  }
+  h1 {
+    font-size: 150%;
+    margin: 0 0 15px;
+  }
+}
+
+.modal-close {
+  color: #aaa;
+  line-height: 50px;
+  font-size: 80%;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 0;
+  width: 70px;
+  text-decoration: none;
+  &:hover {
+    color: black;
+  }
+}
+.modal-window {
+  & > div {
+    border-radius: 1rem;
+  }
+}
+
+/* .modal-window div:not(:last-of-type) {
+  margin-bottom: 15px;
+} */
+.addCoupon-head-Row{
+  text-shadow: 2px 2px #c9c9c9;
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 15pt;
+  position: absolute;
+  left: 0;
+  text-align: center;
+  top: 0;
+  width: 140px;
+  text-decoration: none;
+  padding-bottom: 10px;
+}
+
+
+
+
+
+@media (max-width: 767px) {
+  .col9 {
+      display: none;
+  }
+  .rightAngle{
+      padding-right: 20px;
+  }
+  .spanText {
+      width: 70vw;
+  }
+  .col3{
+      min-height: 600px;
+  }
+  .conF-1{
+      min-height: 650px;
+  }
+}
+

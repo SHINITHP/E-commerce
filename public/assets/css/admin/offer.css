@@ -1,10 +1,8 @@
-
 .row2 {
-    border-left: 10px solid #ffffff;
-    border-right: 10px solid #ffffff;
     height: 100px;
     display: flex;
     justify-content: space-between;
+    padding: 0;
   }
   
   .pageHead {
@@ -27,7 +25,8 @@
   .pageHead h3 {
     text-shadow: 2px 2px #c9c9c9;
     font-weight: 500;
-    padding-left: 60px;
+    padding-left: 5px;
+    margin: 0;
   }
   .col3 {
     height: 42px;
@@ -95,6 +94,7 @@
     font-family: Poppins;
     color: #979797;
     font-size: 12pt;
+    
   }
   .input{
     height: 40px;
@@ -110,10 +110,11 @@
   }
   .codeLabel{
     /* display: flex; */
-    font-size: 12pt;
+    font-size: 11pt;
     width: 100%;
     font-family: Poppins;
     color: #979797;
+    font-weight: normal;
   }
   .btngenerate{
     margin-top: 24px;
@@ -142,8 +143,8 @@
   .btnAdd{
     background-color: black;
     color: white;
-    width: 140px;
-    border-radius: 5px;
+    width: 200px;
+    border-radius: 15px;
   }
   .btn:hover{
     color: white;
@@ -163,12 +164,13 @@
 .col7{
     display: flex;
     align-items: center;
+    padding-left: 5px;
 }
 .sort-UsageRow{
     padding: 10px;
-    width: 270px;
+    width: 250px;
     margin-left: 10px;
-    height: 40px;
+    height: 35px;
     background-color: white;
     border-radius: 7px;
     display: flex;
@@ -224,11 +226,9 @@
     justify-content: center;
     width: 15.66%;
     height: 50px;
-    background-color: white;
     font-size: 12pt;
-    font-family: Montserrat, sans-serif;
-    font-weight: 800;
-    border-bottom: 1px solid rgb(169, 169, 169);
+    font-family: Poppins;
+    font-weight: bold;
   }
   .contentDiv{
     display: flex;
@@ -237,11 +237,10 @@
     text-align: center;
     width: 15.66%;
     min-height: 80px;
-    background-color: white;
-    font-size: 12pt;
-    font-family: Montserrat, sans-serif;
-    border-bottom: 1px solid rgb(169, 169, 169);
+    font-size: 11pt;
+    font-family: Poppins;
     overflow: hidden;
+    font-weight: bold;
 
   }
   .btnPDF{
@@ -285,3 +284,101 @@
     padding-left: 20px;
     font-size: 12pt;
   }
+
+
+
+   
+.modal-window {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.25);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s;
+  &:target {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  & > div {
+    width: 500px;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2em;
+    background: white;
+  }
+  header {
+    font-weight: bold;
+  }
+  h1 {
+    font-size: 150%;
+    margin: 0 0 15px;
+  }
+}
+
+.modal-close {
+  color: #aaa;
+  line-height: 50px;
+  font-size: 80%;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 0;
+  width: 70px;
+  text-decoration: none;
+  &:hover {
+    color: black;
+  }
+}
+.modal-window {
+  & > div {
+    border-radius: 1rem;
+  }
+}
+
+/* .modal-window div:not(:last-of-type) {
+  margin-bottom: 15px;
+} */
+.addCoupon-head-Row{
+  text-shadow: 2px 2px #c9c9c9;
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 15pt;
+  position: absolute;
+  left: 0;
+  text-align: center;
+  top: 0;
+  width: 140px;
+  text-decoration: none;
+  padding-bottom: 10px;
+}
+
+
+
+
+
+@media (max-width: 767px) {
+  .col9 {
+      display: none;
+  }
+  .rightAngle{
+      padding-right: 20px;
+  }
+  .spanText {
+      width: 70vw;
+  }
+  .col3{
+      min-height: 600px;
+  }
+  .conF-1{
+      min-height: 650px;
+  }
+}

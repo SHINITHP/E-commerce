@@ -1,7 +1,6 @@
 
 .row2 {
-    border-left: 10px solid #ffffff;
-    border-right: 10px solid #ffffff;
+  padding: 0;
     height: 100px;
     display: flex;
     justify-content: space-between;
@@ -14,6 +13,7 @@
     font-family: Poppins;
     border: none;
     background-color: transparent;
+    padding: 0;
   }
   
   .col2 {
@@ -27,7 +27,8 @@
   .pageHead h3 {
     text-shadow: 2px 2px #c9c9c9;
     font-weight: 500;
-    padding-left: 60px;
+    padding-left: 20px;
+    margin: 0;
   }
   .col3 {
     height: 42px;
@@ -161,6 +162,7 @@
    
 }
 .col7{
+  padding: 0;
     display: flex;
     align-items: center;
 }
@@ -168,7 +170,7 @@
     padding: 10px;
     width: 270px;
     margin-left: 10px;
-    height: 40px;
+    height: 35px;
     background-color: white;
     border-radius: 7px;
     display: flex;
@@ -179,7 +181,6 @@
 }
 
 .sort-AddedRow{
-    padding-right:25px;
     display: flex;
     justify-content: end;
     align-items: center;
@@ -188,9 +189,9 @@
   }
 
   .dateBox{
-    width: 170px;
+    width: 150px;
     border-radius: 7px;
-    height: 40px;
+    height: 35px;
     background-color: white;
     border: 1px solid rgb(216, 216, 216);
     display: flex;
@@ -198,9 +199,9 @@
     align-items: center;
   }
   .dateBox2{
-    width: 170px;
+    width: 150px;
     border-radius: 7px;
-    height: 40px;
+    height: 35px;
     background-color: white;
     border: 1px solid rgb(216, 216, 216);
     display: flex;
@@ -224,11 +225,9 @@
     justify-content: center;
     width: 15.66%;
     height: 50px;
-    background-color: white;
     font-size: 12pt;
-    font-family: Montserrat, sans-serif;
-    font-weight: 800;
-    border-bottom: 1px solid rgb(169, 169, 169);
+    font-family: Poppins;
+    font-weight: bold;
   }
   .contentDiv{
     text-align: center;
@@ -236,11 +235,10 @@
     align-items: center;
     justify-content: center;
     width: 15.66%;
-    min-height: 90px;
-    background-color: white;
-    font-size: 12pt;
-    font-family: Montserrat, sans-serif;
-    border-bottom: 1px solid rgb(169, 169, 169);
+    min-height: 80px;
+    font-size: 10pt;
+    font-family:Poppins;
+    font-weight: bold;
     padding-right: 6px;
   }
   .btnPDF{

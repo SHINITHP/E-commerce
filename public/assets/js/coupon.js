@@ -45,20 +45,6 @@ function changeStatus(currStatus,id){
 
 
 
-function addCoupon(){
-    console.log('popup')
-    blur.classList.toggle('active');
-    document.getElementById('blur').style.backgroundColor = 'rgba(0, 0, 0, 0.7);' /* Dark semi-transparent background */
-    popup.classList.toggle('active');
-}
-
-
-function btnCancel(){
-    document.getElementById('code').value=''
-    blur.classList.remove('active');
-    popup.classList.remove('active');
-}
-
 async function GenerateCode() {
     try {
         axios.post('/adminLogin/coupon?task=generateCode', {})
@@ -88,7 +74,7 @@ function createCoupon(){
         axios.post('/adminLogin/coupon?task=addCoupon', {code,discountAmt,title,start,expireOn,min,max})
         .then(function(response) {
             console.log(response)
-            location.href('coupon')
+            location.href = 'coupon?success=true'
         })
         .catch(function(err) {
             console.log(err)
@@ -97,4 +83,22 @@ function createCoupon(){
     } catch (error) {
         
     }
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const success = urlParams.get('success');
+
+if (success === 'true') {
+    // Display the success toast
+    Swal.fire({
+        icon: 'success',
+        title: '<span style="color: #5cb85c;font-size:11pt;text-align:center;">Coupon successfully created!</span>',
+        timer: 5000,
+        toast: true,
+        position: 'top',
+        showConfirmButton: false
+    });
+    urlParams.delete('success');
+    const newUrl = window.location.pathname + '?' + urlParams.toString(); // Construct new URL
+    history.replaceState(null, '', newUrl);
 }

@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
+const {getTotalValidTokenCount} = require('../utils/verification.js')
 require('dotenv').config()
-
+let validTokenCount=0;
 const userAuth = async (req, res, next) => {
     // console.log('jwt token : ', req.cookies.jwtUser, '233wjn3iuui3232  f ', process.env.JWT_SECRET);
     const token = req.cookies.jwtUser;
@@ -13,8 +14,12 @@ const userAuth = async (req, res, next) => {
               
                 if (err) {
                     res.render('user/login', { error: " login error " })
+                }else{
+                    // validTokenCount++;
+                    // getTotalValidTokenCount(validTokenCount)
+                  next()   
                 }
-                next()
+               
             })
 
         } catch (error) {

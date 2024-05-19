@@ -272,7 +272,7 @@
                                    
 
                                         <input type="button" style="display: none;" class="btn btncancelOrder"
-                                            id="btnReturnOrder"  value="Return Order">
+                                            id="btnReturnOrder"  value="Return Order" >
                                     </span></h4>
                                 <a href="" style="display:flex;align-items: center;">
                                     <img src="" alt="" style="height: 80px;width: 80px; " id="productImg">
@@ -418,36 +418,6 @@
                         // Handle error if needed
                     });
                 }
-
-                document.getElementById('btnReturnOrder').addEventListener('click',function(){
-                    
-                    let blur = document.getElementById('blur');
-                    blur.classList.toggle('active');
-
-                    let popup = document.getElementById('SuccessDiv');
-                    popup.classList.toggle('active');
-
-                    let body = document.querySelector('body');
-
-                    // Add a class to the body to stop scrolling
-                    body.classList.add('stop-scrolling');
-
-                    document.querySelector('.cancel-Confirmation').style.display='none'
-                    document.querySelector('.returnOrder').style.display='block'
-                    document.querySelector('.returnOrder').style.display='flex'
-                })
-                document.getElementById('returnCancelBtn').addEventListener('click',function(){
-                    let blur = document.getElementById('blur');
-                    blur.classList.remove('active');
-
-                    let popup = document.getElementById('SuccessDiv');
-                    popup.classList.remove('active');
-
-                    let body = document.querySelector('body');
-
-                    // Add a class to the body to stop scrolling
-                    body.classList.remove('stop-scrolling');
-                })
 
 
                 document.getElementById('searchBtn').addEventListener('click', function () {

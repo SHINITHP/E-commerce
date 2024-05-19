@@ -38,15 +38,7 @@ for(let i=0;i<status.length;i++){
     }
 }
 
-function addOffers() {
-    blur.classList.toggle('active');
-    document.getElementById('blur').style.backgroundColor = 'rgba(0, 0, 0, 0.7);' /* Dark semi-transparent background */
-    popup.classList.toggle('active');
-}
-function btnCancel() {
-    blur.classList.remove('active');
-    popup.classList.remove('active');
-}
+
 function selectProduct() {
     const Category = document.getElementById('Category').value
     console.log(Category)

@@ -21,8 +21,11 @@ const crypto = require('crypto');
 const walletSchema = require('../../models/wallet.js')
 const wishlistSchema = require('../../models/wishlist.js')
 const { getUserId, randomToken } = require('../../utils/verification.js')
-
-
+const puppeteer = require('puppeteer');
+const path = require('path');
+const ejs = require('ejs');
+const fs = require('fs-extra')
+const easyinvoice = require('easyinvoice')
 // Function to generate a simple unique ID
 function generateSimpleUniqueId() {
   const uniqueId = crypto.randomBytes(16).toString('base64'); // Generate a random unique ID
@@ -104,10 +107,81 @@ const createToken = (id) => {
 }
 
 
-
+//  const trackDetails = Array.isArray(req.body.trackDetails) ? req.body.trackDetails : [req.body.trackDetails];
 //..................................................................................................................................................
 
 //Section for GET Request start here.......
+const generatePDF = async (req, res) => {
+  try {
+    const orderId = req.query.id;
+    const orders = req.body.trackDetails;
+
+    console.log(orders, ': orders')
+    const invoiceData = {
+      currency: 'INR',
+      marginTop: 25,
+      marginRight: 25,
+      marginLeft: 25,
+      marginBottom: 25,
+      sender: {
+        company: 'Ashion',
+        address: '123 Main Street',
+        city: 'New York',
+        state: 'NY',
+        postalCode: '10001',
+        country: 'USA',
+        phone: '+1-234-567-8901',
+        email: 'info@ashion.com',
+        website: 'www.ashion.com',
+        logo: path.join(__dirname, 'public', 'img', 'logo.png') // Adjust the path if necessary
+      },
+      client: {
+        company: `${orders[0].addressID.fullName}`,
+        email: orders[0].addressID.emailAddress,
+        phoneNumber: orders[0].addressID.phoneNo,
+        address: `${orders[0].addressID.address}, ${orders[0].addressID.cityDistrictTown}, ${orders[0].addressID.state}, ${orders[0].addressID.pincode}`
+      },
+      invoiceNumber: 'INV-123',
+      invoiceDate: new Date().toDateString(),
+      description: orders[0].productID.ProductName,
+      quantity: orders[0].quantity,
+      size: orders[0].size,
+      color: 'red',
+      price: orders[0].productID.MRP,
+      PaidAmount: orders[0].amount,
+      bottomNotice: 'Amount received'
+    };
+
+    // const deliveryCharge = 50; // Define the delivery charge or get it from orders if applicable
+    // invoiceData.products.forEach(product => {
+    //     product.price += deliveryCharge;
+    // });
+
+    easyinvoice.createInvoice(invoiceData, async function (result) {
+
+      const filePath = 'public/invoice.pdf';
+      fs.writeFileSync(filePath, result.pdf, 'base64');
+
+
+      res.download(filePath, 'invoice.pdf', (err) => {
+        if (err) {
+          console.error('Error downloading file:', err);
+        } else {
+
+          fs.unlinkSync(filePath);
+        }
+      });
+    });
+
+  } catch (err) {
+    console.error('Error fetching orders or generating invoice:', err);
+    res.status(500).send('Error fetching orders or generating invoice');
+  }
+};
+
+
+
+
 
 //show landing page 
 const landingPage = async (req, res) => {
@@ -428,7 +502,10 @@ const shoppingCart = async (req, res) => {
 
 //logout get Request
 const logout = async (req, res) => {
-  res.clearCookie('jwtUser');  // Clear the cookie
+  const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+  const userID = getUserId(token);
+  res.clearCookie('jwtUser');
+  await UserModel.findByIdAndUpdate(userID,{$set:{logged:false}})  // Clear the cookie
   res.redirect('/')
 }
 
@@ -593,23 +670,23 @@ const profileMenu = async (req, res) => {
         })
     } else if (req.query.menu === 'coupon') {
       res.render('user/coupon')
-    }else if(req.query.menu === 'trackOrder'){
+    } else if (req.query.menu === 'trackOrder') {
       try {
         const token = req.cookies.jwtUser; // Assuming token is stored in cookies
         const userID = getUserId(token);
         const id = req.query.id;
         const data = await orderSchema.findById(id)
-        .populate('addressID')
-        .populate('productID')
+          .populate('addressID')
+          .populate('productID')
 
         const trackDetails = data ? [data] : [];
 
-        console.log('trackDetails : ',trackDetails)
-        res.render('user/trackOrder',{ trackDetails })
+        // console.log('trackDetails : ',trackDetails)
+        res.render('user/trackOrder', { trackDetails })
       } catch (error) {
-       console.log(error) 
+        console.log(error)
       }
-      
+
     }
   }
 }
@@ -730,25 +807,26 @@ const saveUserAddress = async (req, res) => {
   }
   else if (req.query.type === 'cancelRequest') {
 
-    const orderID = req.body.orderID
+    const orderID = req.query.id
     const reqReason = req.body.reqReason
     const optionalReason = req.body.data
-    console.log('i am herree ', orderID, optionalReason, reqReason)
+    console.log('i am herree ', req.query.id, orderID, optionalReason, reqReason)
 
     // { $set: { quantity: req.body.newQty
     const value = await orderSchema.findByIdAndUpdate(
       orderID,
       { $set: { requestReason: reqReason, request: true, comment: optionalReason, reqDate: Date.now() } }
     );
-    console.log(value)
+    console.log('value : ', value)
 
   } else if (req.query.type === 'returnOrder') {
-    console.log(req.body.orderID)
+    console.log('returnOrder ')
+    console.log('helolo hii', req.query.id)
 
-    let optionalComment = req.body.optionalreason === '' ? 'empty' : req.body.optionalreason
-    console.log(optionalComment)
+    let optionalComment = req.query.optionalreason === '' ? 'empty' : req.body.optionalreason
+    // console.log(optionalComment)
     try {
-      await orderSchema.findByIdAndUpdate(req.body.orderID,
+      await orderSchema.findByIdAndUpdate(req.query.id,
         {
           $set: { return: true, requestReason: req.body.reason, comment: optionalComment }
         })
@@ -1724,7 +1802,6 @@ const userLogin = (async (req, res) => {
   try {
     const { emailAddress, password } = req.body
     const userExist = await UserModel.findOne({ emailAddress: emailAddress });
-    console.log('userEmailfromDB : ', userExist);
     //check the user is exist or not
     if (userExist) {
       const isPasswordMatch = await bcrypt.compare(password, userExist.password)
@@ -1734,6 +1811,7 @@ const userLogin = (async (req, res) => {
           const Token = createToken(userExist._id)
           console.log(Token)
           res.cookie('jwtUser', Token, { httpOnly: true, maxAge: MaxExpTime * 1000 });
+          await UserModel.findByIdAndUpdate(userExist._id,{$set:{logged:true}})
           // res.redirect(`/?id=${userExist._id}`)
           res.redirect('/')
           // res.render('user/index',{userId: userExist._id})
@@ -1930,5 +2008,5 @@ module.exports = {
   forgotEnterOtp, postForgotEnterOtp, resetPassword, createPassword, saveUserAddress, filterProducts,
   enterOtp, sentOTP, createUser, resendOtp, productOverview, saveImage, overviewFilter, checkOut,
   checkOutTasks, orderDetails, updateProfile, onlinPayment, verifyPayment, priceFilter, DeleteData,
-  profileTasks
+  profileTasks, generatePDF
 }

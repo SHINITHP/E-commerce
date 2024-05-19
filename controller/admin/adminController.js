@@ -9,6 +9,7 @@ const subCategorySchema = require('../../models/category.js')
 const walletSchema = require('../../models/wallet.js')
 const couponSchema = require('../../models/coupon.js')
 const offerSchema = require('../../models/offer.js')
+const orderSchema = require('../../models/order.js')
 const jwt = require('jsonwebtoken');
 const path = require('path')
 const mongoose = require('mongoose');
@@ -17,6 +18,7 @@ require('dotenv').config()
 const crypto = require('crypto')
 var pdf = require("pdf-creator-node");
 const { triggerAsyncId } = require('async_hooks')
+const { json } = require('body-parser')
 // Read HTML Template
 //Create jwt Token 
 const MaxExpTime = 3 * 24 * 60 * 60 // expire in 3days
@@ -35,10 +37,50 @@ const createToken = (id) => {
 const adminLogin = (req, res) => {
     res.render('admin/adminLogin', { message: "" })
 }
+const DashboardSales = async (req,res) =>{
+    try {
+        const salesDetails = await orderSchema.find()
+        .populate('productID')
+        .populate('addressID')
 
+        res.json(salesDetails);
+    } catch (error) {
+        console.log(error)
+    }
+}
 //adminDashboard get method
-const adminDashboard = (req, res) => {
-    res.render('admin/adminDashboard')
+const adminDashboard = async (req, res) => {
+ 
+    try {
+        const result = await UserModel.aggregate([
+            { $match: { logged: true } },
+            { $count: "loggedInUsersCount" }
+        ]);
+        const activeUser = result[0].loggedInUsersCount;
+        const product = await productModel.find();
+        const productCount = product.length;
+        const salesDetails = await orderSchema.find()
+        .populate('productID')
+        .populate('addressID')
+        let orderCount,totalSales=0;
+        salesDetails.map((val,i) => {
+            orderCount = i+1;
+            totalSales += val.Amount;
+        })
+        
+
+        console.log('orderCount :',orderCount,totalSales,productCount,activeUser)
+        res.render('admin/adminDashboard',{
+            salesDetails,
+            orderCount,
+            activeUser,
+            totalSales,
+            productCount
+        })
+    } catch (error) {
+        console.log(error)
+    }
+    
 }
 
 const offers = async (req, res) => {
@@ -353,6 +395,8 @@ const OrderTasks = async (req, res) => {
             const newStatus = req.body.orderStatus
 
             await orderModel.findByIdAndUpdate(orderID, { Status: newStatus })
+
+            res.json({message:'success'})
         }
     } catch (error) {
 
@@ -1126,6 +1170,8 @@ const couponTasks = async (req, res) => {
                 }
 
                 await couponSchema.create(data)
+
+                res.json({message:'success'})
             } catch (error) {
                 console.log(error)
             }
@@ -1167,7 +1213,7 @@ const messageBox = async (req, res) => {
             { return: true }
         ]
     }).populate('userID').populate('productID');
-    console.log(requestedData)
+    // console.log(requestedData)
     res.render('admin/messageBox', { requestedData })
 }
 
@@ -1470,6 +1516,7 @@ module.exports = {
     offerTasks,
     editOffer,
     DeleteOffer,
-    deletCoupon
+    deletCoupon,
+    DashboardSales
 
 }

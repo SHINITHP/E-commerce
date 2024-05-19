@@ -64,7 +64,7 @@
 }
 .col2{
     display: flex;
-    justify-content: center;
+    padding-right: 10px;
 }
 .row3{
     /* background-color: #5e5e5e; */
@@ -77,9 +77,9 @@
 }
 .sort-UsageRow{
     padding: 10px;
-    width: 210px;
+    width: 230px;
     margin-left: 10px;
-    height: 40px;
+    height: 35px;
     background-color: white;
     border-radius: 7px;
     display: flex;
@@ -129,9 +129,9 @@ a:hover{
   }
 
   .dateBox{
-    width: 170px;
+    width: 150px;
     border-radius: 7px;
-    height: 40px;
+    height: 35px;
     background-color: white;
     border: 1px solid rgb(216, 216, 216);
     display: flex;
@@ -139,9 +139,9 @@ a:hover{
     align-items: center;
   }
   .dateBox2{
-    width: 170px;
+    width: 150px;
     border-radius: 7px;
-    height: 40px;
+    height: 35px;
     background-color: white;
     border: 1px solid rgb(216, 216, 216);
     display: flex;
@@ -160,14 +160,14 @@ a:hover{
     border: none;
   }
   .row4 {
-    border-left: 10px solid #ffffff;
-    border-right: 10px solid #ffffff;
     height: fit-content;
     display: flex;
     /* flex-direction: column;
     align-items: center; */
     justify-content: center;
-    overflow-x: scroll;
+    min-height: 50px;
+    border-top: 1px solid rgb(112, 112, 112);
+    border-bottom: 1px solid rgb(112, 112, 112);
 }
 .table1{
     width: 98%;
@@ -236,3 +236,56 @@ th{
     background-color: #ebebeb;
 }
 
+.SI-No{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 6%;
+    font-size: 12pt;
+    font-weight: bold;
+    font-family: Poppins;
+}
+.customer-heading{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 11.8%;
+    font-size: 12pt;
+    font-weight: bold;
+    font-family: Poppins;
+}
+.Address-Heading{
+    width: 20%;
+}
+.Email-heading{
+    width: 15%;
+}
+.customer-listing-Row{
+    border-bottom: 1px solid rgb(112, 112, 112);
+    min-height: 80px;
+}
+
+.customer-listing{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 11.8%;
+    font-size: 11pt;
+    font-weight: bold;
+    font-family: Poppins;
+}
+.SI-No-listing{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 6%;
+    font-size: 11pt;
+    font-weight: bold;
+    font-family: Poppins;
+}
+.Address-listing{
+    width: 20%;
+}
+.Email-listing{
+    width: 15%;
+}

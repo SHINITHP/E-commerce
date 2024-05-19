@@ -189,16 +189,15 @@
                             <h3 style="width: 100%; margin-left: 10px;">Track Order</h3>
 
                         </div>
-                        <a href="">
-                            <button class=" btn form-Control"
-                                style="margin-top: 15px;height: 35px;width: 120px;background-color: black;color: white;">Invoice</button>
+                        <a onclick="generateInvoice('<%= JSON.stringify(trackDetails) %>')">
+                            <button class="btn form-Control" style="margin-top: 15px;height: 35px;width: 120px;background-color: black;color: white;">Invoice</button>
                         </a>
                     </div>
 
                     <br><br>
                     <% trackDetails.forEach((val)=> { %>
                     <div class="row deliveryAddress">
-                        
+                         
                             <div class="col-6 leftRow">
                                 <h4>Delivery Address</h4>
                                 <p id="name"
@@ -229,9 +228,8 @@
                                         const currentDate = new Date()
                                         const differenceInDays = Math.floor((currentDate - orderDate) / (1000 * 60 * 60 * 24));  
                                      %>
-                                        <% if (val.Status === 'Delivered' && differenceInDays <= 14) { %>
-                                            <input type="button" class="btn btncancelOrder" id="btnReturnOrder"
-                                            value="Return Order">
+                                        <% if (val.Status === 'Delivered' && differenceInDays <= 14 && val.rejected === false) { %>
+                                            <input type="button" class="btn btncancelOrder" id="btnReturnOrder" onclick="btnReturnOrder()" value="Return Order">
                                         <% } else if(val.Status==='Out For Delivery' || val.Status==='Order Confirmed' || val.Status==='Order Placed' && differenceInDays <= 10){ %>
                                             <input type="button" id="cancelOrderbtn" onclick="cancelOrder()"
                                             class="btn btncancelOrder" value="Cancel Order">
@@ -286,7 +284,7 @@
                                     <li class="step" id="lineFour"><div><i class="fas fa-birthday-cake"></i></div>Delivered</li>
                                 </ul>
                                 <h5 class="text-center content">Your order is on its way and is currently marked as Out For Delivery.</h5>
-                            <% } else if(val.Status === 'Delivered'){ %> 
+                            <% } else if(val.Status === 'Delivered'  && val.rejected === false ){ %> 
                                 <ul class="bs4-order-tracking" style="display: flex;justify-content: center;align-items: center;">
                                     <li class="step active" id="lineOne"><div><i class="fas fa-user"></i></div>Order Placed</li>
                                     <li class="step active" id="lineTwo"><div><i class="fas fa-bread-slice"></i></div>Order Confirmed</li>
@@ -294,7 +292,7 @@
                                     <li class="step active" id="lineFour"><div><i class="fas fa-birthday-cake"></i></div>Delivered</li>
                                 </ul>
                                 <h5 class="text-center content">Your order has been successfully delivered.</h5>
-                            <% } else if(val.Status === 'Order Returned'){ %> 
+                            <% } else if(val.Status === 'Order Returned' ){ %> 
                                 <ul class="bs4-order-tracking" style="display: flex;justify-content: center;align-items: center;">
                                     <li class="step active" id="lineOne"><div><i class="fas fa-user"></i></div>Order Placed</li>
                                     <li class="step active" id="lineFour"><div><i class="fas fa-birthday-cake"></i></div>Order Returned</li>
@@ -306,6 +304,14 @@
                                     <li class="step active" id="lineFour"><div><i class="fas fa-birthday-cake"></i></div>Order Cancelled</li>
                                 </ul>
                                 <h5 class="text-center content">Your Cancel request has been successfully confirmed!</h5>
+                            <% } else if(val.Status === 'Delivered' && val.rejected === true) {%>
+                                <ul class="bs4-order-tracking" style="display: flex;justify-content: center;align-items: center;">
+                                    <li class="step active" id="lineOne"><div><i class="fas fa-user"></i></div>Order Placed</li>
+                                    <li class="step active" id="lineTwo"><div><i class="fas fa-bread-slice"></i></div>Order Confirmed</li>
+                                    <li class="step active" id="lineThree"><div><i class="fas fa-truck"></i></div>Out For Delivery</li>
+                                    <li class="step active" id="lineFour"><div><i class="fas fa-birthday-cake"></i></div>Delivered</li>
+                                </ul>
+                                <h5 class="text-center content">Your return request has been rejected.</h5>
                             <% } %>
                            
                         
@@ -376,12 +382,13 @@
                 <input type="text" id="requestReason" class="commentInput">
             </label>
             <div class="row">
-                <input type="button" class="btn" id="returnCancelBtn" value="Cancel">
-                <input type="button" class="btn" id="returnSubmitBtn" onclick="returnOrder()"  value="Submit">
+                <input type="button" class="btn" onclick="returnCancelBtn()"  value="Cancel">
+                <input type="button" class="btn" id="returnSubmitBtn" onclick="returnOrder('<%=trackDetails[0]._id%>')"  value="Submit">
             </div>
         </div>
     </div>
 
+    <script src="https://unpkg.com/jspdf-invoice-template@1.4.0/dist/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/assets/js/trackorder.js"></script>

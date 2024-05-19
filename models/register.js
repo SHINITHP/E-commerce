@@ -46,6 +46,10 @@ const registerSchema = new mongoose.Schema({
     },
     image:{
         type: Array
+    },
+    logged:{
+        type:Boolean,
+        default:false
     }
 
 })

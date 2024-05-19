@@ -5,13 +5,18 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="/assets/css/user/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
         <link rel="stylesheet"
                 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet"
+                href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
+        <link rel="stylesheet"
                 href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" href="/assets/css/admin/newDashboard.css">
-
-
+        <link rel="stylesheet" href="/assets/css/user/invoice.css">
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> -->
+        <link rel="stylesheet"
+                href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css">
         <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gentelella/1.3.0/css/custom.css"> -->
 
 
@@ -153,25 +158,109 @@
                         <div class="row NavbarRow">
                                 <div class="menuIcon"><a id="MenuBtn"><i class="fa fa-bars"></i></a></div>
                                 <div class="other-Settings">
-                                        <a class="msgIcon" href=""><i class="fa fa-envelope-o"></i> <span
+                                        <a class="msgIcon" href="messageBox"><i class="fa fa-envelope-o"></i> <span
                                                         class="badge bg-green">6</span></a>
                                         <a href="" class="profileName">
                                                 <b>hexashop@gmail.com</b><span class="fa fa-chevron-down"></span>
                                         </a>
                                 </div>
                         </div>
-                        <!-- <div class="row log-DropDown">
-                                        <div class="logoutTab">
 
+                        <div class="row">
+                                <div class="col-12">
+                                        <section>
+                                                <h3 class="section-head">Overview</h3>
+                                                <div class="analytics">
+                                                        <div class="analytic">
+                                                                <div class="analytic-icon"><span
+                                                                                class="las la-eye"></span></div>
+                                                                <div class="analytic-info">
+                                                                        <h4>Total Sales</h4>
+                                                                        <h1>₹ <%=totalSales%></h1>
+                                                                </div>
+                                                        </div>
+                                                        <div class="analytic">
+                                                                <div class="analytic-icon"><span
+                                                                                class="las la-clock"></span></div>
+                                                                <div class="analytic-info">
+                                                                        <h4>Total Orders</h4>
+                                                                        <h1><%=orderCount%></h1>
+                                                                </div>
+                                                        </div>
+                                                        <div class="analytic">
+                                                                <div class="analytic-icon"><span
+                                                                                class="las la-users"></span></div>
+                                                                <div class="analytic-info">
+                                                                        <h4>Total Products</h4>
+                                                                        <h1><%=productCount%>
+                                                                        </h1>
+                                                                </div>
+                                                        </div>
+                                                        <div class="analytic">
+                                                                <div class="analytic-icon"><span
+                                                                                class="las la-heart"></span></div>
+                                                                <div class="analytic-info">
+                                                                        <h4>Active Users</h4>
+                                                                        <h1><%=activeUser%></h1>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                        </section>
+                                        <div class="col-12" style="padding: 0;">
+                                                <div class="block-grid" >
+                                                        <div class="div"style="width:100% ;height: 500px;display: flex;flex-direction: column;align-items: center;justify-content: center;">
+                                                                <canvas id="oilChart"
+                                                                        style="width: 300px;height: 300px;"></canvas>
+                                                                <h3 style="font-size: 13pt;font-family: Poppins;">Sales
+                                                                        By Category</h3>
+                                                        </div>
+                                                        <div id="graphRow">
+                                                                <div class="graph-card">
+                                                                        <h3 class="section-head">Graph</h3>
+                                                                        <div class="graph-content">
+                                                                                <div class="graph-head">
+                                                                                        <div class="icon-wrapper">
+                                                                                                <div class="icon"><span
+                                                                                                                class="las la-eye text-main"></span>
+                                                                                                </div>
+                                                                                                <div class="icon"><span
+                                                                                                                class="las la-clock text-success"></span>
+                                                                                                </div>
+                                                                                        </div>
+                                                                                        <div class="graph-select"
+                                                                                                style="display: flex;">
+                                                                                                <a><input name="saleFilter"id="monthlyFilter"  onclick="salesGraph('monthly', '<%= JSON.stringify(salesDetails) %>')" style="background-color: #a5a5a5;" type="button" value="Monthly" ></a>
+                                                                                                <a><input  name="saleFilter" id="yearlyFilter" onclick="salesGraph('yearly', '<%= JSON.stringify(salesDetails) %>')" style="margin-left: 10px;"type="button"value="Yearly"></a>
+                                                                                        </div>
+        
+                                                                                </div>
+                                                                                <div class="graph-board">
+                                                                                        <canvas id="revenueChart"
+                                                                                                width="100%"></canvas>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                        
+                                                </div>
                                         </div>
-                                </div> -->
-                        <div class="row" style="background-color: bisque;height: 400px;"></div>
+                                </div>
+
+
+
+                        </div>
+                        <br><br><br><br>
                 </div>
 
         </div>
 
-
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script
+                src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+        <script src="/assets/js/adminDashboard.js"></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="/assets/js/dashboard.js"></script>

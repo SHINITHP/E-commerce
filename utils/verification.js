@@ -16,7 +16,11 @@ const randomToken = (id) => {
   })
 }
 
+const getTotalValidTokenCount = (val) => {
+  console.log(val,' : val')
+  return val;
+};
 
 module.exports = {
-    getUserId,randomToken
+    getUserId,randomToken,getTotalValidTokenCount
 }
