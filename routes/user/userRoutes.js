@@ -6,7 +6,7 @@ const {
     forgotEnterOtp, postForgotEnterOtp, resetPassword, createPassword, saveUserAddress, filterProducts,
     enterOtp, sentOTP, createUser, resendOtp, productOverview, saveImage, overviewFilter, checkOut,
     checkOutTasks, orderDetails, updateProfile,onlinPayment,verifyPayment,priceFilter,DeleteData,profileTasks,
-    generatePDF
+    generatePDF,allProductFilter
 } = require("../../controller/user/userConroller.js");
 
 const { userAuth } = require('../../middlewares/authMiddleware.js')
@@ -30,6 +30,7 @@ router.route('/resetPassword').get(resetPassword).patch(createPassword)// resetp
 router.route('/resendOtp').post(resendOtp)//resend otp 
 router.route('/productOverview').get(productOverview).post(userAuth,overviewFilter).delete(overviewFilter)//productOverview 
 router.route('/allProducts').get(landingPage).post(priceFilter)//allProducts
+router.route('/allProductFilter').get(allProductFilter)
 router.route('/filterProducts').get(filterProducts)
 router.route('/filterCategory').get(landingPage)//listCategory
 router.route('/Profile').get(userAuth, profile).post(profileTasks).patch(updateProfile)

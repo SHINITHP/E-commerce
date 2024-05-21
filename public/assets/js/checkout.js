@@ -142,7 +142,17 @@ function RazorPayment(product, user) {
 
             const rzp = new Razorpay(options);
             rzp.open();
-
+            rzp.on('payment.failed', function () {
+                cosole.log('payment.failed')
+                axios.post('/checkOut?task=RazorPay-Failed', { amount: totalAmt, AppliedCode, ProductData: product, paymentMethod: paymentMethod, addressID, couponDiscount }) // Sending productID as data
+                    .then(function (response) {
+                        // Handle success response if needed
+                    })
+                    .catch(function (error) {
+                        console.error('Error adding product to cart:', error);
+                        // Handle error if needed
+                    });
+            })
 
         })
         .catch(function (error) {
@@ -259,14 +269,14 @@ document.getElementById('walletAmount').innerHTML = localStorage.getItem('wallet
 function successMessage(val) {
 
     if (Selectpayment.checked && Selectpayment.value === 'Cash On Delivery') {
-      
+
         let flag = false;
         // axios.get('/checkOut?task=checkValidOrder',{cartDetails})
         // .then(function(response){})
         // .catch(function(error){})
         let cartDetails = JSON.parse(val)
         cartDetails.forEach((val) => {
-         
+
             if (val.totalPrice > 1000) {
                 Swal.fire({
                     icon: 'info',
@@ -277,20 +287,20 @@ function successMessage(val) {
                     showConfirmButton: false
                 });
             } else {
-               console.log('i am here....')
+                console.log('i am here....')
                 flag = true
             }
-              
-        })  
 
-        if(flag){
+        })
+
+        if (flag) {
             let blur = document.getElementById('blur');
             blur.classList.toggle('active');
-    
+
             let popup = document.getElementById('SuccessDiv');
             popup.classList.toggle('active');
         }
-        
+
 
 
     } else if (wallet.checked && wallet.value === 'Wallet') {

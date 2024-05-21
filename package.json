@@ -11,10 +11,12 @@
   "author": "SHINITH.P",
   "license": "ISC",
   "dependencies": {
+    "@ironsoftware/ironpdf": "^2024.4.2",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cloudinary": "^2.0.1",
+    "convert-html-to-pdf": "^1.0.1",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.1.0",
     "cropperjs": "^1.6.1",

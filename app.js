@@ -42,7 +42,7 @@ app.use('/adminLogin',adminRoutes)
 
 
 app.get('/sample', (req, res) => {
-  res.render('admin/sample')
+  res.render('user/invoice')
 })
 
 const port = process.env.port||8000

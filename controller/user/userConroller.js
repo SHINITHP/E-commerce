@@ -26,6 +26,9 @@ const path = require('path');
 const ejs = require('ejs');
 const fs = require('fs-extra')
 const easyinvoice = require('easyinvoice')
+
+
+
 // Function to generate a simple unique ID
 function generateSimpleUniqueId() {
   const uniqueId = crypto.randomBytes(16).toString('base64'); // Generate a random unique ID
@@ -233,7 +236,7 @@ const landingPage = async (req, res) => {
           pages: Math.ceil(docCount / perPage)
         })
       })
-  } else if (req.query.task === 'filterCategory') {
+  }else if (req.query.task === 'filterCategory') {
     const category = req.query.cat
     const page = req.query.page;
     const perPage = 4;
@@ -348,6 +351,49 @@ const landingPage = async (req, res) => {
   }
 
 }
+const allProductFilter = async (req,res) =>{
+  const subCategories = await subCategorySchema.find({})
+  const token = req.cookies.jwtUser; // Assuming token is stored in cookies
+  const userID = getUserId(token);
+
+  console.log(userID)
+  const wishlist = await wishlistSchema.find({ userID: userID })
+  const productID = wishlist.map((val) => val.productID)
+  let allProducts = await productModel.find({})
+  let BrandNames = allProducts.map((val) => val.BrandName)
+  let uniqueBrandNames = [...new Set(BrandNames)];
+
+  console.log('i=hi brooo')
+  console.log('else statement',req.query.sortOrder)
+  const sortOrder = req.query.sortOrder === 'LowToHigh' ? 1 :-1;
+  console.log('sortOrder :',sortOrder)
+    const page = req.query.page;
+    const perPage = 4;
+    let docCount;
+    const ProductData = await productModel.find({}).sort({ SalesRate : sortOrder })
+      .countDocuments()
+      .then(documents => {
+        docCount = documents;
+
+        return productModel.find({}).sort({ SalesRate : sortOrder })
+          .skip((page - 1) * perPage)
+          .limit(perPage)
+      })
+      .then(ProductData => {
+        res.render('user/allProducts', {
+          route: 'Sort',
+          ProductData,
+          task: req.query.sortOrder,
+          category: '',
+          subCategories,
+          uniqueBrandNames,
+          currentPage: page,
+          totalDocuments: docCount,
+          pages: Math.ceil(docCount / perPage)
+        })
+      })
+}
+
 const priceFilter = async (req, res) => {
 
   let allProducts = await productModel.find({})
@@ -928,9 +974,9 @@ const checkOut = async (req, res) => {
   const userID = getUserId(token) // Verify token and get userID
   if (req.query.task === 'checkValidOrder') {
     let cartDetails = req.body.cartDetails;
-    
+
     console.log('iam in get checkout')
-    res.json({message:'s'})
+    res.json({ message: 's' })
   } else {
     couponApplied = false
 
@@ -948,13 +994,13 @@ const checkOut = async (req, res) => {
         // console.log('cartDetails', cartDetails)
         res.render('user/checkOut', { cartDetails, userInfo, addresses })
       }
-  
+
     } catch (error) {
       console.error("Error fetching cart products:", error);
     }
   }
 
-  
+
 }
 
 
@@ -1294,6 +1340,16 @@ const checkOutTasks = async (req, res) => {
     } catch (error) {
       console.log(error)
     }
+  }else if (req.query.task === 'failedPayment') {
+    const orderID = req.body.orderID;
+    console.log('orderID :',orderID)
+
+    try {
+      await orderSchema.findByIdAndUpdate(orderID, { $set: { Status: 'Order Placed' } }, { new: true });
+      res.json({message:'success'})
+    } catch (error) {
+      console.log(error)
+    }
   }
   else if (req.query.task === 'RazorPay') {
 
@@ -1392,6 +1448,56 @@ const checkOutTasks = async (req, res) => {
       console.log(error)
     }
 
+  } else if (req.query.task === 'RazorPay-Failed') {
+    console.log('payment.failed ', req.body.AppliedCode)
+    const paymentMethod = req.body.paymentMethod;
+    const ProductData = JSON.parse(req.body.ProductData);
+    const addressID = req.body.addressID;
+    const couponDiscount = req.body.couponDiscount
+    const productCount = couponDiscount / ProductData.length;
+    console.log('i am here... payment.failed', ProductData, couponDiscount, productCount)
+
+    const couponData = {
+      userID: userID,
+      couponCode: req.body.AppliedCode
+    }
+
+
+    await appliedCoupon.create(couponData)
+
+    try {
+      let details;
+      const orderDetails = ProductData.map((val) => {
+        const discountAmt = parseFloat(val.productID.SalesRate * productCount / 100)
+        return details = {
+          userID: val.userID,
+          productID: val.productID._id,
+          addressID: addressID,
+          Quantity: val.quantity,
+          Amount: val.productID.SalesRate - discountAmt,
+          Size: val.size,
+          PaymentMethod: paymentMethod,
+          couponDiscount: productCount,
+          Status:'Failed'
+        }
+      })
+      console.log('details :', orderDetails[0].userID)
+
+      const id = orderDetails[0].productID;
+
+      for (const element of ProductData) {
+        // console.log('element.productID._id : ', element.productID._id);
+          await orderDetailsModel.deleteMany({ productID: element.productID._id });
+          await addtToCartModel.deleteMany({ productID: element.productID._id });
+
+      }
+
+        await orderSchema.create(orderDetails)
+
+      // res.redirect('/profileMenu?menu=myOrders')
+    } catch (error) {
+      console.log(error)
+    }
   }
   else if (req.query.task === 'saveOrderDetails') {
 
@@ -2017,5 +2123,5 @@ module.exports = {
   forgotEnterOtp, postForgotEnterOtp, resetPassword, createPassword, saveUserAddress, filterProducts,
   enterOtp, sentOTP, createUser, resendOtp, productOverview, saveImage, overviewFilter, checkOut,
   checkOutTasks, orderDetails, updateProfile, onlinPayment, verifyPayment, priceFilter, DeleteData,
-  profileTasks, generatePDF
+  profileTasks, generatePDF,allProductFilter
 }
