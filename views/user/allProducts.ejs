@@ -543,18 +543,7 @@
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
             <script>
-                document.getElementById('sortForm').addEventListener('submit', function(e) {
-                    e.preventDefault(); // Prevent the form from submitting the default way
                 
-                    var sortOrder = document.getElementById('sortSelect').value;
-                    var actionUrl = '/allProductFilter?page=1';
-                
-                    if (sortOrder) {
-                        actionUrl += '&sortOrder=' + encodeURIComponent(sortOrder);
-                    }
-                
-                    window.location.href = actionUrl; // Redirect to the new URL
-                });
                 </script>
             <!-- Js Plugins -->
             <script src="/assets/js_2/jquery-3.3.1.min.js"></script>
@@ -567,7 +556,7 @@
             <script src="/assets/js_2/owl.carousel.min.js"></script>
             <script src="/assets/js_2/jquery.nicescroll.min.js"></script>
             <script src="/assets/js_2/main.js"></script>
-            <!-- <script src="/assets/js/allProducts.js"></script> -->
+            <script src="/assets/js/allProducts.js"></script>
 
             <!-- //navbar -->
             <!-- jQuery -->

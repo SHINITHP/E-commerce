@@ -100,7 +100,8 @@ const adminDashboard = async (req, res) => {
             productCount,
             categories,
             topTenProducts,
-            topTenBrands
+            topTenBrands,
+            product
         })
     } catch (error) {
         console.log(error)

@@ -96,7 +96,7 @@
         </div>
     </div>
 </header>
-<% let count , cartCount%>
+<% let count , cartCount %>
 
         <!-- show product datas -->
         <div class="container-fluid con-f1">
@@ -151,11 +151,19 @@
                             </div>
 
                         </div>
-
+                        
                         <div class="col-2 colms2">
                             <p style="font-size: 14pt; padding-right: 15px;" class="salesRate"><i class="fa-solid fa-indian-rupee-sign"
                                     style=" font-size:13pt; padding-right: 5px;"></i>
-                                <%= item.productID.SalesRate %>
+                                    
+                                    <%  if(item.productID.offer > 0) { %>
+                                        
+                                        ₹ <%= item.productID.SalesRate - item.productID.SalesRate * item.productID.offer / 100 %> <b style="font-weight: 500;text-decoration: line-through;"><%=item.MRP%></b>
+                                        
+                                    <% } else{ %>
+                                        <%= item.productID.SalesRate %> 
+                                    <% } %>
+                                
                             </p> ₹<span class="discount" id="discount<%=index%>"style="text-decoration: line-through;color:rgb(63, 63, 63);">
                                 <%=item.productID.MRP%>
                             </span>
@@ -227,9 +235,10 @@
                                             <input type="text" id="ExactPrice" class="cartAmount" readonly
                                                 value="<%= totalPrice %>">
                                         </span></li>
-                                        <% let cartTotal = cartItems.reduce((acc,curr) => acc + (curr.totalPrice),0); %>
-                                        <% let discount = cartItems.reduce((acc,curr) => acc + ( cartTotal * curr.discount) / 100 , 0) %>
-                                        <% let totalDiscount = cartItems.reduce((acc, curr) => acc + (curr.totalMRP - (curr.productID.SalesRate * curr.quantity)), 0); %>
+                                        
+                                        <% let cartTotal = cartItems.reduce((acc,curr) => acc + (curr.totalPrice - curr.productID.SalesRate * curr.productID.offer / 100  ),0); %>
+                                        <% let discount = cartItems.reduce((acc,curr) => acc + ( cartTotal * curr.discount) / 100   , 0) %>
+                                        <% let totalDiscount = cartItems.reduce((acc, curr) => acc + (curr.totalMRP - (curr.productID.SalesRate * curr.quantity) + curr.productID.SalesRate * curr.productID.offer / 100 ), 0); %>
                                         <li>Discount <span
                                                 style="display: flex; align-items: center;justify-content: center;">-<i
                                                     class="fa-solid fa-indian-rupee-sign" style=" font-size:13pt;"></i>
@@ -246,7 +255,7 @@
                                     </ul>
                                     <% if(cartCount >= 0 ){ %> 
                                     <a style="cursor: pointer;"   onclick="saveOrder('<%= JSON.stringify(cartItems) %>')"
-                                        class="primary-btn checkoutBtn">Proceed to checkout</a>
+                                        class="primary-btn checkoutBtn" >Proceed to checkout</a>
                                     <% } else{ %> 
                                         <a style="cursor: pointer;" id="errorCheckoutBtn" onclick="cartError()" class="primary-btn checkoutBtn" >Proceed to checkout</a>
                                     <% } %>

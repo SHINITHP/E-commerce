@@ -59,9 +59,6 @@ const razorpay = new Razorpay({
 
 const onlinPayment = async (req, res) => {
   let amount = req.body.amount;
-
-  console.log('amount', amount)
-
   const paymentData = {
     amount: amount * 100, // Amount in paise (100 paise = 1 INR)
     currency: 'INR',
@@ -236,7 +233,7 @@ const landingPage = async (req, res) => {
           pages: Math.ceil(docCount / perPage)
         })
       })
-  }else if (req.query.task === 'filterCategory') {
+  } else if (req.query.task === 'filterCategory') {
     const category = req.query.cat
     const page = req.query.page;
     const perPage = 4;
@@ -351,7 +348,7 @@ const landingPage = async (req, res) => {
   }
 
 }
-const allProductFilter = async (req,res) =>{
+const allProductFilter = async (req, res) => {
   const subCategories = await subCategorySchema.find({})
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
   const userID = getUserId(token);
@@ -364,34 +361,34 @@ const allProductFilter = async (req,res) =>{
   let uniqueBrandNames = [...new Set(BrandNames)];
 
   console.log('i=hi brooo')
-  console.log('else statement',req.query.sortOrder)
-  const sortOrder = req.query.sortOrder === 'LowToHigh' ? 1 :-1;
-  console.log('sortOrder :',sortOrder)
-    const page = req.query.page;
-    const perPage = 4;
-    let docCount;
-    const ProductData = await productModel.find({}).sort({ SalesRate : sortOrder })
-      .countDocuments()
-      .then(documents => {
-        docCount = documents;
+  console.log('else statement', req.query.sortOrder)
+  const sortOrder = req.query.sortOrder === 'LowToHigh' ? 1 : -1;
+  console.log('sortOrder :', sortOrder)
+  const page = req.query.page;
+  const perPage = 4;
+  let docCount;
+  const ProductData = await productModel.find({}).sort({ SalesRate: sortOrder })
+    .countDocuments()
+    .then(documents => {
+      docCount = documents;
 
-        return productModel.find({}).sort({ SalesRate : sortOrder })
-          .skip((page - 1) * perPage)
-          .limit(perPage)
+      return productModel.find({}).sort({ SalesRate: sortOrder })
+        .skip((page - 1) * perPage)
+        .limit(perPage)
+    })
+    .then(ProductData => {
+      res.render('user/allProducts', {
+        route: 'Sort',
+        ProductData,
+        task: req.query.sortOrder,
+        category: '',
+        subCategories,
+        uniqueBrandNames,
+        currentPage: page,
+        totalDocuments: docCount,
+        pages: Math.ceil(docCount / perPage)
       })
-      .then(ProductData => {
-        res.render('user/allProducts', {
-          route: 'Sort',
-          ProductData,
-          task: req.query.sortOrder,
-          category: '',
-          subCategories,
-          uniqueBrandNames,
-          currentPage: page,
-          totalDocuments: docCount,
-          pages: Math.ceil(docCount / perPage)
-        })
-      })
+    })
 }
 
 const priceFilter = async (req, res) => {
@@ -632,8 +629,10 @@ const profileMenu = async (req, res) => {
       const orderDetails = await orderSchema.find({ userID: userID })
         .populate('productID')
         .populate('addressID')
-      console.log('orderdetails', orderDetails)
-      res.render('user/myOrders', { orderDetails })
+        .sort({ _id: -1 }); // Sorting by _id in descending order
+
+      console.log('orderdetails', orderDetails);
+      res.render('user/myOrders', { orderDetails });
     }
     else if (req.query.menu === 'wishlist') {
       const page = req.query.page;
@@ -1055,64 +1054,58 @@ const orderDetails = async (req, res) => {
   const userID = verifyToken(token); // Verify token and get userID
 
   try {
-
     const cartItems = JSON.parse(req.body.cartData);
-    console.log('cartItems', cartItems)
 
-    cartItems.forEach(async (cartval) => {
+    let allItemsValid = true; // To track if all items are valid
+    let bulkOrderDetails = []; // To collect all order details to create at once
+
+    for (const cartval of cartItems) {
       let id = cartval.productID._id;
-      console.log('id :;', id)
-      const productData = [await productModel.findById(cartval.productID._id).lean()];
-      let productSize;
-      productData.forEach((val, i) => productSize = val.ProductSize)
-      console.log('productData : ', productSize)
-      productSize.forEach(async (val, i) => {
-        // console.log(val.size)
+      let productData = await productModel.findById(id).lean();
+      let productSize = productData.ProductSize;
+
+      let isValid = false;
+      for (const val of productSize) {
         if (val.size === cartval.size) {
           if (val.quantity < cartval.quantity) {
-            res.json({ message: 'error' })
+            isValid = false;
+            allItemsValid = false; // Set the flag to false if any item is invalid
+            break; // No need to check other sizes for this product
           } else {
-            await orderDetailsModel.deleteMany({ userID: userID });
-
-            await orderDetailsModel.create({
-              userID: cartval.userID,
+            isValid = true;
+            bulkOrderDetails.push({
+              userID: userID,
               productID: cartval.productID._id,
               quantity: cartval.quantity,
               size: cartval.size,
               totalPrice: req.body.total,
               totalMRP: cartval.productID.MRP,
-              discount: req.body.discountAmt
+              discount: req.body.discountAmt,
             });
-
-
+            break; // Size matched and quantity is available
           }
         }
-      })
-    })
+      }
 
-    res.json({ message: 'success' })
-    // await orderDetailsModel.deleteMany({ userID: userID });
-    // let checkQty;
-    // productData.forEach((val,i) =>{
-    //   if(val.productID.ProductSize[i].size === val.size){
-    //      if(val.productID.ProductSize[i].quantity === 0){
-    //       console.log('OutOfStock')
-    //       checkQty = 'OutOfStock'
-    //       console.log(checkQty,'size :',val.productID.ProductSize[i].quantity)
-    //      }
-    //   }
-    // })
-    // cartItems.productID.ProductSize.forEach((val) => {
-    //   if (val.size === cartItems.size) {
-    //     checkQty = val.quantity;
-    //   }
-    // });
+      if (!isValid) {
+        break; // Stop processing if any item is invalid
+      }
+    }
+
+    if (allItemsValid) {
+      await orderDetailsModel.deleteMany({ userID: userID });
+      await orderDetailsModel.create(bulkOrderDetails);
+      res.json({ message: 'success' });
+    } else {
+      res.json({ message: 'error' });
+    }
 
   } catch (error) {
     console.error('Error processing cart items:', error);
     res.status(500).send('Error processing cart items');
   }
-}
+};
+
 
 
 const updateCheckout = async (req, res) => {
@@ -1340,13 +1333,13 @@ const checkOutTasks = async (req, res) => {
     } catch (error) {
       console.log(error)
     }
-  }else if (req.query.task === 'failedPayment') {
+  } else if (req.query.task === 'failedPayment') {
     const orderID = req.body.orderID;
-    console.log('orderID :',orderID)
+    console.log('orderID :', orderID)
 
     try {
       await orderSchema.findByIdAndUpdate(orderID, { $set: { Status: 'Order Placed' } }, { new: true });
-      res.json({message:'success'})
+      res.json({ message: 'success' })
     } catch (error) {
       console.log(error)
     }
@@ -1478,7 +1471,7 @@ const checkOutTasks = async (req, res) => {
           Size: val.size,
           PaymentMethod: paymentMethod,
           couponDiscount: productCount,
-          Status:'Failed'
+          Status: 'Failed'
         }
       })
       console.log('details :', orderDetails[0].userID)
@@ -1487,12 +1480,12 @@ const checkOutTasks = async (req, res) => {
 
       for (const element of ProductData) {
         // console.log('element.productID._id : ', element.productID._id);
-          await orderDetailsModel.deleteMany({ productID: element.productID._id });
-          await addtToCartModel.deleteMany({ productID: element.productID._id });
+        await orderDetailsModel.deleteMany({ productID: element.productID._id });
+        await addtToCartModel.deleteMany({ productID: element.productID._id });
 
       }
 
-        await orderSchema.create(orderDetails)
+      await orderSchema.create(orderDetails)
 
       // res.redirect('/profileMenu?menu=myOrders')
     } catch (error) {
@@ -2123,5 +2116,5 @@ module.exports = {
   forgotEnterOtp, postForgotEnterOtp, resetPassword, createPassword, saveUserAddress, filterProducts,
   enterOtp, sentOTP, createUser, resendOtp, productOverview, saveImage, overviewFilter, checkOut,
   checkOutTasks, orderDetails, updateProfile, onlinPayment, verifyPayment, priceFilter, DeleteData,
-  profileTasks, generatePDF,allProductFilter
+  profileTasks, generatePDF, allProductFilter
 }

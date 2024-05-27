@@ -160,7 +160,17 @@
                                                         </span></p>
                                                     <h5 style="padding-top:5px ; ">₹<span id="totalPrice<%=index%>"
                                                             style="padding-right: 15px;" class="TotalAmount">
-                                                            <%=item.productID.SalesRate * item.quantity%>
+
+                                                            <%  if(item.productID.offer > 0) { %>
+                                        
+                                                                ₹ <%= (item.productID.SalesRate - item.productID.SalesRate * item.productID.offer / 100) * item.quantity %> <b style="font-weight: 500;text-decoration: line-through;"><%=item.MRP%></b>
+                                                                
+                                                            <% } else{ %>
+                                                                <%=item.productID.SalesRate * item.quantity%>
+                                                            <% } %>
+                                                            
+
+                                                          
                                                         </span> ₹<span id="discount<%=index%>" class="discount"
                                                             style="text-decoration: line-through;">
                                                             <%=item.productID.MRP * item.quantity%>
@@ -211,8 +221,8 @@
                                                 <%= totalPrice %>
                                             </span></p>
                                         <p>-₹<span id="discountAmt">
-
-                                                <%=totalDiscount%>
+                                            <% let Discount = cartDetails.reduce((acc, curr) => acc + (curr.totalMRP - (curr.productID.SalesRate * curr.quantity) + curr.productID.SalesRate * curr.productID.offer / 100 ), 0); %>
+                                                <%=Discount%>
                                             </span></p>
                                             <p>₹<span id="deliveryCharge">40</span></p>    
                                         <p style="padding-right: 27px;">----------</p>
@@ -649,9 +659,8 @@
         </div>
     </div>
 
-
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="/assets/js/checkout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 

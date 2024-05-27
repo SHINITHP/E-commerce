@@ -136,6 +136,8 @@ function saveOrder(data) {
                     position: 'top', // Toast position
                     showConfirmButton: false
                 });
+
+            
             }else{
                 location.href ='/checkOut'  
             }

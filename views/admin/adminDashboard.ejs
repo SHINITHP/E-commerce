@@ -176,7 +176,8 @@
                                                                                 class="las la-eye"></span></div>
                                                                 <div class="analytic-info">
                                                                         <h4>Total Sales</h4>
-                                                                        <h1>₹ <%=totalSales%></h1>
+                                                                        <h1>₹ <%=totalSales%>
+                                                                        </h1>
                                                                 </div>
                                                         </div>
                                                         <div class="analytic">
@@ -184,7 +185,9 @@
                                                                                 class="las la-clock"></span></div>
                                                                 <div class="analytic-info">
                                                                         <h4>Total Orders</h4>
-                                                                        <h1><%=orderCount%></h1>
+                                                                        <h1>
+                                                                                <%=orderCount%>
+                                                                        </h1>
                                                                 </div>
                                                         </div>
                                                         <div class="analytic">
@@ -192,7 +195,8 @@
                                                                                 class="las la-users"></span></div>
                                                                 <div class="analytic-info">
                                                                         <h4>Total Products</h4>
-                                                                        <h1><%=productCount%>
+                                                                        <h1>
+                                                                                <%=productCount%>
                                                                         </h1>
                                                                 </div>
                                                         </div>
@@ -201,14 +205,22 @@
                                                                                 class="las la-heart"></span></div>
                                                                 <div class="analytic-info">
                                                                         <h4>Active Users</h4>
-                                                                        <h1><%=activeUser%></h1>
+                                                                        <h1>
+                                                                                <%=activeUser%>
+                                                                        </h1>
                                                                 </div>
                                                         </div>
                                                 </div>
                                         </section>
+                                        <div class="col-12" style="display: flex;align-items: center;justify-content: flex-end;padding: 0;">
+                                                <input type="date" onchange="customDateFilter()" class="dateBox" id="startDate" style="margin-right: 10px;">
+                                                <input type="date" onchange="customDateFilter()" class="dateBox"id="endDate">
+
+                                        </div>
                                         <div class="col-12" style="padding: 0;">
-                                                <div class="block-grid" >
-                                                        <div class="div"style="width:100% ;height: 500px;display: flex;flex-direction: column;align-items: center;justify-content: center;">
+                                                <div class="block-grid">
+                                                        <div class="div"
+                                                                style="width:100% ;height: 500px;display: flex;flex-direction: column;align-items: center;justify-content: center;">
                                                                 <canvas id="oilChart"
                                                                         style="width: 300px;height: 300px;"></canvas>
                                                                 <h3 style="font-size: 13pt;font-family: Poppins;">Sales
@@ -229,10 +241,20 @@
                                                                                         </div>
                                                                                         <div class="graph-select"
                                                                                                 style="display: flex;">
-                                                                                                <a><input name="saleFilter"id="monthlyFilter"  onclick="salesGraph('monthly', '<%= JSON.stringify(salesDetails) %>')" style="background-color: #a5a5a5;" type="button" value="Monthly" ></a>
-                                                                                                <a><input  name="saleFilter" id="yearlyFilter" onclick="salesGraph('yearly', '<%= JSON.stringify(salesDetails) %>')" style="margin-left: 10px;"type="button"value="Yearly"></a>
+                                                                                                <a><input name="saleFilter"
+                                                                                                                id="monthlyFilter"
+                                                                                                                onclick="salesGraph('monthly', '<%= JSON.stringify(salesDetails) %>')"
+                                                                                                                style="background-color: #a5a5a5;"
+                                                                                                                type="button"
+                                                                                                                value="Monthly"></a>
+                                                                                                <a><input name="saleFilter"
+                                                                                                                id="yearlyFilter"
+                                                                                                                onclick="salesGraph('yearly', '<%= JSON.stringify(salesDetails) %>')"
+                                                                                                                style="margin-left: 10px;"
+                                                                                                                type="button"
+                                                                                                                value="Yearly"></a>
                                                                                         </div>
-        
+
                                                                                 </div>
                                                                                 <div class="graph-board">
                                                                                         <canvas id="revenueChart"
@@ -241,54 +263,172 @@
                                                                         </div>
                                                                 </div>
                                                         </div>
-                                                        
+
                                                 </div>
                                         </div>
-<br><br>
+                                        <br><br>
+
                                         <section>
-                                                <h3 class="section-head">Best Selling Products, Categories, and Brands</h3>
+                                                <h3 class="section-head">Best Selling Products, Categories, and Brands
+                                                </h3>
                                                 <div class="analytics" style="display: flex;justify-content: center;">
-                                                        <div class="analytic best-selling-Box" >
+                                                        <div class="analytic best-selling-Box">
                                                                 <div class="analytic-icon"><span
                                                                                 class="las la-eye"></span></div>
                                                                 <div class="analytic-info">
-                                                                        <h4 style="font-weight: bold;font-size: 11pt;">TOP CATEGORYS</h4>
-                                                                        <% categories.forEach((val) => { %> 
-                                                                                <p><%=val%></p>
-                                                                        <% }) %>
-                                                                                
+                                                                        <h4 style="font-weight: bold;font-size: 11pt;">
+                                                                                TOP CATEGORYS</h4>
+                                                                        <% categories.forEach((val)=> { %>
+                                                                                <p>
+                                                                                        <%=val%>
+                                                                                </p>
+                                                                                <% }) %>
+
                                                                 </div>
                                                         </div>
                                                         <div class="analytic best-selling-Box">
                                                                 <div class="analytic-icon"><span
                                                                                 class="las la-clock"></span></div>
                                                                 <div class="analytic-info">
-                                                                        <h4 style="font-weight: bold;font-size: 11pt;">TOP 10 PRODUCTS</h4>
-                                                                        <% topTenProducts.forEach((val) => { %> 
-                                                                                <p><%=val%></p>
-                                                                        <% }) %>
+                                                                        <h4 style="font-weight: bold;font-size: 11pt;">
+                                                                                TOP 10 PRODUCTS</h4>
+                                                                        <% topTenProducts.forEach((val)=> { %>
+                                                                                <p>
+                                                                                        <%=val%>
+                                                                                </p>
+                                                                                <% }) %>
                                                                 </div>
                                                         </div>
                                                         <div class="analytic best-selling-Box">
                                                                 <div class="analytic-icon"><span
                                                                                 class="las la-users"></span></div>
                                                                 <div class="analytic-info">
-                                                                        <h4 style="font-weight: bold;font-size: 11pt;">TOP 10 BRAND</h4>
-                                                                        <% topTenBrands.forEach((val) => { %> 
-                                                                                <p><%=val%></p>
-                                                                        <% }) %>
-                                                                        
+                                                                        <h4 style="font-weight: bold;font-size: 11pt;">
+                                                                                TOP 10 BRAND</h4>
+                                                                        <% topTenBrands.forEach((val)=> { %>
+                                                                                <p>
+                                                                                        <%=val%>
+                                                                                </p>
+                                                                                <% }) %>
+
                                                                 </div>
                                                         </div>
-                                                       
+
                                                 </div>
                                         </section>
+
+                                        <br>
+
+
+
+
+
+                                </div>
+                                <div class="col-12" style="padding: 0;min-height: 500px;">
+                                        <div class="row" style="padding-left: 15px;">
+                                                <h3 class="section-head">Leadger Book</h3>
+                                        </div>
+                                        <div class="row"
+                                                style="box-shadow: var(--shadow);height: 50px;display: flex;align-items: center;justify-content: center;border: 1px solid rgb(202, 202, 202);padding: 0;">
+                                                <div class="col-1"
+                                                        style="font-family: Poppins;font-weight: bold;color:#555;display: flex;align-items: center;justify-content: center;">
+                                                        SI</div>
+                                                <div class="col-3"
+                                                        style="font-family: Poppins;font-weight: bold;color:#555;display: flex;align-items: center;justify-content: center;">
+                                                        Product</div>
+                                                <div class="col-1"
+                                                        style="font-family: Poppins;font-weight: bold;color:#555;display: flex;align-items: center;justify-content: center;">
+                                                        P-Qty</div>
+                                                <div class="col-1"
+                                                        style="font-family: Poppins;font-weight: bold;color:#555;display: flex;align-items: center;justify-content: center;">
+                                                        P-Rate</div>
+                                                <div class="col-1"
+                                                        style="font-family: Poppins;font-weight: bold;color:#555;display: flex;align-items: center;justify-content: center;">
+                                                        P-Amt</div>
+                                                <div class="col-1"
+                                                        style="font-family: Poppins;font-weight: bold;color:#555;display: flex;align-items: center;justify-content: center;">
+                                                        S-Qty</div>
+                                                <div class="col-1"
+                                                        style="font-family: Poppins;font-weight: bold;color:#555;display: flex;align-items: center;justify-content: center;">
+                                                        S-Rate</div>
+                                                <div class="col-1"
+                                                        style="font-family: Poppins;font-weight: bold;color:#555;display: flex;align-items: center;justify-content: center;">
+                                                        S-Amt</div>
+                                                <div class="col-1"
+                                                        style="font-family: Poppins;font-weight: bold;color:#555;display: flex;align-items: center;justify-content: center;">
+                                                        B-Qty</div>
+                                                <div class="col-1"
+                                                        style="font-family: Poppins;font-weight: bold;color:#555;display: flex;align-items: center;justify-content: center;">
+                                                        Profit/Loss</div>
+
+                                        </div>
+                                        <% let salescount=0 %>
+                                                <% product.forEach((val,i)=>{ %>
+                                                        <div class="row"
+                                                                style="box-shadow: var(--shadow);height: 90px;display: flex;align-items: center;justify-content: center;border-bottom: 1px solid rgb(202, 202, 202);padding: 0;">
+                                                                <div class="col-1"
+                                                                        style="display: flex;align-items: center;justify-content: center;text-align: center;height: 90px;">
+                                                                        <%=i+1%>
+                                                                </div>
+                                                                <div class="col-3"
+                                                                        style="display: flex;align-items: center;justify-content: center;text-align: center;height: 90px;">
+                                                                        <%=val.ProductName%>
+                                                                </div>
+                                                                <div class="col-1"
+                                                                        style="display: flex;align-items: center;justify-content: center;text-align: center;height: 90px;">
+                                                                        <%=val.StockQuantity%>
+                                                                </div>
+                                                                <div class="col-1"
+                                                                        style="display: flex;align-items: center;justify-content: center;text-align: center;height: 90px;">
+                                                                        <%=val.PurchaseRate%>
+                                                                </div>
+                                                                <div class="col-1"
+                                                                        style="display: flex;align-items: center;justify-content: center;text-align: center;height: 90px;">
+                                                                        <%=val.PurchaseRate * val.StockQuantity%>
+                                                                </div>
+                                                                <div class="col-1"
+                                                                        style="display: flex;align-items: center;justify-content: center;text-align: center;height: 90px;">
+                                                                        <% salesDetails.forEach((item)=>{ %>
+                                                                                <% if(val.ProductName===item.productID.ProductName){
+                                                                                        %>
+                                                                                        <% salescount +=item.Quantity %>
+
+                                                                                                <% } %>
+                                                                                                        <% }) %>
+                                                                                                                <%=salescount%>
+
+                                                                </div>
+                                                                <div class="col-1"
+                                                                        style="display: flex;align-items: center;justify-content: center;text-align: center;height: 90px;">
+                                                                        <%=val.SalesRate%>
+                                                                </div>
+                                                                <div class="col-1"
+                                                                        style="display: flex;align-items: center;justify-content: center;text-align: center;height: 90px;">
+                                                                        <%=val.SalesRate * salescount%>
+                                                                </div>
+                                                                <div class="col-1"
+                                                                        style="display: flex;align-items: center;justify-content: center;text-align: center;height: 90px;">
+                                                                        <%=val.StockQuantity%>
+                                                                </div>
+                                                                <div class="col-1"
+                                                                        style="display: flex;align-items: center;justify-content: center;text-align: center;height: 90px;">
+                                                                        <% if(val.PurchaseRate * val.StockQuantity <
+                                                                                val.SalesRate * salescount ) { %>
+                                                                                <button
+                                                                                        style="width: 65px;height: 30px;background-color: #4BB543;border: none;color: white;font-family: Poppins;border-radius: 5px;">Profit</button>
+                                                                                <% }else { %>
+                                                                                        <button
+                                                                                                style="width: 65px;height: 30px;background-color: #cc0000;border: none;color: white;font-family: Poppins;border-radius: 5px;">Loss</button>
+                                                                                        <% } %>
+                                                                </div>
+                                                                <% salescount=0 %>
+                                                        </div>
+                                                        <% }) %>
                                 </div>
 
 
-
                         </div>
-                        <br><br><br><br><br>  
+                        <br><br><br><br><br>
                 </div>
 
         </div>

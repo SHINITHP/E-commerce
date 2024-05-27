@@ -423,6 +423,18 @@
                     urlParams.delete('success');
                     const newUrl = window.location.pathname + '?' + urlParams.toString(); // Construct new URL
                     history.replaceState(null, '', newUrl);
+                }else if (success === 'false'){
+                    Swal.fire({
+                        icon: 'info',
+                        title: '<span style="font-size:9pt;color: red">Payment Failed!</span>',
+                        timer: 4000, // Duration in milliseconds
+                        toast: true,
+                        position: 'top', // Toast position
+                        showConfirmButton: false
+                    });
+                    urlParams.delete('success');
+                    const newUrl = window.location.pathname + '?' + urlParams.toString(); // Construct new URL
+                    history.replaceState(null, '', newUrl);
                 }
 
 

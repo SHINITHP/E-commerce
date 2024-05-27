@@ -359,3 +359,12 @@ li {
     align-items: center;
     justify-content: center;
 }
+.dateBox {
+    width: 155px;
+    border-radius: 7px;
+    height: 35px;
+    background-color: white;
+    border: 1px solid rgb(216, 216, 216);
+    text-align: center;
+    outline: none;
+}

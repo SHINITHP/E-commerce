@@ -235,6 +235,7 @@ function generateInvoice(details) {
                 { title: "Price" },
                 { title: "Quantity" },
                 { title: "MRP" },
+                {title: "Delivery" },
                 { title: "Total" }
             ],
             table: trackDetails.map((detail, index) => ([
@@ -243,8 +244,9 @@ function generateInvoice(details) {
                 detail.productID.ProductDescription,
                 detail.productID.SalesRate.toString(),  // Convert to string
                 detail.Quantity.toString(),  // Convert to string
-                detail.productID.MRP.toString(),  // Convert to string
-                detail.Amount.toString()  // Convert to string
+                detail.productID.MRP.toString(),
+                '40',  // Convert to string
+                parseFloat(detail.Amount + 40 ).toString()  // Convert to string
             ])),
             additionalRows: [{
                 col1: 'Total:',

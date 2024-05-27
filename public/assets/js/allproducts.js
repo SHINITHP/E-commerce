@@ -1,5 +1,16 @@
 
+document.getElementById('sortForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent the form from submitting the default way
 
+    var sortOrder = document.getElementById('sortSelect').value;
+    var actionUrl = '/allProductFilter?page=1';
+
+    if (sortOrder) {
+        actionUrl += '&sortOrder=' + encodeURIComponent(sortOrder);
+    }
+
+    window.location.href = actionUrl; // Redirect to the new URL
+});
 
 let mainCategory = document.querySelectorAll('.collapse');
 console.log('mainCategory', mainCategory)
