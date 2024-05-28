@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
 
 const getUserId = (token) => {
     try {
@@ -21,6 +22,18 @@ const getTotalValidTokenCount = (val) => {
   return val;
 };
 
+const createToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+      expiresIn: MaxExpTime
+  })
+}
+
+const generateSimpleUniqueId = () => {
+  const uniqueId = crypto.randomBytes(16).toString('base64'); // Generate a random unique ID
+  return uniqueId;
+}
+
+
 module.exports = {
-    getUserId,randomToken,getTotalValidTokenCount
+    getUserId,randomToken,getTotalValidTokenCount,generateSimpleUniqueId
 }

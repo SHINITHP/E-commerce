@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const {getTotalValidTokenCount} = require('../utils/verification.js')
+const {getTotalValidTokenCount} = require('../utils/functions.js')
 require('dotenv').config()
 let validTokenCount=0;
 const userAuth = async (req, res, next) => {

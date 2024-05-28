@@ -1,33 +1,23 @@
-const UserModel = require('../../models/register.js')
-const ProductModel = require('../../models/products.js')
-const orderModel = require('../../models/order.js')
+const UserModel = require('../../models/register.js')//user schema
+const ProductModel = require('../../models/products.js')//product schema
+const subCategorySchema = require('../../models/category.js')//category schema
+const walletSchema = require('../../models/wallet.js')//wallet schema
+const couponSchema = require('../../models/coupon.js')//coupon schema
+const offerSchema = require('../../models/offer.js')//offer schema
+const orderSchema = require('../../models/order.js')//order schema
+const { insertMany } = require('../../models/address.js')//address schema
 const bcrypt = require('bcrypt')
 const cloudinary = require('../admin/cloudinary.js')
 const fs = require('fs')
-const productModel = require('../../models/products.js')
-const subCategorySchema = require('../../models/category.js')
-const walletSchema = require('../../models/wallet.js')
-const couponSchema = require('../../models/coupon.js')
-const offerSchema = require('../../models/offer.js')
-const orderSchema = require('../../models/order.js')
 const jwt = require('jsonwebtoken');
 const path = require('path')
 const mongoose = require('mongoose');
-const { insertMany } = require('../../models/address.js')
 require('dotenv').config()
-const crypto = require('crypto')
 var pdf = require("pdf-creator-node");
 const { triggerAsyncId } = require('async_hooks')
 const { json } = require('body-parser')
-// Read HTML Template
-//Create jwt Token 
 const MaxExpTime = 3 * 24 * 60 * 60 // expire in 3days
-const createToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: MaxExpTime
-    })
-}
-
+const { randomToken, generateSimpleUniqueId } = require('../../utils/functions.js')
 
 //..................................................................................................................................................
 
@@ -37,6 +27,9 @@ const createToken = (id) => {
 const adminLogin = (req, res) => {
     res.render('admin/adminLogin', { message: "" })
 }
+//..................................................................................................................................................
+
+// to show the sales chart in dashboard
 const DashboardSales = async (req, res) => {
     try {
         const salesDetails = await orderSchema.find()
@@ -48,6 +41,8 @@ const DashboardSales = async (req, res) => {
         console.log(error)
     }
 }
+//..................................................................................................................................................
+
 //adminDashboard get method
 const adminDashboard = async (req, res) => {
 
@@ -57,13 +52,13 @@ const adminDashboard = async (req, res) => {
             { $count: "loggedInUsersCount" }
         ]);
         const activeUser = result[0].loggedInUsersCount;
-        const product = await productModel.find();
+        const product = await ProductModel.find();
         const productCount = product.length;
         const salesDetails = await orderSchema.find()
             .populate('productID')
             .populate('addressID')
         let orderCount, totalSales = 0;
-        let categoryCounts = {} ,brandCounts = {} , productCounts = {};
+        let categoryCounts = {}, brandCounts = {}, productCounts = {};
         salesDetails.map((val, i) => {
             orderCount = i + 1;
             totalSales += val.Amount;
@@ -83,123 +78,95 @@ const adminDashboard = async (req, res) => {
             }
 
         })
-        
         const categories = Object.keys(categoryCounts);
-        const topTenProducts =Object.keys(productCounts);
-        const topTenBrands =Object.keys(brandCounts);
-
+        const topTenProducts = Object.keys(productCounts);
+        const topTenBrands = Object.keys(brandCounts);
         categories.sort((a, b) => b[1] - a[1]);
-        // const top10Categories = categoryCountArray.slice(0, 10);
-
-        console.log('orderCount :', categories,topTenBrands,topTenProducts)
         res.render('admin/adminDashboard', {
-            salesDetails,
-            orderCount,
-            activeUser,
-            totalSales,
-            productCount,
-            categories,
-            topTenProducts,
-            topTenBrands,
-            product
+            salesDetails, orderCount, activeUser,
+            totalSales, productCount, categories,
+            topTenProducts, topTenBrands, product
         })
     } catch (error) {
         console.log(error)
     }
 
 }
+//..................................................................................................................................................
 
+//to show the offer page
 const offers = async (req, res) => {
     if (req.query.filter === 'All') {
         const offers = await offerSchema.find({}).populate('productID');
-        // console.log(offers)
         res.render('admin/offers', { offers })
     } else if (req.query.filter === 'Listed') {
         const offers = await offerSchema.find({ status: 'Listed' }).populate('productID');
-        // console.log(offers)
         res.render('admin/offers', { offers })
     }
     else if (req.query.filter === 'Unlisted') {
         console.log('Unlisted')
         const offers = await offerSchema.find({ status: 'Unlisted' }).populate('productID');
-        // console.log(offers)
         res.render('admin/offers', { offers })
     }
-    // else if(req.query.filter === 'customDate'){
-    //     const startDate = req.query.startDate
-    //     const endDate = req.query.endDate
-    //     console.log('Unlisted')
-    //     const offers = await offerSchema.find({ OrderDate: {
-    //         $gte: new Date(startDate), // Start of the specified date range
-    //         $lte: new Date(endDate) // End of the specified date range
-    //     }}).populate('productID');
-    //     // console.log(offers)
-    //     res.render('admin/offers', { offers })
-    // }
     else {
         console.log('normal')
         const offers = await offerSchema.find({}).populate('productID');
-        // console.log(offers)
         res.render('admin/offers', { offers })
     }
 
 }
+//..................................................................................................................................................
 
+//delete controller for offer page
 const DeleteOffer = async (req, res) => {
     try {
         const productID = req.body.productID.split(',');
         const { id } = req.body
-        console.log('Deleting offer with ID:', id, 'and productID:', productID);
         productID.forEach(async (val) => {
-            await productModel.findByIdAndUpdate(val, { $set: { offer: 0 } })
+            await ProductModel.findByIdAndUpdate(val, { $set: { offer: 0 } })
         })
         await offerSchema.findByIdAndDelete(id)
-
         res.json({ message: 'success' })
     } catch (error) {
         console.log(error)
     }
 }
+//..................................................................................................................................................
 
+//create offers
 const offerTasks = async (req, res) => {
     try {
         if (req.query.task === 'selectProduct') {
-            const products = await productModel.find({ CategoryName: req.body.Category })
+            const products = await ProductModel.find({ CategoryName: req.body.Category })
             res.json({ products })
         } else if (req.query.task === 'createOffer') {
             const title = req.body.title
             const percentage = req.body.percentage
             const Category = req.body.Category
             const selectedValues = req.body.selectedValues.map(id => new mongoose.Types.ObjectId(id));
-
-
-            // console.log(selectedValues,': selectedValues')
             const data = {
                 productID: selectedValues,
                 categoryID: Category,
                 title,
                 percentage
             }
-
             await offerSchema.create(data)
-
             selectedValues.forEach(async (val) => {
-                await productModel.findByIdAndUpdate(val, {
+                await ProductModel.findByIdAndUpdate(val, {
                     $set: {
                         offer: percentage
                     }
                 })
             })
-
-
             res.json({ message: 'success' })
         }
     } catch (error) {
         console.log(error)
     }
 }
+//..................................................................................................................................................
 
-
+//edit offers
 const editOffer = async (req, res) => {
     try {
 
@@ -209,7 +176,7 @@ const editOffer = async (req, res) => {
                 const data = await offerSchema.findByIdAndUpdate(req.body.id, { $set: { status: 'Unlisted' } })
                 let productIDs = data.productID;
                 productIDs.forEach(async (val) => {
-                    await productModel.findByIdAndUpdate(val, { $set: { offer: 0 } })
+                    await ProductModel.findByIdAndUpdate(val, { $set: { offer: 0 } })
                 })
                 console.log(productIDs, ': productIDs')
                 res.json({ message: 'success' })
@@ -218,7 +185,7 @@ const editOffer = async (req, res) => {
                 const data = await offerSchema.findByIdAndUpdate(req.body.id, { $set: { status: 'Listed' } })
                 let productIDs = data.productID;
                 productIDs.forEach(async (val) => {
-                    await productModel.findByIdAndUpdate(val, { $set: { offer: data.percentage } })
+                    await ProductModel.findByIdAndUpdate(val, { $set: { offer: data.percentage } })
                 })
                 res.json({ message: 'success' })
             }
@@ -227,12 +194,12 @@ const editOffer = async (req, res) => {
         console.log(error)
     }
 }
+//..................................................................................................................................................
 
-
-//prductlist get method
+//productlist get method
 const productList = async (req, res) => {
     if (req.path === '/ProductList') {
-        const productDetails = await productModel.find({})
+        const productDetails = await ProductModel.find({})
         res.render('admin/ProductList', { productDetails, message: ' ' })
     }
     else if (req.path === '/ProductList/addProducts') {
@@ -248,14 +215,18 @@ const productList = async (req, res) => {
     }
 
 }
+//..................................................................................................................................................
 
 //CustomerDetails get Request
 const CustomerDetails = async (req, res) => {
-    const users = await UserModel.find({}).select("-password")
-    // console.log(users);
-    res.render('admin/CustomerDetails', { users })
+    try {
+        const users = await UserModel.find({}).select("-password")
+        res.render('admin/CustomerDetails', { users })
+    } catch (error) {
+        console.log(error)
+    }
 }
-
+//..................................................................................................................................................
 
 //CustomerDetails get Request
 const CustomerFilter = async (req, res) => {
@@ -277,7 +248,7 @@ const CustomerFilter = async (req, res) => {
     }
 
 }
-
+//..................................................................................................................................................
 
 //Category page get Request
 const Category = async (req, res) => {
@@ -296,12 +267,13 @@ const Category = async (req, res) => {
     }
 
 }
+//..................................................................................................................................................
 
+//category related filters
 const filterCategory = async (req, res) => {
     try {
         if (req.query.Category == 'All') {
             try {
-                console.log(req.query.Category)
                 const categoryData = await subCategorySchema.find({});
                 res.render('admin/Category', { categoryData })
             } catch (error) {
@@ -311,7 +283,6 @@ const filterCategory = async (req, res) => {
         }
         else if (req.query.task == 'subCat') {
             try {
-                console.log(req.query.Category)
                 const categoryData = await subCategorySchema.find({ CategoryName: req.query.Category });
                 res.render('admin/Category', { categoryData })
             } catch (error) {
@@ -320,12 +291,9 @@ const filterCategory = async (req, res) => {
         }
         else if (req.query.Category == 'search') {
             try {
-                console.log('i am hereee bro ', req.query.text)
                 let data = req.query.text;
                 const searchText = new RegExp("^" + data, "i")
-                console.log(searchText)
                 const categoryData = await subCategorySchema.find({ subCategory: { $regex: searchText } })
-                // console.log(categoryData)
                 res.render('admin/Category', { categoryData })
             } catch (error) {
                 console.log(error)
@@ -337,71 +305,63 @@ const filterCategory = async (req, res) => {
     }
 
 }
+//..................................................................................................................................................
 
 //Logout get Request
 const logout = (req, res) => {
     res.clearCookie('jwtAdmin');
     res.redirect('/adminLogin')
 }
-
+//orderhistory related get request
 const orderHistory = async (req, res) => {
-
-    if (req.query.task === 'all') {
-        const orderDetails = await orderModel.find({})
-            .populate('productID')
-            .populate('userID')
-            .populate('addressID')
-        console.log('order details', orderDetails)
-        res.render('admin/orderHistory', { orderDetails })
-    } else if (req.query.task === 'OrderPlaced') {
-        const orderDetails = await orderModel.find({ Status: 'Order Placed' })
-            .populate('productID')
-            .populate('userID')
-            .populate('addressID')
-        console.log('order details', orderDetails)
-        res.render('admin/orderHistory', { orderDetails })
-    } else if (req.query.task === 'Delivered') {
-        const orderDetails = await orderModel.find({ Status: 'Delivered' })
-            .populate('productID')
-            .populate('userID')
-            .populate('addressID')
-        console.log('order details', orderDetails)
-        res.render('admin/orderHistory', { orderDetails })
-    } else if (req.query.task === 'Cancelled') {
-        const orderDetails = await orderModel.find({ Status: 'Cancelled' })
-            .populate('productID')
-            .populate('userID')
-            .populate('addressID')
-        console.log('order details', orderDetails)
-        res.render('admin/orderHistory', { orderDetails })
-    } else if (req.query.task === 'customDate') {
-
-
-
-
-        const startDate = req.query.startDate
-        const endDate = req.query.endDate
-
-        const orderDetails = await orderModel.find({
-            OrderDate: {
-                $gte: new Date(startDate), // Start of the specified date range
-                $lte: new Date(endDate) // End of the specified date range
-            }
-        }).sort({ OrderDate: 1 })
-            .populate('productID')
-            .populate('userID')
-            .populate('addressID')
-        console.log('order details', orderDetails)
-        res.render('admin/orderHistory', { orderDetails })
-    } else {
-        const orderDetails = await orderModel.find({})
-            .populate('productID')
-            .populate('userID')
-            .populate('addressID')
-        console.log('order details', orderDetails)
-        res.render('admin/orderHistory', { orderDetails })
+    try {
+        if (req.query.task === 'all') {
+            const orderDetails = await orderSchema.find({})
+                .populate('productID')
+                .populate('userID')
+                .populate('addressID')
+            res.render('admin/orderHistory', { orderDetails })
+        } else if (req.query.task === 'OrderPlaced') {
+            const orderDetails = await orderSchema.find({ Status: 'Order Placed' })
+                .populate('productID')
+                .populate('userID')
+                .populate('addressID')
+            res.render('admin/orderHistory', { orderDetails })
+        } else if (req.query.task === 'Delivered') {
+            const orderDetails = await orderSchema.find({ Status: 'Delivered' })
+                .populate('productID')
+                .populate('userID')
+                .populate('addressID')
+            res.render('admin/orderHistory', { orderDetails })
+        } else if (req.query.task === 'Cancelled') {
+            const orderDetails = await orderSchema.find({ Status: 'Cancelled' })
+                .populate('productID')
+                .populate('userID')
+                .populate('addressID')
+            res.render('admin/orderHistory', { orderDetails })
+        } else if (req.query.task === 'customDate') {
+            const startDate = req.query.startDate
+            const endDate = req.query.endDate
+            const orderDetails = await orderSchema.find({
+                OrderDate: {
+                    $gte: new Date(startDate), // Start of the specified date range
+                    $lte: new Date(endDate) // End of the specified date range
+                }
+            }).sort({ OrderDate: 1 })
+                .populate('productID')
+                .populate('userID')
+                .populate('addressID')
+            res.render('admin/orderHistory', { orderDetails })
+        } else {
+            const orderDetails = await orderSchema.find({})
+                .populate('productID')
+                .populate('userID')
+                .populate('addressID')
+            res.render('admin/orderHistory', { orderDetails })
+        }
+    } catch (error) {
+        console.log(error)
     }
-
 }
 
 
@@ -413,40 +373,28 @@ const orderHistory = async (req, res) => {
 
 
 const OrderTasks = async (req, res) => {
-    // console.log('i am here....')
-
     try {
         if (req.query.task === 'updateStatus') {
             const orderID = req.body.orderID
             const newStatus = req.body.orderStatus
-
-            await orderModel.findByIdAndUpdate(orderID, { Status: newStatus })
-
+            await orderSchema.findByIdAndUpdate(orderID, { Status: newStatus })
             res.json({ message: 'success' })
         }
     } catch (error) {
-
+        console.log(error)
     }
 }
+//..................................................................................................................................................
 
 //adminlogin post method
 const adminLoginPost = async (req, res) => {
-
     try {
         const { emailAddress, Password } = req.body
-
         const email = process.env.ADMIN_USERNAME;
         const adminPassword = process.env.ADMIN_PASSWORD;
-
-
-        // console.log(emailAddress);
-        // const adminExist = await UserModel.findOne({ emailAddress })
         if (emailAddress == email) {
-            // const isAdmin = adminExist.isAdmin;
-            // console.log('.....!!', isAdmin);
-            // const isPasswordMatch = await bcrypt.compare(Password, adminExist.password)
             if (Password == adminPassword) {
-                const Token = createToken(emailAddress)
+                const Token = randomToken(emailAddress)
                 res.cookie('jwtAdmin', Token, { httpOnly: true, maxAge: MaxExpTime * 1000 });
                 res.redirect('adminLogin/adminDashboard')
             } else {
@@ -465,10 +413,8 @@ const adminLoginPost = async (req, res) => {
 
 //for listed and unlisted in ProductList page
 const productListEdit = async (req, res) => {
-    // console.log(req.query.ID);
     try {
         const product = await ProductModel.findById(req.query.ID)
-        console.log(product);
         if (product.Inventory === "Listed") {
             await ProductModel.findByIdAndUpdate(req.query.ID, { Inventory: 'Unlisted' })
             res.redirect('/adminLogin/ProductList')
@@ -488,7 +434,7 @@ const productListEdit = async (req, res) => {
 const productSearch = async (req, res) => {
     try {
         const searchedData = req.body.search
-        const productDetails = await productModel.find({ ProductName: searchedData })
+        const productDetails = await ProductModel.find({ ProductName: searchedData })
         const subCategory = await subCategorySchema.find({})
         if (productDetails == "") {
             console.log('empty');
@@ -504,11 +450,7 @@ const productSearch = async (req, res) => {
 
 const addImagesToCloudinary = async (imageUrls) => {
     try {
-
-
         for (const imageUrl of imageUrls) {
-            // console.log('image url :', imageUrl)
-            // Upload image directly from URL to Cloudinary
             const result = await cloudinary.uploads(imageUrl, 'Images');
             // Push the public URL of the uploaded image to the uploadedUrls array
             uploadedUrls.push(result.secure_url);
@@ -520,15 +462,12 @@ const addImagesToCloudinary = async (imageUrls) => {
     }
 };
 
-
-
 //..................................................................................................................................................
 const addProductsPost = async (req, res) => {
     try {
         const uploader = async (path) => await cloudinary.uploads(path, 'Images')
         const urls = [];
         const imageData = Array.isArray(req.body.imageLinks) ? req.body.imageLinks : [req.body.imageLinks];
-        // console.log(imageData,req.body.imageLinks)
         for (const imageUrl of imageData) {
             try {
                 const newPath = await uploader(imageUrl);
@@ -537,7 +476,6 @@ const addProductsPost = async (req, res) => {
                 console.log(error)
             }
         }
-        console.log('urls : ', urls);
         const {
             ProductName, BrandName, CategoryName, StockQuantity, subCategory,
             PurchaseRate, SalesRate, ColorNames,
@@ -556,7 +494,6 @@ const addProductsPost = async (req, res) => {
             PurchaseRate, SalesRate, ColorNames, ProductDescription,
             VATAmount, MRP: mrp, ProductSize, files: urls
         }
-        //  console.log(Products);
         try {
             await ProductModel.create(Products);
             const subCategory = await subCategorySchema.distinct('subCategory');
@@ -572,64 +509,7 @@ const addProductsPost = async (req, res) => {
     }
 };
 
-//Post method for AddProducts page
-// const addProductsPost = async (req, res) => {
-//     try {
-//         //Uploading image to Clouddinary
-//         const uploader = async (path) => await cloudinary.uploads(path, 'Images')
-//         if (req.method === 'POST') {
-//             const urls = []
-//             const files = req.files
-//             for (const file of files) {
-//                 const { path } = file
-//                 try {
-//                     const newPath = await uploader(path)
-//                     urls.push(newPath)
-//                     fs.unlinkSync(path)
-//                 } catch (uploadError) {
-//                     console.error('Error uploading file to Cloudinary:', uploadError)
-//                     return res.status(500).json({ error: 'Failed to upload images' })
-//                 }
-//             }
-//             // requseting all the data from the body
-//             const {
-//                 ProductName, BrandName, CategoryName, StockQuantity, subCategory,
-//                 PurchaseRate, SalesRate, ColorNames,
-//                 ProductDescription, VATAmount, mrp, sizes
-//             } = req.body
 
-//             // Prepare sizes array
-//             const ProductSize = sizes.map((size, index) => ({
-//                 size,
-//                 quantity: req.body.SizeQuantity[index]
-//             }));
-
-//             //assigning all the reqested data to product variable
-//             const Products = {
-//                 ProductName, BrandName, CategoryName, StockQuantity, subCategory,
-//                 PurchaseRate, SalesRate, ColorNames, ProductDescription,
-//                 VATAmount, MRP: mrp, ProductSize, files: urls
-//             }
-//             //  console.log(Products);
-//             try {
-
-//                 await ProductModel.create(Products);
-//                 const subCategory = await subCategorySchema.distinct('subCategory');
-//                 res.render('admin/addProducts', { subCategory, success: 'Product Added Successfully' })
-//             } catch (saveError) {
-//                 console.error('Error saving product to database:', saveError)
-//                 res.status(500).json({ error: 'Failed to save product to database' })
-//             }
-//         } else {
-//             res.status(405).json({
-//                 error: 'Images not uploaded!'
-//             })
-//         }
-//     } catch (error) {
-//         console.log('Admin controller error:', error)
-//         res.status(500).json({ error: 'Internal Server Error' })
-//     }
-// }
 // //..................................................................................................................................................
 
 
@@ -642,14 +522,14 @@ const postEditProduct = async (req, res) => {
                 const index = req.body.index;
 
                 // Find the product document by its ID
-                const product = await productModel.findById(id);
+                const product = await ProductModel.findById(id);
 
                 // Access the files array and remove the element at the specified index
                 if (product) {
                     product.files.splice(index, 1); // Remove 1 element at the specified index
 
                     // Update the product document in the database to reflect the changes
-                    await productModel.findByIdAndUpdate(id, { files: product.files });
+                    await ProductModel.findByIdAndUpdate(id, { files: product.files });
 
                     console.log('Image deleted successfully');
                     res.json({ message: 'success' })
@@ -660,27 +540,16 @@ const postEditProduct = async (req, res) => {
                 console.log('Error deleting image:', error);
             }
         } else {
-
-            // console.log(req.body.imageLinks)
             const imageData = Array.isArray(req.body.imageLinks) ? req.body.imageLinks : [req.body.imageLinks];
-            const oldData = await productModel.findById(req.query.id);
-            console.log(oldData.files)
+            const oldData = await ProductModel.findById(req.query.id);
             const imgData = []
             oldData.files.forEach((val) => imgData.push(val))
-
-            // console.log('image Data : ',imgData)
-
             const uploader = async (path) => await cloudinary.uploads(path, 'Images');
             const urls = []
-
-            console.log(imageData.length, 'imageData.length :', imageData)
             if (imageData.length > 0) {
-                console.log('hi iam in the if ')
                 for (const imageUrl of imageData) {
-                    console.log('hi iam in the if ')
                     try {
                         const newPath = await uploader(imageUrl);
-                        console.log(newPath, ' : new path')
                         urls.push(newPath);
                     } catch (error) {
                         console.log(error)
@@ -689,7 +558,6 @@ const postEditProduct = async (req, res) => {
 
             }
             if (urls.length > 0) {
-                console.log('i bro i am in urls', urls.length, urls)
                 urls.forEach((val) => imgData.push(val))
             }
 
@@ -705,8 +573,6 @@ const postEditProduct = async (req, res) => {
                 quantity: req.body.SizeQuantity[index]
             }));
             //assigning all the reqested data to product variable
-
-
             const Products = {
                 ProductName,
                 BrandName,
@@ -723,10 +589,8 @@ const postEditProduct = async (req, res) => {
                 ProductSize,
                 files: imgData
             };
-
             try {
                 await ProductModel.findOneAndUpdate({ _id: req.query.id }, { $set: Products }).then((result) => {
-                    // console.log('result :', result);
                 }).catch(error => {
                     console.log(error);
                 });
@@ -740,213 +604,12 @@ const postEditProduct = async (req, res) => {
             }
 
         }
-
-
     } catch (error) {
         console.log('Admin controller error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
-
-
-// const postEditProduct = async (req, res) => {
-//     try {
-//         const oldData = await productModel.findById(req.query.id);
-
-//         const uploader = async (path) => await cloudinary.uploads(path, 'Images');
-//         let urls = [];
-//         const files = [req.files];
-//         let finalImage,imagePaths;
-//         console.log('files', files);
-//         if (files.length > 0) {
-//             console.log('iam here..... files.length > 0')
-//             for (const file of files) {
-//                 console.log('files', file);
-//                 // const { path } = file;
-//                 let path = [];
-//                 for (let key in file) {
-//                     path = [...path, file[key][0].path];
-//                 }
-//                 console.log("path :", path);
-
-
-//                 try {
-//                     path.forEach(async (item) => {
-//                         // console.log(item);
-//                         const newPath = await uploader(item);
-//                         // console.log("np:",newPath);
-//                         urls.push(newPath)
-//                         finalImage = urls
-//                         console.log("finalImage :",finalImage);
-//                     })
-
-//                     // console.log('urldata', file)
-//                     // fs.unlinkSync(path);
-//                 } catch (uploadError) {
-//                     console.error('Error uploading file to Cloudinary:', uploadError);
-//                     return res.status(500).json({ error: 'Failed to upload images' });
-//                 }
-//             }
-//         }
-
-
-//             const imgData = []
-//             imgData.push(oldData.files)
-
-//             // requseting all the data from the body
-//             const {
-//                 ProductName, BrandName, CategoryName, StockQuantity, subCategory,
-//                 PurchaseRate, SalesRate, TotalPrice, ColorNames,
-//                 ProductDescription, VATAmount, DiscountPrecentage, sizes
-//             } = req.body
-
-//             // Prepare sizes array
-//             let ProductSize = sizes.map((size, index) => ({
-//                 size,
-//                 quantity: req.body.SizeQuantity[index]
-//             }));
-//             //assigning all the reqested data to product variable
-
-//             if(Array.isArray(finalImage) && finalImage.length > 0){
-//                 const Products = {
-//                     ProductName,
-//                     BrandName,
-//                     CategoryName,
-//                     StockQuantity,
-//                     subCategory,
-//                     PurchaseRate,
-//                     SalesRate,
-//                     TotalPrice,
-//                     ColorNames,
-//                     ProductDescription,
-//                     VATAmount,
-//                     DiscountPrecentage,
-//                     ProductSize,
-//                     files: Array.isArray(finalImage) && finalImage.length > 0 ? finalImage : oldData.files
-//                 };
-//             }
-
-
-
-//             try {
-//                 await ProductModel.findOneAndUpdate({ _id: req.query.id }, { $set: Products }).then((result) => {
-//                     console.log('result :', result);
-//                 }).catch(error => {
-//                     console.log(error);
-//                 });
-//                 const subCategory = await subCategorySchema.distinct('subCategory');
-//                 const productInfo = await ProductModel.findById(req.query.id)
-//                 res.render('admin/editProducts', { subCategory, productInfo, success: 'Product Successfully Edited' })
-
-//             } catch (saveError) {
-//                 console.error('Error saving product to database:', saveError)
-//                 res.status(500).json({ error: 'Failed to save product to database' })
-//             }
-
-
-//     } catch (error) {
-//         console.log('Admin controller error:', error);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// }
-
-// const postEditProduct = async (req, res) => {
-//     try {
-//         const oldProduct = await ProductModel.findById(req.query.id);
-
-//         const uploader = async (path) => await cloudinary.uploads(path, 'Images');
-//         const urls = [];
-//         const files = req.files;
-
-//         if (files && files.length > 0) {
-//             for (const file of files) {
-//                 const { path } = file;
-//                 try {
-//                     const newPath = await uploader(path);
-//                     urls.push(newPath);
-//                     fs.unlinkSync(path);
-//                 } catch (uploadError) {
-//                     console.error('Error uploading file to Cloudinary:', uploadError);
-//                     return res.status(500).json({ error: 'Failed to upload images' });
-//                 }
-//             }
-//         }
-
-//         const imageUrls = urls.map(item => item.url).slice(0, 4);
-
-//         const {
-//             ProductName, BrandName, CategoryName, StockQuantity, subCategory,
-//             PurchaseRate, SalesRate, TotalPrice, ColorNames,
-//             ProductDescription, VATAmount, DiscountPrecentage, sizes
-//         } = req.body;
-
-//         const ProductSize = sizes.map((size, index) => ({
-//             size,
-//             quantity: req.body.SizeQuantity[index]
-//         }));
-//         const updatedProduct = {
-//             ProductName, BrandName, CategoryName, StockQuantity, subCategory,
-//             PurchaseRate, SalesRate, TotalPrice, ColorNames, ProductDescription,
-//             VATAmount, DiscountPrecentage, ProductSize,
-//             files: imageUrls.length > 0 ? imageUrls : oldProduct.files
-//         };
-//         try {
-
-//             const updatedProductInfo = await ProductModel.findByIdAndUpdate(req.query.id, updatedProduct, { new: true });
-
-//             const subCategory = await subCategorySchema.distinct('subCategory');
-
-//             res.render('admin/editProducts', { subCategory, productInfo: updatedProductInfo, success: 'Product Successfully Edited' });
-//         } catch (error) {
-//             console.log(error)
-//         }
-
-
-
-//     } catch (error) {
-//         console.error('Error editing product:', error);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// };
-
-
-
-
-
-
-//Post method for editProducts page
-// const postEditProduct = async (req, res) => {
-//     try {
-
-//         const oldData = await productModel.findById(req.query.id)
-//         //Uploading image to Clouddinary
-//         const uploader = async (path) => await cloudinary.uploads(path, 'Images')
-//         const urls = []
-//         const files = req.files
-//         console.log(files)
-
-//             if (req.files || req.files.length > 0) {
-//                 for (const file of files) {
-//                     const { path } = file
-//                     try {
-//                         const newPath = await uploader(path)
-//                         urls.push(newPath)
-//                         fs.unlinkSync(path)
-//                     } catch (uploadError) {
-//                         console.error('Error uploading file to Cloudinary:', uploadError)
-//                         return res.status(500).json({ error: 'Failed to upload images' })
-//                     }
-//                 }
-//             }
-
-
-
-//     } catch (error) {
-//         console.log('Admin controller error:', error)
-//         res.status(500).json({ error: 'Internal Server Error' })
-//     }
-// }
 //..................................................................................................................................................
 
 //listed and ulisted for CustomerDetails page
@@ -1114,14 +777,15 @@ const postAddCategory = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' })
     }
 }
+//..................................................................................................................................................
 
 //delete products
 const deleteInventory = async (req, res) => {
     if (req.query.delete === "Products") {
         if (req.query.id) {
             console.log('imag wsnhjfn ')
-            await productModel.findByIdAndDelete(req.query.id)
-            const productDetails = await productModel.find({})
+            await ProductModel.findByIdAndDelete(req.query.id)
+            const productDetails = await ProductModel.find({})
             res.render('admin/ProductList', { productDetails, message: 'Product Successfully Deleted' })
         }
     }
@@ -1133,6 +797,7 @@ const deleteInventory = async (req, res) => {
         }
     }
 }
+//..................................................................................................................................................
 
 const coupon = async (req, res) => {
     if (req.query.task === 'All') {
@@ -1167,14 +832,7 @@ const coupon = async (req, res) => {
     }
 
 }
-
-function generateSimpleUniqueId() {
-    const uniqueId = crypto.randomBytes(16).toString('base64'); // Generate a random unique ID
-    return uniqueId;
-}
-
-
-
+//..................................................................................................................................................
 
 const couponTasks = async (req, res) => {
     try {
@@ -1218,6 +876,7 @@ const couponTasks = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' }); // Handle error response
     }
 };
+//..................................................................................................................................................
 
 const deletCoupon = async (req, res) => {
     try {
@@ -1228,9 +887,10 @@ const deletCoupon = async (req, res) => {
         console.log(error)
     }
 }
+//..................................................................................................................................................
 
 const messageBox = async (req, res) => {
-    const requestedData = await orderModel.find({
+    const requestedData = await orderSchema.find({
         $or: [
             { request: true },
             { Status: 'Order Cancelled' },
@@ -1242,10 +902,11 @@ const messageBox = async (req, res) => {
     // console.log(requestedData)
     res.render('admin/messageBox', { requestedData })
 }
+//..................................................................................................................................................
 
 const salesReport = async (req, res) => {
     if (req.query.filter === 'All') {
-        const salesReport = await orderModel.find({ Status: 'Delivered' })
+        const salesReport = await orderSchema.find({ Status: 'Delivered' })
             .populate('productID')
             .populate('addressID')
         console.log(salesReport)
@@ -1257,7 +918,7 @@ const salesReport = async (req, res) => {
         // Extract the date part from currentDate
         const currentDateOnly = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
 
-        const salesReport = await orderModel.find({
+        const salesReport = await orderSchema.find({
             Status: 'Delivered', OrderDate: {
                 $gte: currentDateOnly, // Greater than or equal to the current date
                 $lt: new Date(currentDateOnly.getTime() + 86400000) // Less than the next day
@@ -1271,7 +932,7 @@ const salesReport = async (req, res) => {
         const currentMonth = new Date().getMonth() + 1; // Adding 1 because months are zero-indexed
         const currentYear = new Date().getFullYear();
 
-        const salesReport = await orderModel.find({
+        const salesReport = await orderSchema.find({
             Status: 'Delivered',
             OrderDate: {
                 $gte: new Date(currentYear, currentMonth - 1, 1), // Start of the current month
@@ -1286,7 +947,7 @@ const salesReport = async (req, res) => {
         // Get the current year
         const currentYear = new Date().getFullYear();
 
-        const salesReport = await orderModel.find({
+        const salesReport = await orderSchema.find({
             Status: 'Delivered',
             OrderDate: {
                 $gte: new Date(currentYear, 0, 1), // Start of the current year (January 1st)
@@ -1302,7 +963,7 @@ const salesReport = async (req, res) => {
         const startDate = req.query.startDate
         const endDate = req.query.endDate
 
-        const salesReport = await orderModel.find({
+        const salesReport = await orderSchema.find({
             Status: 'Delivered',
             OrderDate: {
                 $gte: new Date(startDate), // Start of the specified date range
@@ -1314,7 +975,7 @@ const salesReport = async (req, res) => {
 
         res.render('admin/salesReport', { salesReport })
     } else {
-        const salesReport = await orderModel.find({ Status: 'Delivered' })
+        const salesReport = await orderSchema.find({ Status: 'Delivered' })
             .populate('productID')
             .populate('addressID')
         console.log(salesReport)
@@ -1322,6 +983,7 @@ const salesReport = async (req, res) => {
     }
 
 }
+//..................................................................................................................................................
 
 const salesFilter = async (req, res) => {
 
@@ -1330,14 +992,14 @@ const salesFilter = async (req, res) => {
 const updateRequest = async (req, res) => {
     console.log('i ahem heree..')
     if (req.body.status === 'accept') {
-        const data = await orderModel.findByIdAndUpdate(
+        const data = await orderSchema.findByIdAndUpdate(
             req.body.id,
             { $set: { Status: 'Order Cancelled', request: false, rejected: false } }
         );
 
 
 
-        const product = await productModel.findById(data.productID._id)
+        const product = await ProductModel.findById(data.productID._id)
         const productArray = [product];
         let returnData;
         let updatedProduct = productArray.map((val, index) => {
@@ -1401,7 +1063,7 @@ const updateRequest = async (req, res) => {
         }
 
 
-        await productModel.findByIdAndUpdate(data.productID._id, updatedProduct[0], { new: true });
+        await ProductModel.findByIdAndUpdate(data.productID._id, updatedProduct[0], { new: true });
 
         // console.log('checkWallet',checkWallet)
 
@@ -1412,20 +1074,20 @@ const updateRequest = async (req, res) => {
         res.redirect('admin/messageBox')
 
     } else if (req.body.status === 'reject') {
-        await orderModel.findByIdAndUpdate(
+        await orderSchema.findByIdAndUpdate(
             req.body.id,
             { $set: { rejected: true, request: false } }
         );
         res.redirect('admin/messageBox')
     } else if (req.body.status === 'returnAccepted') {
-        const data = await orderModel.findByIdAndUpdate(
+        const data = await orderSchema.findByIdAndUpdate(
             req.body.id,
             { $set: { return: false, Status: 'Order Returned' } }
         );
         // 
 
 
-        const product = await productModel.findById(data.productID._id)
+        const product = await ProductModel.findById(data.productID._id)
         const productArray = [product];
         let returnData;
         console.log('productArray :', data.Quantity)
@@ -1473,14 +1135,8 @@ const updateRequest = async (req, res) => {
 
             }
         })
-
-        // console.log('product',product)
-        console.log('updatedProduct', updatedProduct)
-
         const checkWallet = await walletSchema.findOne({ userID: data.userID }).sort({ added: -1 });
-
         const balance = checkWallet ? checkWallet.balance + data.Amount : data.Amount;
-
         const walletData = {
             userID: data.userID,
             productID: data.productID,
@@ -1488,19 +1144,11 @@ const updateRequest = async (req, res) => {
             balance: balance,
             transaction: 'Credit'
         }
-
-
-        await productModel.findByIdAndUpdate(data.productID._id, updatedProduct[0], { new: true });
-
-
-        // console.log('checkWallet',checkWallet)
-
-        console.log('walletData', walletData)
+        await ProductModel.findByIdAndUpdate(data.productID._id, updatedProduct[0], { new: true });
         await walletSchema.create(walletData)
-
         res.redirect('admin/messageBox')
     } else if (req.body.status === 'returnRejected') {
-        await orderModel.findByIdAndUpdate(
+        await orderSchema.findByIdAndUpdate(
             req.body.id,
             { $set: { return: false, rejected: true } }
         );
@@ -1512,37 +1160,8 @@ const updateRequest = async (req, res) => {
 
 
 module.exports = {
-    adminLogin,
-    updateRequest,
-    adminLoginPost,
-    productList,
-    productListEdit,
-    categoryPost,
-    addProductsPost,
-    deleteInventory,
-    adminDashboard,
-    CustomerDetails,
-    filterCategory,
-    updateUser,
-    productSearch,
-    Category,
-    CustomerFilter,
-    postAddCategory,
-    categoryEdit,
-    salesFilter,
-    postEditProduct,
-    logout,
-    OrderTasks,
-    orderHistory,
-    messageBox,
-    coupon,
-    couponTasks,
-    salesReport,
-    offers,
-    offerTasks,
-    editOffer,
-    DeleteOffer,
-    deletCoupon,
-    DashboardSales
-
+    adminLogin, updateRequest, adminLoginPost, productList, productListEdit, categoryPost, addProductsPost, deleteInventory,
+    adminDashboard, CustomerDetails, filterCategory, updateUser, productSearch, Category, CustomerFilter, postAddCategory,
+    categoryEdit, salesFilter, postEditProduct, logout, OrderTasks, orderHistory, messageBox, coupon, couponTasks,
+    salesReport, offers, offerTasks, editOffer, DeleteOffer, deletCoupon, DashboardSales
 }

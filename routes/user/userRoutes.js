@@ -8,11 +8,9 @@ const {
     checkOutTasks, orderDetails, updateProfile,onlinPayment,verifyPayment,priceFilter,DeleteData,profileTasks,
     generatePDF,allProductFilter
 } = require("../../controller/user/userConroller.js");
-
 const { userAuth } = require('../../middlewares/authMiddleware.js')
 const passport = require('passport')
 require('../../controller/user/googleOuath.js')
-const jwt = require('jsonwebtoken');
 const { loginAuth } = require('../../middlewares/loginMiddleware.js')
 
 

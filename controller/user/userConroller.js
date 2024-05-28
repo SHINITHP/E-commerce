@@ -1,44 +1,28 @@
-const reqErrorHandler = require("../../middlewares/reqErrorHandler.js")
 const UserModel = require('../../models/register.js')
 const addressModel = require('../../models/address.js')
 const addtToCartModel = require('../../models/cart.js')
-const orderDetailsModel = require('../../models/orderSummary.js')
+const appliedCoupon = require('../../models/AppliedCoupon.js')
+const subCategorySchema = require('../../models/category.js')
+const couponModel = require('../../models/coupon.js')
+const orderSummary = require('../../models/orderSummary.js')
 const orderSchema = require('../../models/order.js')
 const OTPModel = require('../../models/otp.js')
+const walletSchema = require('../../models/wallet.js')
+const wishlistSchema = require('../../models/wishlist.js')
 const productModel = require('../../models/products.js')
 const bcrypt = require('bcrypt')
 const otpGenerator = require('otp-generator');
 const jwt = require('jsonwebtoken');
-const { request } = require("express");
-const subCategorySchema = require('../../models/category.js')
-const couponModel = require('../../models/coupon.js')
-const appliedCoupon = require('../../models/AppliedCoupon.js')
-const passport = require("passport")
 require('dotenv').config()
-const axios = require('axios')
 const Razorpay = require('razorpay')
 const crypto = require('crypto');
-const walletSchema = require('../../models/wallet.js')
-const wishlistSchema = require('../../models/wishlist.js')
-const { getUserId, randomToken } = require('../../utils/verification.js')
-const puppeteer = require('puppeteer');
+const { getUserId, randomToken, generateSimpleUniqueId } = require('../../utils/functions.js')
 const path = require('path');
-const ejs = require('ejs');
 const fs = require('fs-extra')
 const easyinvoice = require('easyinvoice')
 
-
-
-// Function to generate a simple unique ID
-function generateSimpleUniqueId() {
-  const uniqueId = crypto.randomBytes(16).toString('base64'); // Generate a random unique ID
-  return uniqueId;
-}
-
 // Example usage
 const uniqueId = generateSimpleUniqueId();
-
-//Globally declared variables
 
 let GlobalUser = {
   userName: "",
@@ -47,15 +31,13 @@ let GlobalUser = {
   password: ""
 };
 
-let couponApplied = false;
-
-let otp;
-
+let couponApplied = false, otp;
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAYKEY,
   key_secret: process.env.RAZORPAY_SECRET
 });
+//..................................................................................................................................................
 
 const onlinPayment = async (req, res) => {
   let amount = req.body.amount;
@@ -64,7 +46,6 @@ const onlinPayment = async (req, res) => {
     currency: 'INR',
     receipt: uniqueId,
   };
-
   try {
     const response = await razorpay.orders.create(paymentData);
     res.json(response);
@@ -73,41 +54,18 @@ const onlinPayment = async (req, res) => {
     res.status(500).json({ error: 'Failed to create payment' });
   }
 }
+//..................................................................................................................................................
 
 const verifyPayment = async (req, res) => {
   const payment = req.body.payment
   const order = req.body.order
-  // console.log(payment.razorpay_payment_id,'req.body.payment')
   let hmac = crypto.createHash('sha256', process.env.RAZORPAYKEY)
   hmac.update(payment.razorpay_order_id + '|' + payment.razorpay_payment_id)
   hmac = hmac.digest('hex')
-
   if (hmac == payment.razorpay_signature) {
     res.status(200).send('Payment verified successfully.');
   }
 }
-
-
-// Define the verifyToken function
-function verifyToken(token) {
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded.id; // Return the decoded userID
-  } catch (err) {
-    return null; // Return null if verification fails
-  }
-}
-
-//Create jwt Token 
-const MaxExpTime = 3 * 24 * 60 * 60 // expire in 3days
-const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: MaxExpTime
-  })
-}
-
-
-//  const trackDetails = Array.isArray(req.body.trackDetails) ? req.body.trackDetails : [req.body.trackDetails];
 //..................................................................................................................................................
 
 //Section for GET Request start here.......
@@ -161,13 +119,10 @@ const generatePDF = async (req, res) => {
 
       const filePath = 'public/invoice.pdf';
       fs.writeFileSync(filePath, result.pdf, 'base64');
-
-
       res.download(filePath, 'invoice.pdf', (err) => {
         if (err) {
           console.error('Error downloading file:', err);
         } else {
-
           fs.unlinkSync(filePath);
         }
       });
@@ -178,10 +133,7 @@ const generatePDF = async (req, res) => {
     res.status(500).send('Error fetching orders or generating invoice');
   }
 };
-
-
-
-
+//..................................................................................................................................................
 
 //show landing page 
 const landingPage = async (req, res) => {
@@ -189,8 +141,6 @@ const landingPage = async (req, res) => {
   const subCategories = await subCategorySchema.find({})
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
   const userID = getUserId(token);
-
-  console.log(userID)
   const wishlist = await wishlistSchema.find({ userID: userID })
   const productID = wishlist.map((val) => val.productID)
   let allProducts = await productModel.find({})
@@ -262,10 +212,7 @@ const landingPage = async (req, res) => {
     try {
       if (req.query.cat === '') {
         let data = req.query.text;
-
         const searchText = new RegExp("^" + data, "i")
-        console.log(searchText)
-
         const page = req.query.page;
         const perPage = 4;
         let docCount;
@@ -273,7 +220,6 @@ const landingPage = async (req, res) => {
           .countDocuments()
           .then(documents => {
             docCount = documents;
-
             return productModel.find({ ProductName: { $regex: searchText } })
               .skip((page - 1) * perPage)
               .limit(perPage)
@@ -295,14 +241,8 @@ const landingPage = async (req, res) => {
       } else {
         try {
           let cat = req.query.cat;
-          console.log('i am hereee bro ', req.query.text, cat)
           let data = req.query.text;
-
-
-
           const searchText = new RegExp("^" + data, "i")
-          console.log(searchText)
-
           const page = req.query.page;
           const perPage = 4;
           let docCount;
@@ -313,7 +253,6 @@ const landingPage = async (req, res) => {
             .countDocuments()
             .then(documents => {
               docCount = documents;
-
               return productModel.find({
                 ProductName: { $regex: searchText },
                 CategoryName: { $in: cat }
@@ -348,6 +287,8 @@ const landingPage = async (req, res) => {
   }
 
 }
+//..................................................................................................................................................
+
 const allProductFilter = async (req, res) => {
   const subCategories = await subCategorySchema.find({})
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
@@ -390,28 +331,21 @@ const allProductFilter = async (req, res) => {
       })
     })
 }
+//..................................................................................................................................................
 
 const priceFilter = async (req, res) => {
-
   let allProducts = await productModel.find({})
   let BrandNames = allProducts.map((val) => val.BrandName)
   let uniqueBrandNames = [...new Set(BrandNames)];
-
-
   if (req.query.task === 'priceFilter') {
     try {
-
       const subCategories = await subCategorySchema.find({})
-      console.log('req.body.minimum : ', req.body.minimum)
       const page = req.query.page;
       const perPage = 4;
       let docCount;
       const minimum = req.body.minimum;
       const maximum = req.body.maximum;
       const BrandName = req.body.brandName;
-
-
-
       if (req.query.cat !== '') {
         console.log('BrandName : ', BrandName)
         const ProductData = await productModel.find({
@@ -454,7 +388,6 @@ const priceFilter = async (req, res) => {
           .countDocuments()
           .then(documents => {
             docCount = documents;
-
             return productModel.find({
               $or: [
                 { SalesRate: { $gte: minimum, $lte: maximum } },
@@ -484,20 +417,25 @@ const priceFilter = async (req, res) => {
     }
   }
 }
+//..................................................................................................................................................
+
 //Show register page
 const registerPage = (req, res) => {
   res.render('user/register')
 }
+//..................................................................................................................................................
 
 //show enterOTP for registration
 const enterOtp = (req, res) => {
   res.render('user/enterOtp', { message: '', timer: '2:00' })
 }
+//..................................................................................................................................................
 
 // show login page
 const loginPage = (req, res) => {
   res.render('user/login', { error: "" })
 }
+//..................................................................................................................................................
 
 const google = (req, res) => {
   const token = jwt.sign(
@@ -508,40 +446,38 @@ const google = (req, res) => {
   res.cookie('jwtUser', token);
   res.redirect('/')
 }
-
-
+//..................................................................................................................................................
 
 // show the page to enter the email to send otp when the user forgot password.
 const sendEmailOtp = (req, res) => {
   res.render('user/sendEmailOtp', { message: '' })
 }
+//..................................................................................................................................................
 
 // show forgotEnterOtp page to enter otp
 const forgotEnterOtp = (req, res) => {
   res.render('user/forgotEnterOtp', { message: '' })
 }
-
+//..................................................................................................................................................
 
 //Show reset password page
 const resetPassword = (req, res) => {
   res.render('user/resetPassword')
 }
-
+//..................................................................................................................................................
 
 //get method for shoppingcart
 const shoppingCart = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-  const userID = verifyToken(token); // Verify token and get userID
+  const userID = getUserId(token); // Verify token and get userID
   try {
     const cartItems = await addtToCartModel.find({ userID: userID }).populate('productID');
-    // console.log(cartItems)
     res.render('user/shoppingCart', { cartItems })
   } catch (error) {
     console.error("Error fetching cart products:", error);
   }
-
-
 }
+//..................................................................................................................................................
 
 //logout get Request
 const logout = async (req, res) => {
@@ -551,20 +487,17 @@ const logout = async (req, res) => {
   await UserModel.findByIdAndUpdate(userID, { $set: { logged: false } })  // Clear the cookie
   res.redirect('/')
 }
+//..................................................................................................................................................
 
 const filterProducts = async (req, res) => {
-
   let allProducts = await productModel.find({})
-
   let BrandNames = allProducts.map((val) => val.BrandName)
-
   let uniqueBrandNames = [...new Set(BrandNames)];
-
   const subCategories = await subCategorySchema.find({})
+
   if (req.query.subCategory) {
     let subCategory = req.query.subCategory
     let category = req.query.category
-    // console.log('else statement')
     const page = req.query.page;
     const perPage = 4;
     let docCount;
@@ -572,13 +505,11 @@ const filterProducts = async (req, res) => {
       .countDocuments()
       .then(documents => {
         docCount = documents;
-
         return productModel.find({ CategoryName: category, subCategory: subCategory })
           .skip((page - 1) * perPage)
           .limit(perPage)
       })
       .then(ProductData => {
-        console.log('else statement', ProductData)
         res.render('user/allProducts', {
           route: 'allProducts',
           ProductData,
@@ -593,34 +524,28 @@ const filterProducts = async (req, res) => {
   }
 
 }
-
-
-
-
+//..................................................................................................................................................
 
 //profile
 const profile = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-  const userID = await verifyToken(token); // Verify token and get userID
-
+  const userID = await getUserId(token); // Verify token and get userID 
   try {
     const userInfo = await addressModel.find({ userID: userID }).populate('userID')
     const data = await UserModel.findById(userID).select('-password');
     let userData = data ? [data] : [];
-    console.log(userData, ' : userData')
     res.render('user/Profile', { error: '', userInfo, userData })
 
   } catch (error) {
     console.error('Token verification failed:', error);
   }
 }
-
+//..................................................................................................................................................
 
 const profileMenu = async (req, res) => {
   if (req.path == '/profileMenu') {
     const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-    const userID = verifyToken(token); // Verify token and get userID
-    console.log(userID)
+    const userID = getUserId(token); // Verify token and get userID 
     const userAddress = await addressModel.find({ userID: userID })
     if (req.query.menu == 'manageAddress') {
       res.render('user/manageAddress', { userAddress })
@@ -629,16 +554,13 @@ const profileMenu = async (req, res) => {
       const orderDetails = await orderSchema.find({ userID: userID })
         .populate('productID')
         .populate('addressID')
-        .sort({ _id: -1 }); // Sorting by _id in descending order
-
-      console.log('orderdetails', orderDetails);
+        .sort({ _id: -1 }); // Sorting by _id in descending order 
       res.render('user/myOrders', { orderDetails });
     }
     else if (req.query.menu === 'wishlist') {
       const page = req.query.page;
       const perPage = 4;
       let docCount;
-
       const wishlist = await wishlistSchema.find({ userID: userID })
         .populate('productID')
         .countDocuments()
@@ -671,11 +593,9 @@ const profileMenu = async (req, res) => {
       // res.render('user/wishlist', { wishlist })
     }
     else if (req.query.menu == 'Wallet') {
-
       const page = req.query.page;
       const perPage = 4;
       let docCount;
-
       const lastdetails = await walletSchema.findOne({ userID: userID }).sort({ added: -1 });
       const walletDetails = await walletSchema.find({ userID: userID })
         .populate('userID')
@@ -693,7 +613,6 @@ const profileMenu = async (req, res) => {
         })
         .then(walletDetails => {
           if (walletDetails.length > 0) {
-            console.log('walletDetails : ', walletDetails)
             res.render('user/wallet', {
               route: 'wallet',
               walletDetails,
@@ -723,10 +642,7 @@ const profileMenu = async (req, res) => {
         const data = await orderSchema.findById(id)
           .populate('addressID')
           .populate('productID')
-
         const trackDetails = data ? [data] : [];
-
-        // console.log('trackDetails : ',trackDetails)
         res.render('user/trackOrder', { trackDetails })
       } catch (error) {
         console.log(error)
@@ -735,6 +651,7 @@ const profileMenu = async (req, res) => {
     }
   }
 }
+//..................................................................................................................................................
 
 const DeleteData = async (req, res) => {
   const { productID } = req.query;
@@ -748,19 +665,16 @@ const DeleteData = async (req, res) => {
     }
   }
 }
+//..................................................................................................................................................
 
 const saveImage = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-  const userID = verifyToken(token); // Verify token and get userID
+  const userID = getUserId(token); // Verify token and get userID
 }
-
-
-
 const saveUserAddress = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-  const userID = verifyToken(token); // Verify token and get userID
+  const userID = getUserId(token); // Verify token and get userID
   if (req.query.type === 'addAddress') {
-
     try {
       const {
         addressType, address, pincode,
@@ -768,14 +682,12 @@ const saveUserAddress = async (req, res) => {
         country, cityDistrictTown, phoneNo,
         fullName
       } = req.body
-
       const UserAddress = {
         addressType, address, pincode,
         state, gender, emailAddress,
         country, cityDistrictTown, phoneNo,
         fullName, userID
       }
-
       await addressModel.create(UserAddress);
       res.redirect('/profileMenu?menu=manageAddress')
     } catch (error) {
@@ -783,9 +695,7 @@ const saveUserAddress = async (req, res) => {
     }
 
   } else if (req.query.task === 'addToCart') {
-    // console.log('wishlist:', req.body.productID, userID)
     try {
-      console.log('iam in the add to cart')
       const productID = req.body.productID
       const data = await productModel.findById(productID);
       const cartExist = await addtToCartModel.find({ productID: productID })
@@ -800,7 +710,6 @@ const saveUserAddress = async (req, res) => {
           size: data.ProductSize[0].size,
           totalMRP: data.MRP
         }
-        console.log('Received cart data:', details);
         await addtToCartModel.create(details)
         res.json({ message: 'success' })
       }
@@ -880,11 +789,11 @@ const saveUserAddress = async (req, res) => {
     }
   }
 }
-
+//..................................................................................................................................................
 
 const overviewFilter = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-  const userID = verifyToken(token); // Verify token and get userID
+  const userID = getUserId(token); // Verify token and get userID
 
   if (req.query.task === 'addToCart') {
     try {
@@ -894,10 +803,6 @@ const overviewFilter = async (req, res) => {
       const size = req.body.size != undefined ? req.body.size : productData.ProductSize[0].size;
       let quantity = req.body.quantity;
 
-      console.log(price, price * quantity - req.body.proDiscount * quantity, productData)
-
-      console.log('productData', productData)
-
       const data = {
         userID,
         productID,
@@ -906,7 +811,6 @@ const overviewFilter = async (req, res) => {
         size,
         totalMRP: productData.MRP * quantity
       }
-      // console.log('Received cart data:', size);
       await addtToCartModel.create(data)
       res.json({ message: 'Success' })
     } catch (error) {
@@ -922,18 +826,6 @@ const overviewFilter = async (req, res) => {
       console.log(details)
       await wishlistSchema.create(details)
       res.json({ message: 'success' })
-      // const wishlistExist = await wishlistSchema.findOne({ userID: userID, productID: req.body.productID });
-      // console.log('wishlistExist : ',wishlistExist)
-      // if(!wishlistEntry){
-      //   console.log('!wishlistExist')
-      //   await wishlistSchema.create(details)
-      //   res.redirect('/profileMenu?menu=wishlist')
-
-      // }else{
-      //   console.log('iam in ')
-      //   res.redirect('/profileMenu?menu=wishlist')
-      // }
-
     } catch (error) {
       console.log(error)
     }
@@ -950,47 +842,24 @@ const overviewFilter = async (req, res) => {
     }
   }
 }
-// const data = productModel.aggregate([
-//   {
-//     $group: {
-//       _id: `${ProductSize}`, // Group by size field
-//       count: { $sum: 1 } // Count occurrences of each size
-//     }
-//   },
-//   {
-//     $project: {// Exclude _id field from output
-//       size: "$_id", // Rename _id to size
-//       count: 1 // Include count field
-//     }
-//   }
-// ])
-// }
-
-
+//..................................................................................................................................................
 
 const checkOut = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
   const userID = getUserId(token) // Verify token and get userID
   if (req.query.task === 'checkValidOrder') {
     let cartDetails = req.body.cartDetails;
-
-    console.log('iam in get checkout')
     res.json({ message: 's' })
   } else {
     couponApplied = false
-
-    console.log('couponApplied', couponApplied)
     try {
       if (req.query.task == 'checkWallet') {
-        // console.log('checkWallet')
         const checkWallet = await walletSchema.findOne({ userID: userID }).sort({ added: -1 });
         res.json(checkWallet)
       } else {
-        // console.log(userID)
-        const cartDetails = await orderDetailsModel.find({ userID: userID }).populate('productID')
+        const cartDetails = await orderSummary.find({ userID: userID }).populate('productID')
         const userInfo = await addressModel.find({ userID: userID, selected: true })
         const addresses = await addressModel.find({ userID: userID })
-        // console.log('cartDetails', cartDetails)
         res.render('user/checkOut', { cartDetails, userInfo, addresses })
       }
 
@@ -998,60 +867,12 @@ const checkOut = async (req, res) => {
       console.error("Error fetching cart products:", error);
     }
   }
-
-
 }
+//..................................................................................................................................................
 
-
-// const orderDetails = async (req, res) => {
-//   const cartItems = JSON.parse(req.body.cartData);
-
-//   try {
-//     let data = cartItems.map(val => {
-//       const { userID, productID, quantity, size, totalPrice } = val;
-//       if (userID && productID._id && quantity && size && totalPrice) {
-//         return {
-//           userID: userID,
-//           productID: productID._id,
-//           quantity: quantity,
-//           size: size,
-//           price: totalPrice
-//         };
-//       }
-//     }).filter(item => item); // Filter out undefined values
-
-//     console.log('cartItems', data);
-
-//     const itemsToCreate = [];
-
-//     for (const item of data) {
-//       const productExists = await orderDetailsModel.exists({
-//         userID: item.userID,
-//         productID: item.productID,
-//         quantity: item.quantity,
-//         size: item.size,
-//         totalPrice: item.price
-//       });
-
-//       if (!productExists) {
-//         itemsToCreate.push(item);
-//         await orderDetailsModel.insertMany(itemsToCreate);
-//       }
-//     }
-
-
-//     res.redirect('/checkOut');
-//   } catch (error) {
-//     console.error('Error processing cart items:', error);
-//     // Handle error appropriately, perhaps send an error response
-//     res.status(500).send('Error processing cart items');
-//   }
-
-
-// }
 const orderDetails = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-  const userID = verifyToken(token); // Verify token and get userID
+  const userID = getUserId(token); // Verify token and get userID
 
   try {
     const cartItems = JSON.parse(req.body.cartData);
@@ -1093,8 +914,8 @@ const orderDetails = async (req, res) => {
     }
 
     if (allItemsValid) {
-      await orderDetailsModel.deleteMany({ userID: userID });
-      await orderDetailsModel.create(bulkOrderDetails);
+      await orderSummary.deleteMany({ userID: userID });
+      await orderSummary.create(bulkOrderDetails);
       res.json({ message: 'success' });
     } else {
       res.json({ message: 'error' });
@@ -1105,17 +926,14 @@ const orderDetails = async (req, res) => {
     res.status(500).send('Error processing cart items');
   }
 };
-
-
+//..................................................................................................................................................
 
 const updateCheckout = async (req, res) => {
   if (req.query.task === 'selectDeleveryAddress') {
     try {
       const addressID = req.body.addressID
-      // console.log('body ',addressID,req.body.selected)
       await addressModel.updateMany({}, { $set: { selected: false } })
       await addressModel.findOneAndUpdate({ _id: addressID }, { $set: { selected: true } })
-      // res.redirect('/')
     } catch (error) {
       console.log('Error on select Delivery Address')
     }
@@ -1135,40 +953,32 @@ const updateCheckout = async (req, res) => {
         address: req.body.address,
         addressType: req.body.addressType
       }
-
       await addressModel.findByIdAndUpdate(id, data, { new: true });
       res.redirect('/checkOut')
     } catch (error) {
       console.log('Error on select Delivery Address')
     }
   } else if (req.query.task === 'incQuantity') {
-
     const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-    const userID = verifyToken(token);
-
+    const userID = getUserId(token);
     console.log(req.body.id)
-
-    const data = await orderDetailsModel.findById(req.body.id).populate('productID')
+    const data = await orderSummary.findById(req.body.id).populate('productID')
     console.log(data, ": summarydata")
-    // const productID = summarydata.productID._id
-    // const data = productModel.findById(productID)
     let productSize = data.productID.ProductSize;
-    // console.log('data', productSize)
     let b;
     let filter = productSize.filter((val, i) => {
       if (val.size === data.size) {
-        // console.log('index :', val.quantity)
         b = val.quantity;
       }
       return b;
     })
-    console.log('b : size :', data.quantity + 1, b)
-
     if (req.body.type === 'increment') {
       if (data.quantity + 1 <= b) {
-        console.log('i am heree')
-        // console.log('data[0].productID.SalesRate * req.body.newQty', data.productID.SalesRate * req.body.newQty);
-        const updateddata = await orderDetailsModel.findByIdAndUpdate(req.body.id, { $set: { quantity: req.body.newQty, totalMRP: data.productID.MRP * req.body.newQty } })
+        const updateddata = await orderSummary.findByIdAndUpdate(req.body.id,
+          {
+            $set:
+              { quantity: req.body.newQty, totalMRP: data.productID.MRP * req.body.newQty }
+          })
         res.json(updateddata)
       } else {
         let limit = 'finished'
@@ -1176,23 +986,21 @@ const updateCheckout = async (req, res) => {
       }
     } else if (req.body.type === 'decrement') {
       // console.log('data[0].productID.SalesRate * req.body.newQty', data.productID.SalesRate * req.body.newQty);
-      const updateddata = await orderDetailsModel.findByIdAndUpdate(req.body.id, { $set: { quantity: req.body.newQty, totalMRP: data.productID.MRP * req.body.newQty } })
+      const updateddata = await orderSummary.findByIdAndUpdate(req.body.id, { $set: { quantity: req.body.newQty, totalMRP: data.productID.MRP * req.body.newQty } })
       res.json(updateddata)
     }
 
   }
 }
-
-
+//..................................................................................................................................................
 
 const checkOutTasks = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-  const userID = verifyToken(token); // Verify token and get userID
+  const userID = getUserId(token); // Verify token and get userID
   if (req.query.task === 'removeProducts') {
     try {
       const orderSummaryId = req.body.id;
-      console.log(orderSummaryId)
-      await orderDetailsModel.deleteMany({ _id: orderSummaryId })
+      await orderSummary.deleteMany({ _id: orderSummaryId })
       res.redirect('/checkOut');
     } catch (error) {
       console.log(error)
@@ -1203,18 +1011,13 @@ const checkOutTasks = async (req, res) => {
     const userID = getUserId(token);
     const AddAmount = req.body.AddAmount;
     const latestWishlistItem = await walletSchema.findOne({ userID: userID }).sort({ added: -1 });
-
     if (latestWishlistItem) {
-
       const updatedDocument = await walletSchema.findOneAndUpdate(
         { userID: userID },
         { $inc: { balance: AddAmount } },
         { sort: { _id: -1 }, new: true }
       );
-
-      console.log('Updated document:', updatedDocument, req.body.AddAmount);
       res.json({ message: 'successfully added' })
-
     } else {
       let options = {
         userID: userID,
@@ -1224,14 +1027,10 @@ const checkOutTasks = async (req, res) => {
       await walletSchema.create(options)
       res.json({ message: 'successfully created' })
     }
-
-
   } else if (req.query.task === 'walletPayment') {
     const paymentMethod = req.body.paymentMethod;
     const ProductData = JSON.parse(req.body.ProductData);
     const addressID = req.body.addressID;
-    console.log('i am here...', ProductData)
-
     try {
       let details;
       const orderDetails = ProductData.map((val) => {
@@ -1245,18 +1044,13 @@ const checkOutTasks = async (req, res) => {
           PaymentMethod: paymentMethod
         }
       })
-
       ProductData.forEach(async element => {
         await addtToCartModel.findByIdAndDelete(element.productID._id)
       })
-
       const orderData = await orderSchema.create(orderDetails);
-
       const order = await Promise.all(ProductData.map(async (val, i) => {
-        const checkWallet = await walletSchema.findOne({ userID: val.userID }).sort({ added: -1 });
-        console.log('checkWallet :', checkWallet)
-        const balance = checkWallet ? checkWallet.balance - req.body.total : orderData[i].Amount;
-
+        const checkWallet = await walletSchema.findOne({ userID: val.userID }).sort({ added: -1 }); 
+        const balance = checkWallet ? checkWallet.balance - req.body.total : orderData[i].Amount; 
         return {
           userID: val.userID,
           productID: val.productID._id,
@@ -1264,15 +1058,7 @@ const checkOutTasks = async (req, res) => {
           balance: balance,
           transaction: 'Debit'
         };
-      }));
-
-      console.log('wallet details :', order)
-
-
-
-
-      console.log('details :', orderDetails[0].userID)
-
+      }));  
       let returnData;
       const UpdatedData = ProductData.map((val, index) => {
         return returnData = {
@@ -1315,28 +1101,21 @@ const checkOutTasks = async (req, res) => {
           Added: val.productID.Added,
           SI: val.productID.SI
         }
-      })
-
-      console.log('UpdatedData  ', UpdatedData)
+      }) 
       const id = orderDetails[0].productID;
-      await productModel.findByIdAndUpdate(id, UpdatedData[0], { new: true });
-
-      for (const element of ProductData) {
-        // console.log('element.productID._id : ', element.productID._id);
-        const orderDetails = await orderDetailsModel.deleteMany({ productID: element.productID._id });
+      await productModel.findByIdAndUpdate(id, UpdatedData[0], { new: true }); 
+      for (const element of ProductData) { 
+        const orderDetails = await orderSummary.deleteMany({ productID: element.productID._id });
         const addToCart = await addtToCartModel.deleteMany({ productID: element.productID._id });
 
-      }
-
-      await walletSchema.create(order)
-      // res.redirect('/profileMenu?menu=myOrders')
+      } 
+      await walletSchema.create(order) 
     } catch (error) {
       console.log(error)
     }
   } else if (req.query.task === 'failedPayment') {
     const orderID = req.body.orderID;
-    console.log('orderID :', orderID)
-
+    console.log('orderID :', orderID) 
     try {
       await orderSchema.findByIdAndUpdate(orderID, { $set: { Status: 'Order Placed' } }, { new: true });
       res.json({ message: 'success' })
@@ -1344,24 +1123,17 @@ const checkOutTasks = async (req, res) => {
       console.log(error)
     }
   }
-  else if (req.query.task === 'RazorPay') {
-
-    console.log('AppliedCode ', req.body.AppliedCode)
+  else if (req.query.task === 'RazorPay') { 
     const paymentMethod = req.body.paymentMethod;
     const ProductData = JSON.parse(req.body.ProductData);
     const addressID = req.body.addressID;
     const couponDiscount = req.body.couponDiscount
-    const productCount = couponDiscount / ProductData.length;
-    console.log('i am here...', ProductData, couponDiscount, productCount)
-
+    const productCount = couponDiscount / ProductData.length;  
     const couponData = {
       userID: userID,
       couponCode: req.body.AppliedCode
-    }
-
-
-    await appliedCoupon.create(couponData)
-
+    } 
+    await appliedCoupon.create(couponData) 
     try {
       let details;
       const orderDetails = ProductData.map((val) => {
@@ -1376,8 +1148,7 @@ const checkOutTasks = async (req, res) => {
           PaymentMethod: paymentMethod,
           couponDiscount: productCount
         }
-      })
-      console.log('details :', orderDetails[0].userID)
+      }) 
 
       let returnData;
       const UpdatedData = ProductData.map((val, index) => {
@@ -1421,43 +1192,31 @@ const checkOutTasks = async (req, res) => {
           Added: val.productID.Added,
           SI: val.productID.SI
         }
-      })
-
-      console.log('UpdatedData  ', UpdatedData)
+      }) 
       const id = orderDetails[0].productID;
       await productModel.findByIdAndUpdate(id, UpdatedData[0], { new: true });
 
-      for (const element of ProductData) {
-        // console.log('element.productID._id : ', element.productID._id);
-        const orderDetails = await orderDetailsModel.deleteMany({ productID: element.productID._id });
+      for (const element of ProductData) { 
+        const orderDetails = await orderSummary.deleteMany({ productID: element.productID._id });
         const addToCart = await addtToCartModel.deleteMany({ productID: element.productID._id });
 
-      }
-
-      const orderData = await orderSchema.create(orderDetails)
-
-      // res.redirect('/profileMenu?menu=myOrders')
+      } 
+      const orderData = await orderSchema.create(orderDetails) 
     } catch (error) {
       console.log(error)
     }
 
-  } else if (req.query.task === 'RazorPay-Failed') {
-    console.log('payment.failed ', req.body.AppliedCode)
+  } else if (req.query.task === 'RazorPay-Failed') { 
     const paymentMethod = req.body.paymentMethod;
     const ProductData = JSON.parse(req.body.ProductData);
     const addressID = req.body.addressID;
     const couponDiscount = req.body.couponDiscount
-    const productCount = couponDiscount / ProductData.length;
-    console.log('i am here... payment.failed', ProductData, couponDiscount, productCount)
-
+    const productCount = couponDiscount / ProductData.length;  
     const couponData = {
       userID: userID,
       couponCode: req.body.AppliedCode
-    }
-
-
-    await appliedCoupon.create(couponData)
-
+    } 
+    await appliedCoupon.create(couponData) 
     try {
       let details;
       const orderDetails = ProductData.map((val) => {
@@ -1473,21 +1232,13 @@ const checkOutTasks = async (req, res) => {
           couponDiscount: productCount,
           Status: 'Failed'
         }
-      })
-      console.log('details :', orderDetails[0].userID)
-
-      const id = orderDetails[0].productID;
-
-      for (const element of ProductData) {
-        // console.log('element.productID._id : ', element.productID._id);
-        await orderDetailsModel.deleteMany({ productID: element.productID._id });
-        await addtToCartModel.deleteMany({ productID: element.productID._id });
-
-      }
-
-      await orderSchema.create(orderDetails)
-
-      // res.redirect('/profileMenu?menu=myOrders')
+      })  
+      const id = orderDetails[0].productID; 
+      for (const element of ProductData) { 
+        await orderSummary.deleteMany({ productID: element.productID._id });
+        await addtToCartModel.deleteMany({ productID: element.productID._id }); 
+      } 
+      await orderSchema.create(orderDetails) 
     } catch (error) {
       console.log(error)
     }
@@ -1498,11 +1249,7 @@ const checkOutTasks = async (req, res) => {
     const ProductData = JSON.parse(req.body.ProductData);
     const addressID = req.body.addressID;
     const couponDiscount = req.body.couponDiscount
-    const partialCount = couponDiscount / ProductData.length;
-
-
-    console.log('i am here...', ProductData, couponDiscount, partialCount)
-
+    const partialCount = couponDiscount / ProductData.length;  
     try {
       let details;
       const orderDetails = ProductData.map((val) => {
@@ -1517,8 +1264,7 @@ const checkOutTasks = async (req, res) => {
           PaymentMethod: paymentMethod,
           couponDiscount: partialCount
         }
-      })
-      console.log('details :', orderDetails[0].userID)
+      }) 
 
       let returnData;
       const UpdatedData = ProductData.map((val, index) => {
@@ -1562,28 +1308,20 @@ const checkOutTasks = async (req, res) => {
           Added: val.productID.Added,
           SI: val.productID.SI
         }
-      })
-
-      console.log('UpdatedData  ', UpdatedData)
+      }) 
       const id = orderDetails[0].productID;
-      await productModel.findByIdAndUpdate(id, UpdatedData[0], { new: true });
-
-      for (const element of ProductData) {
-        // console.log('element.productID._id : ', element.productID._id);
-        const orderDetails = await orderDetailsModel.deleteMany({ productID: element.productID._id });
+      await productModel.findByIdAndUpdate(id, UpdatedData[0], { new: true }); 
+      for (const element of ProductData) { 
+        const orderDetails = await orderSummary.deleteMany({ productID: element.productID._id });
         const addToCart = await addtToCartModel.deleteMany({ productID: element.productID._id });
       }
-      const orderData = await orderSchema.create(orderDetails)
-
-      // res.redirect('/profileMenu?menu=myOrders')
+      const orderData = await orderSchema.create(orderDetails) 
     } catch (error) {
       console.log(error)
     }
 
   }
-  else if (req.query.task === 'addAddress') {
-
-    console.log('Iam heree')
+  else if (req.query.task === 'addAddress') { 
     try {
       const {
         addressType, address, pincode,
@@ -1605,40 +1343,30 @@ const checkOutTasks = async (req, res) => {
       console.log(error)
     }
   } else if (req.query.task === 'checkCoupon') {
-    try {
-
+    try { 
       const currentDate = new Date(); // Get today's date
       const couponExist = await couponModel.findOne({
         couponCode: req.body.couponCode,
         Expire: { $gte: currentDate },
         status: 'Listed'
-      });
-
-      const cartData = await addtToCartModel.find({ userID: userID })
-
-      const couponUsed = await appliedCoupon.findOne({ userID: userID, couponCode: req.body.couponCode })
-      console.log('couponUsed : ', couponApplied, couponExist)
-      if (couponApplied === false) {
-
-        if (couponExist) {
-
-          if (!couponUsed) {
-            console.log('iam in not used', couponExist.discountAmount)
+      }); 
+      const cartData = await addtToCartModel.find({ userID: userID }) 
+      const couponUsed = await appliedCoupon.findOne({ userID: userID, couponCode: req.body.couponCode }) 
+      if (couponApplied === false) { 
+        if (couponExist) { 
+          if (!couponUsed) { 
             couponApplied = true;
             res.json({ message: couponExist.discountAmount })
           } else {
-            res.json({ error: 'Coupon Is Already Applied', message: couponExist.discountAmount })
-            console.log('already couponExist')
+            res.json({ error: 'Coupon Is Already Applied', message: couponExist.discountAmount }) 
           }
 
         } else {
-          res.json({ error: 'Coupon Is Already Expired' })
-          console.log('already Expired')
+          res.json({ error: 'Coupon Is Already Expired' }) 
         }
 
       } else {
-        res.json({ error: 'Coupon Is Already Applied', message: couponExist.discountAmount })
-        console.log('already couponApplied')
+        res.json({ error: 'Coupon Is Already Applied', message: couponExist.discountAmount }) 
       }
 
     } catch (error) {
@@ -1649,22 +1377,14 @@ const checkOutTasks = async (req, res) => {
   }
 
 }
-
-
-//Section for GET Request End here.......
-
 //..................................................................................................................................................
-
-//Section for Post Method Starts here.....
 
 
 const removeCartProduct = async (req, res) => {
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-  const userID = verifyToken(token); // Verify token and get userID
+  const userID = getUserId(token); // Verify token and get userID
   try {
-    if (req.query.task === 'deleteCartItem') {
-      console.log('I am here to delete', req.query.id);
-
+    if (req.query.task === 'deleteCartItem') { 
       await addtToCartModel.findOneAndDelete({ _id: req.query.id, userID: userID });
       res.redirect('/shoppingcart');
     }
@@ -1674,21 +1394,18 @@ const removeCartProduct = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 }
+//..................................................................................................................................................
 
-const updateProfile = async (req, res) => {
-  console.log('iam in change email')
+const updateProfile = async (req, res) => { 
   const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-  const userID = verifyToken(token); // Verify token and get userID
+  const userID = getUserId(token); // Verify token and get userID
   const oldEmail = await UserModel.findById(userID, { _id: 0, emailAddress: 1 });
   const emailAddress = oldEmail.emailAddress;
   if (req.query.task === 'checkEmailotp') {
-    try {
-      console.log(req.body.NewOTP)
+    try { 
       const newOTP = req.body.NewOTP
       const newEmail = req.body.newEmail;
-      const response = await OTPModel.find({ emailAddress }).sort({ createdAt: -1 }).limit(1);
-      console.log(response[0].otp, 'dshsdsdmn :', newOTP)
-
+      const response = await OTPModel.find({ emailAddress }).sort({ createdAt: -1 }).limit(1);  
       if (newOTP === response[0].otp) {
         await UserModel.findByIdAndUpdate(userID, { $set: { emailAddress: newEmail } })
         res.json({ message: 'success' })
@@ -1700,56 +1417,40 @@ const updateProfile = async (req, res) => {
     }
   }
   else if (req.query.task === 'changePassword') {
-    try {
-      console.log('iam in change password')
+    try { 
       const oldPassword = req.body.oldPassword;
       const newPassword = req.body.newPassword;
-      const Password = await UserModel.findById(userID, { _id: 0, password: 1 })
-      console.log('correct password')
+      const Password = await UserModel.findById(userID, { _id: 0, password: 1 }) 
       const isPasswordMatch = await bcrypt.compare(oldPassword, Password.password)
       let hashedPassword;
-      if (isPasswordMatch) {
-
-        hashedPassword = await bcrypt.hash(newPassword, 10);
-        console.log(hashedPassword, ' : hashedPassword')
+      if (isPasswordMatch) { 
+        hashedPassword = await bcrypt.hash(newPassword, 10); 
         await UserModel.findByIdAndUpdate(userID, { $set: { password: hashedPassword } })
         res.json({ message: 'Success' })
       } else {
         res.json({ message: 'error' })
-      }
-
-
+      } 
     } catch (error) {
       console.log(error)
     }
   } else if (req.query.task === 'changeinfo') {
-    console.log('hi bro', req.body.fullName, req.body.mobileNo)
-    // const newData = {
-    //   $set: {
-    //     fullName: req.body.fullName,
-    //     phoneNo: req.body.mobileNo,
-    //   }
-    // };
-
+    console.log('hi bro', req.body.fullName, req.body.mobileNo) 
     const result = await UserModel.findByIdAndUpdate(userID, { $set: { userName: req.body.fullName, phoneNo: req.body.mobileNo } });
     console.log(result)
     res.redirect('/Profile')
   }
 
 }
+//..................................................................................................................................................
 
 const profileTasks = async (req, res) => {
   try {
     const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-    const userID = verifyToken(token);
-
-    console.log(req.body.newEmailAddress)
+    const userID = getUserId(token);
     const newEmail = req.body.newEmailAddress;
-    const emailExist = await UserModel.find({ emailAddress: newEmail })
-    console.log('emnailexist', emailExist)
+    const emailExist = await UserModel.find({ emailAddress: newEmail }) 
     if (emailExist.length === 0) {
-      const oldEmail = await UserModel.findById(userID, { _id: 0, emailAddress: 1 });
-      console.log(oldEmail)
+      const oldEmail = await UserModel.findById(userID, { _id: 0, emailAddress: 1 }); 
       const emailAddress = oldEmail.emailAddress;
       if (newEmail === oldEmail.emailAddress) {
         res.json({ message: 'SameEmail' })
@@ -1758,8 +1459,7 @@ const profileTasks = async (req, res) => {
           upperCaseAlphabets: false,
           lowerCaseAlphabets: false,
           specialChars: false,
-        })
-
+        }) 
         let result = await OTPModel.findOne({ otp: otp });
         while (result) {
           otp = otpGenerator.generate(6, {
@@ -1773,15 +1473,13 @@ const profileTasks = async (req, res) => {
       }
     } else {
       res.json({ message: 'AlreadyExist' })
-    }
-
-
+    } 
   } catch (error) {
     console.log(error)
   }
 }
-
-
+//..................................................................................................................................................
+ 
 //send OTP for the registration of user 
 const sentOTP = async (req, res) => {
   try {
@@ -1791,11 +1489,10 @@ const sentOTP = async (req, res) => {
     GlobalUser.emailAddress = req.body.emailAddress
     GlobalUser.password = req.body.password
 
-    const emailAddress = GlobalUser.emailAddress
-    // Check if user is already present
-    const checkUserPresent = await UserModel.findOne({ emailAddress });
-    // If user found with provided email
-    if (checkUserPresent) {
+    const emailAddress = GlobalUser.emailAddress 
+    const checkUserPresent = await UserModel.findOne({ emailAddress });// Check if user is already present
+    
+    if (checkUserPresent) {// If user found with provided email
       return res.status(401).json({
         success: false,
         message: 'User is already registered',
@@ -1863,20 +1560,11 @@ const createUser = async (req, res) => {
     const password = GlobalUser.password
 
     const { otp1, otp2, otp3, otp4, otp5, otp6 } = req.body
-    const combinedOTP = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
-    // const combinedOTP = req.body.otp
-    // Find the most recent OTP for the email
-    const response = await OTPModel.find({ emailAddress }).sort({ createdAt: -1 }).limit(1);
-    // console.log( response[0].otp, 'dshsdsdmn :', otp, combinedOTP)
-
-    if (combinedOTP !== response[0].otp) {
-      console.log(timer)
-      console.log(combinedOTP);
-      console.log(' i am heree at otp')
+    const combinedOTP = otp1 + otp2 + otp3 + otp4 + otp5 + otp6; 
+    const response = await OTPModel.find({ emailAddress }).sort({ createdAt: -1 }).limit(1); 
+    if (combinedOTP !== response[0].otp) { 
       res.render('user/enterOtp', { message: 'Invalid OTP', timer: '2:00' })
-    } else {
-      console.log('i am here !!! ')
-      // Secure password
+    } else { 
       let hashedPassword;
       try {
         hashedPassword = await bcrypt.hash(password, 10);
@@ -1889,17 +1577,13 @@ const createUser = async (req, res) => {
       // hash the password
       GlobalUser.password = hashedPassword
       //store the user data to mongodb
-      const createdUser = await UserModel.create(GlobalUser);
-
-      console.log('createdUser._id', createdUser._id)
-      const Token = createToken(createdUser._id)
-      res.cookie('jwtUser', Token, { httpOnly: true, maxAge: MaxExpTime * 1000 });
-
+      const createdUser = await UserModel.create(GlobalUser); 
+      const Token = randomToken(createdUser._id)
+      res.cookie('jwtUser', Token, { httpOnly: true, maxAge: MaxExpTime * 1000 }); 
       res.redirect('/')
     }
 
-  } catch (error) {
-    // console.log(error.message);
+  } catch (error) { 
     res.render('user/enterOtp', { message: 'OTP Time Out', timer: timer })
   }
 }
@@ -1914,15 +1598,12 @@ const userLogin = (async (req, res) => {
     if (userExist) {
       const isPasswordMatch = await bcrypt.compare(password, userExist.password)
       if (isPasswordMatch) {
-        if (userExist.status === true) {
-          // const userData = await UserModel.create(GlobalUser);
-          const Token = createToken(userExist._id)
+        if (userExist.status === true) { 
+          const Token = randomToken(userExist._id)
           console.log(Token)
           res.cookie('jwtUser', Token, { httpOnly: true, maxAge: MaxExpTime * 1000 });
-          await UserModel.findByIdAndUpdate(userExist._id, { $set: { logged: true } })
-          // res.redirect(`/?id=${userExist._id}`)
-          res.redirect('/')
-          // res.render('user/index',{userId: userExist._id})
+          await UserModel.findByIdAndUpdate(userExist._id, { $set: { logged: true } }) 
+          res.redirect('/') 
         }
         else {
           res.render('user/login', { error: "User Blocked!" })
@@ -1944,12 +1625,10 @@ const userLogin = (async (req, res) => {
 const postsendEmailOtp = async (req, res) => {
   try {
     GlobalUser.emailAddress = req.body.emailAddress
-    const emailAddress = GlobalUser.emailAddress
-    // console.log('00100012092838!! : ',emailAddress);
+    const emailAddress = GlobalUser.emailAddress 
     const checkUserPresent = await UserModel.findOne({ emailAddress });
     console.log(checkUserPresent);
-    if (checkUserPresent) {
-      // console.log("User data: ", checkUserPresent);
+    if (checkUserPresent) { 
       otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
         lowerCaseAlphabets: false,
@@ -1982,10 +1661,7 @@ const postForgotEnterOtp = async (req, res) => {
     const { otp1, otp2, otp3, otp4, otp5, otp6 } = req.body
     const combinedOTP = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
 
-    const response = await OTPModel.find({ emailAddress }).sort({ createdAt: -1 }).limit(1);
-    console.log('response   = ', response);
-    console.log(otp);
-    console.log(response[0].otp);
+    const response = await OTPModel.find({ emailAddress }).sort({ createdAt: -1 }).limit(1);  
     if (response.length === 0 || combinedOTP !== response[0].otp) {
       res.render('user/enterOtp', { message: 'Invalid OTP', timer: '2:00' })
     } else {
@@ -2001,9 +1677,7 @@ const postForgotEnterOtp = async (req, res) => {
 const createPassword = async (req, res) => {
   try {
     const emailAddress = GlobalUser.emailAddress
-    const password = req.body.password
-    // console.log('!!!!!!!!!!!!!!!!! : ',password);
-    // Find the most recent OTP for the email
+    const password = req.body.password 
     const response = await OTPModel.find({ emailAddress }).sort({ createdAt: -1 }).limit(1);
     if (response.length === 0 || otp !== response[0].otp) {
       return res.status(400).json({
@@ -2040,8 +1714,7 @@ const createPassword = async (req, res) => {
 const productOverview = async (req, res) => {
   try {
     const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-    const userID = verifyToken(token); // Verify token and get userID
-
+    const userID = getUserId(token); // Verify token and get userID 
     const id = req.query.id
     const ProductData = await productModel.find({ _id: id })
     const cart = await addtToCartModel.find({ userID: userID, productID: id })
@@ -2049,9 +1722,7 @@ const productOverview = async (req, res) => {
     let isWishlisted = false;
     if (wishListExist.length > 0) {
       isWishlisted = true;
-    }
-    console.log('cart ', cart, wishListExist)
-
+    } 
     const productColor = await productModel.find({ ProductName: ProductData[0].ProductName })
     const firstProduct = ProductData[0];
     const CategoryName = firstProduct.CategoryName;
@@ -2065,40 +1736,28 @@ const productOverview = async (req, res) => {
 const updateCart = async (req, res) => {
   try {
     const token = req.cookies.jwtUser; // Assuming token is stored in cookies
-    const userID = verifyToken(token);
-
-
-    const data = await addtToCartModel.findById(req.body.id).populate('productID')
-
-    let productSize = data.productID.ProductSize;
-    // console.log('data', productSize)
+    const userID = getUserId(token); 
+    const data = await addtToCartModel.findById(req.body.id).populate('productID') 
+    let productSize = data.productID.ProductSize; 
     let b;
     let filter = productSize.filter((val, i) => {
-      if (val.size === data.size) {
-        // console.log('index :', val.quantity)
+      if (val.size === data.size) { 
         b = val.quantity;
       }
       return b;
-    })
-    console.log('b : size :', data.quantity + 1, b)
-
+    }) 
     if (req.body.type === 'increment') {
-      if (data.quantity + 1 <= b) {
-        // console.log('data[0].productID.SalesRate * req.body.newQty', data.productID.SalesRate * req.body.newQty);
+      if (data.quantity + 1 <= b) { 
         const updateddata = await addtToCartModel.findByIdAndUpdate(req.body.id, { $set: { quantity: req.body.newQty, totalPrice: data.productID.SalesRate * req.body.newQty, totalMRP: data.productID.MRP * req.body.newQty } })
         res.json(updateddata)
       } else {
         let limit = 'finished'
         res.json(limit)
       }
-    } else if (req.body.type === 'decrement') {
-      // console.log('data[0].productID.SalesRate * req.body.newQty', data.productID.SalesRate * req.body.newQty);
+    } else if (req.body.type === 'decrement') { 
       const updateddata = await addtToCartModel.findByIdAndUpdate(req.body.id, { $set: { quantity: req.body.newQty, totalPrice: data.productID.SalesRate * req.body.newQty, totalMRP: data.productID.MRP * req.body.newQty } })
       res.json(updateddata)
-    }
-
-
-
+    } 
   } catch (error) {
     console.log(error)
   }
