@@ -213,8 +213,8 @@
                                                 </div>
                                         </section>
                                         <div class="col-12" style="display: flex;align-items: center;justify-content: flex-end;padding: 0;">
-                                                <input type="date" onchange="customDateFilter()" class="dateBox" id="startDate" style="margin-right: 10px;">
-                                                <input type="date" onchange="customDateFilter()" class="dateBox"id="endDate">
+                                                <input type="date" onchange="customDateFilter('<%= JSON.stringify(salesDetails) %>')" class="dateBox" id="startDate" style="margin-right: 10px;">
+                                                <input type="date" onchange="customDateFilter('<%= JSON.stringify(salesDetails) %>')" class="dateBox"id="endDate">
 
                                         </div>
                                         <div class="col-12" style="padding: 0;">

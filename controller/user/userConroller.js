@@ -16,14 +16,14 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config()
 const Razorpay = require('razorpay')
 const crypto = require('crypto');
-const { getUserId, randomToken, generateSimpleUniqueId } = require('../../utils/functions.js')
+const { getUserId, randomToken, generateSimpleUniqueId , generateUniqueFourDigitNumber} = require('../../utils/functions.js')
 const path = require('path');
 const fs = require('fs-extra')
 const easyinvoice = require('easyinvoice')
-
+const puppeteer = require('puppeteer')
 // Example usage
 const uniqueId = generateSimpleUniqueId();
-
+const pdf = require('html-pdf');
 let GlobalUser = {
   userName: "",
   phoneNo: "",
@@ -71,62 +71,23 @@ const verifyPayment = async (req, res) => {
 //Section for GET Request start here.......
 const generatePDF = async (req, res) => {
   try {
-    const orderId = req.query.id;
-    const orders = req.body.trackDetails;
-
-    console.log(orders, ': orders')
-    const invoiceData = {
-      currency: 'INR',
-      marginTop: 25,
-      marginRight: 25,
-      marginLeft: 25,
-      marginBottom: 25,
-      sender: {
-        company: 'Ashion',
-        address: '123 Main Street',
-        city: 'New York',
-        state: 'NY',
-        postalCode: '10001',
-        country: 'USA',
-        phone: '+1-234-567-8901',
-        email: 'info@ashion.com',
-        website: 'www.ashion.com',
-        logo: path.join(__dirname, 'public', 'img', 'logo.png') // Adjust the path if necessary
-      },
-      client: {
-        company: `${orders[0].addressID.fullName}`,
-        email: orders[0].addressID.emailAddress,
-        phoneNumber: orders[0].addressID.phoneNo,
-        address: `${orders[0].addressID.address}, ${orders[0].addressID.cityDistrictTown}, ${orders[0].addressID.state}, ${orders[0].addressID.pincode}`
-      },
-      invoiceNumber: 'INV-123',
-      invoiceDate: new Date().toDateString(),
-      description: orders[0].productID.ProductName,
-      quantity: orders[0].quantity,
-      size: orders[0].size,
-      color: 'red',
-      price: orders[0].productID.MRP,
-      PaidAmount: orders[0].amount,
-      bottomNotice: 'Amount received'
-    };
-
-    // const deliveryCharge = 50; // Define the delivery charge or get it from orders if applicable
-    // invoiceData.products.forEach(product => {
-    //     product.price += deliveryCharge;
-    // });
-
-    easyinvoice.createInvoice(invoiceData, async function (result) {
-
-      const filePath = 'public/invoice.pdf';
-      fs.writeFileSync(filePath, result.pdf, 'base64');
-      res.download(filePath, 'invoice.pdf', (err) => {
-        if (err) {
-          console.error('Error downloading file:', err);
-        } else {
-          fs.unlinkSync(filePath);
-        }
+    const invoiceNum = generateUniqueFourDigitNumber()
+    const date = new Date();
+    const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+    const invoiceData = JSON.parse(req.query.data);
+    console.log('orders :',invoiceData)
+    res.render('user/invoice', { invoiceData ,formattedDate , invoiceNum}, (err, html) => {
+      if (err) {
+          return res.status(500).send('Error generating HTML');
+      }
+      pdf.create(html).toStream((err, stream) => {
+          if (err) {
+              return res.status(500).send('Error creating PDF');
+          }
+          res.setHeader('Content-type', 'application/pdf');
+          stream.pipe(res);
       });
-    });
+  });
 
   } catch (err) {
     console.error('Error fetching orders or generating invoice:', err);
@@ -157,7 +118,7 @@ const landingPage = async (req, res) => {
     }
   } else if (req.query.task == 'showAllPro') {
 
-    console.log('else statement')
+    // console.log('else statement')
     const page = req.query.page;
     const perPage = 4;
     let docCount;
@@ -301,10 +262,10 @@ const allProductFilter = async (req, res) => {
   let BrandNames = allProducts.map((val) => val.BrandName)
   let uniqueBrandNames = [...new Set(BrandNames)];
 
-  console.log('i=hi brooo')
+  // console.log('i=hi brooo')
   console.log('else statement', req.query.sortOrder)
   const sortOrder = req.query.sortOrder === 'LowToHigh' ? 1 : -1;
-  console.log('sortOrder :', sortOrder)
+  // console.log('sortOrder :', sortOrder)
   const page = req.query.page;
   const perPage = 4;
   let docCount;
@@ -1041,7 +1002,8 @@ const checkOutTasks = async (req, res) => {
           Quantity: val.quantity,
           Amount: req.body.total,
           Size: val.size,
-          PaymentMethod: paymentMethod
+          PaymentMethod: paymentMethod,
+          deliveryCharge:req.body.deliveryCharge
         }
       })
       ProductData.forEach(async element => {
@@ -1226,7 +1188,7 @@ const checkOutTasks = async (req, res) => {
           productID: val.productID._id,
           addressID: addressID,
           Quantity: val.quantity,
-          Amount: val.productID.SalesRate - discountAmt,
+          Amount: req.body.amount,
           Size: val.size,
           PaymentMethod: paymentMethod,
           couponDiscount: productCount,
@@ -1239,6 +1201,8 @@ const checkOutTasks = async (req, res) => {
         await addtToCartModel.deleteMany({ productID: element.productID._id }); 
       } 
       await orderSchema.create(orderDetails) 
+
+      res.json({message:'success'})
     } catch (error) {
       console.log(error)
     }
@@ -1259,10 +1223,11 @@ const checkOutTasks = async (req, res) => {
           productID: val.productID._id,
           addressID: addressID,
           Quantity: val.quantity,
-          Amount: val.productID.SalesRate - discountAmt,
+          Amount: req.body.amount,
           Size: val.size,
           PaymentMethod: paymentMethod,
-          couponDiscount: partialCount
+          couponDiscount: partialCount,
+          deliveryCharge:req.body.deliveryCharge
         }
       }) 
 
@@ -1550,7 +1515,7 @@ const resendOtp = async (req, res) => {
   }
 }
 //..................................................................................................................................................
-
+const MaxExpTime = 3 * 24 * 60 * 60 // expire in 3days
 //save the user data to mongodb when the user enter the correct otp.
 const createUser = async (req, res) => {
   let timer = req.body.Timer;

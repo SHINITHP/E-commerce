@@ -5,11 +5,20 @@ const Selectpayment = document.getElementById('Selectpayment');
 const onlinePayment = document.getElementById('onlinePayment');
 let couponDiscount = 0;
 
+let payableAmount = parseFloat(document.getElementById('cartTotal').innerText) - parseFloat(document.getElementById('discountAmt').innerText);
+if (payableAmount >= 2000) {
+    document.getElementById('deliveryCharge').innerHTML = 0;
+} else if (payableAmount <= 500) {
+    document.getElementById('deliveryCharge').innerHTML = 50;
+} else {
+    document.getElementById('deliveryCharge').innerHTML = 40;
+}
+
+
 document.getElementById('toTalAmount').innerHTML = parseFloat(document.getElementById('cartTotal').innerText) - parseFloat(document.getElementById('discountAmt').innerText) + parseFloat(document.getElementById('deliveryCharge').innerText)
 
 let AppliedCode;
 function applyCouuponCode() {
-
     const couponCode = document.getElementById('couponCode').value
     AppliedCode = couponCode
     console.log('couponCode :', couponCode)
@@ -32,9 +41,6 @@ function applyCouuponCode() {
                 document.getElementById('discountAmt').innerHTML = parseFloat(discountAmt) + parseFloat(discount);
                 document.getElementById('toTalAmount').innerHTML = parseFloat(total) - parseFloat(discount);
             }
-
-
-
         })
         .catch((err) => {
             console.log(err)
@@ -48,8 +54,6 @@ function AddMoneyTOWallet(user) {
         .then(function (response) {
             const responseData = response.data;
             console.log(responseData.amount)
-
-
             const options = {
                 key: 'rzp_test_TrCYwkpURRftvO',
                 amount: responseData.amount,
@@ -86,21 +90,17 @@ function AddMoneyTOWallet(user) {
 }
 
 
-
 function RazorPayment(product, user) {
     let productDetails = JSON.parse(product);
     let userInfo = JSON.parse(user);
-    console.log(userInfo[0].phoneNo);
-    
+    // console.log(userInfo[0].phoneNo);
     // Create an order on the server
     const totalAmt = document.getElementById('toTalAmount').innerText;
-    
     axios.post('/create-payment', { amount: totalAmt })
         .then(function (response) {
             // Handle success response if needed
             const responseData = response.data;
             console.log(responseData.amount);
-
             // Initialize Razorpay checkout
             const options = {
                 key: 'rzp_test_TrCYwkpURRftvO',
@@ -120,22 +120,23 @@ function RazorPayment(product, user) {
                     const addressID = userInfo.map((val) => val._id);
                     console.log(userInfo, 'addressID');
                     const paymentMethod = Selectpayment.checked ? 'Cash On Delivery' : 'Online Payment';
-
+                    let deliveryCharge = document.getElementById('deliveryCharge').innerText;
                     axios.post('/checkOut?task=RazorPay', {
                         amount: totalAmt,
                         AppliedCode,
                         ProductData: product,
                         paymentMethod: paymentMethod,
                         addressID,
-                        couponDiscount
+                        couponDiscount,
+                        deliveryCharge
                     })
-                    .then(function (response) {
-                        // Handle success response if needed
-                    })
-                    .catch(function (error) {
-                        console.error('Error during checkout:', error);
-                        // Handle error if needed
-                    });
+                        .then(function (response) {
+                            // Handle success response if needed
+                        })
+                        .catch(function (error) {
+                            console.error('Error during checkout:', error);
+                            // Handle error if needed
+                        });
                 },
                 prefill: {
                     name: userInfo[0].fullName, // Pre-fill customer's name
@@ -152,22 +153,26 @@ function RazorPayment(product, user) {
             rzp.on('payment.failed', function () {
                 console.log('payment.failed');
                 const addressID = userInfo.map((val) => val._id);
-                
+                let deliveryCharge = document.getElementById('deliveryCharge').innerText;
                 axios.post('/checkOut?task=RazorPay-Failed', {
                     amount: totalAmt,
                     AppliedCode,
                     ProductData: product,
                     paymentMethod: 'Online Payment',
                     addressID,
-                    couponDiscount
+                    couponDiscount,
+                    deliveryCharge
                 })
-                .then(function (response) {
-                    // Handle success response if needed
-                })
-                .catch(function (error) {
-                    console.error('Error during checkout (failed payment):', error);
-                    // Handle error if needed
-                });
+                    .then(function (response) {
+                        // Handle success response if needed
+                        if(response){
+                            window.location.href ='/profileMenu?menu=myOrders&success=false'
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Error during checkout (failed payment):', error);
+                        // Handle error if needed
+                    });
             });
 
         })
@@ -214,10 +219,11 @@ function ConfirmOrder(ProductData, userAddress) {
     let total = document.getElementById('toTalAmount').innerText;
     const addressID = fetchAddress.map((val) => val._id)
     console.log(addressID, 'addressID')
+    let deliveryCharge = document.getElementById('deliveryCharge').innerText;
     const paymentMethod = document.getElementById('Selectpayment').value
     if (wallet.checked) {
         console.log('sasi')
-        axios.post('/checkOut?task=walletPayment', { ProductData, paymentMethod: paymentMethod, addressID: addressID, total }) // Sending productID as data
+        axios.post('/checkOut?task=walletPayment', { ProductData, paymentMethod: paymentMethod, addressID: addressID, total, deliveryCharge }) // Sending productID as data
             .then(function (response) {
                 // Handle success response if needed
             })
@@ -227,7 +233,7 @@ function ConfirmOrder(ProductData, userAddress) {
             });
     } else {
         const totalAmt = document.getElementById('toTalAmount').innerText
-        axios.post('/checkOut?task=saveOrderDetails', { amount: totalAmt, couponDiscount, ProductData: ProductData, paymentMethod: paymentMethod, addressID: addressID }) // Sending productID as data
+        axios.post('/checkOut?task=saveOrderDetails', { amount: totalAmt, couponDiscount, ProductData: ProductData, paymentMethod: paymentMethod, addressID: addressID, deliveryCharge }) // Sending productID as data
             .then(function (response) {
                 // Handle success response if needed
             })

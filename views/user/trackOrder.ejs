@@ -190,9 +190,9 @@
 
                         </div>
                         <% if(trackDetails[0].Status ==='Delivered'){ %> 
-                        <a onclick="generateInvoice('<%= JSON.stringify(trackDetails) %>')">
+                        <form action="/generate-invoice?data=<%= JSON.stringify(trackDetails) %>" method="post">
                             <button class="btn form-Control" style="margin-top: 15px;height: 35px;width: 120px;background-color: black;color: white;">Invoice</button>
-                        </a>
+                        </form>
                         <% } %>
                     </div>
 
@@ -386,8 +386,8 @@
                 <input type="text" id="requestReason" class="commentInput">
             </label>
             <div class="row">
-                <input type="button" class="btn" onclick="returnCancelBtn()"  value="Cancel">
-                <input type="button" class="btn" id="returnSubmitBtn" onclick="returnOrder('<%=trackDetails[0]._id%>')"  value="Submit">
+                <input type="button" class="btn" style="margin: 0;margin-left: 10px; width: 100px;height: 40px;"  onclick="returnCancelBtn()"  value="Cancel" >
+                <input type="button" class="btn" id="returnSubmitBtn" style="margin: 0;margin-left: 10px; width: 100px;height: 40px;" onclick="returnOrder('<%=trackDetails[0]._id%>')"  value="Submit">
             </div>
         </div>
     </div>

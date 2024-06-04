@@ -33,7 +33,19 @@ const generateSimpleUniqueId = () => {
   return uniqueId;
 }
 
+const generatedNumbers = [];
+
+function generateUniqueFourDigitNumber() {
+    let number;
+    do {
+        number = Math.floor(Math.random() * 9000) + 1000; // Generate a random number between 1000 and 9999
+    } while (generatedNumbers.includes(number)); // Check if the number has already been generated
+
+    generatedNumbers.push(number); // Store the unique number
+    return number;
+}
+
 
 module.exports = {
-    getUserId,randomToken,getTotalValidTokenCount,generateSimpleUniqueId
+    getUserId,randomToken,getTotalValidTokenCount,generateSimpleUniqueId,generateUniqueFourDigitNumber
 }

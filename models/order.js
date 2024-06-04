@@ -68,6 +68,9 @@ const orderModel = new mongoose.Schema({
     },
     couponDiscount:{
         type:Number
+    },
+    deliveryCharge:{
+        type:Number
     }
 
 })
